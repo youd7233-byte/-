@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سجّل حِرفتك | حِرَفي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand:#F5EDD8; --clay:#C8956C; --terracotta:#B5531A;
+    --dark:#1A1208; --mid:#3D2B12; --gold:#D4A843;
+    --cream:#FBF6EC; --green:#2D5016; --text:#2A1A08; --muted:#7A6045;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Cairo',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
+
+  nav {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1rem 3rem; background:rgba(251,246,236,0.95);
+    backdrop-filter:blur(12px); border-bottom:1px solid rgba(200,149,108,0.2);
+  }
+  .logo { font-family:'Tajawal',sans-serif; font-size:1.7rem; font-weight:800; color:var(--terracotta); text-decoration:none; }
+  .logo span { color:var(--gold); }
+
+  .page-wrap {
+    display:grid; grid-template-columns:1fr 440px;
+    min-height:calc(100vh - 70px);
+  }
+  @media(max-width:900px) { .page-wrap { grid-template-columns:1fr; } .side-panel { display:none; } nav{padding:1rem 1.5rem;} .form-wrap{padding:2rem 1.5rem;} }
+
+  /* SIDE PANEL */
+  .side-panel {
+    background: linear-gradient(160deg, var(--dark) 0%, var(--mid) 100%);
+    padding:3.5rem 2.5rem; color:#fff; position:sticky; top:0;
+    height:calc(100vh - 70px); overflow-y:auto;
+  }
+  .side-panel h2 {
+    font-family:'Tajawal',sans-serif; font-size:1.8rem; font-weight:800;
+    line-height:1.3; margin-bottom:1.25rem;
+  }
+  .side-panel h2 em { color:var(--gold); font-style:normal; }
+  .side-panel p { font-size:0.9rem; color:rgba(255,255,255,0.65); line-height:1.7; margin-bottom:2rem; }
+
+  .benefit {
+    display:flex; gap:1rem; align-items:flex-start; margin-bottom:1.25rem;
+  }
+  .benefit-icon {
+    width:40px; height:40px; border-radius:10px;
+    background:rgba(255,255,255,0.08); display:flex; align-items:center;
+    justify-content:center; font-size:1.2rem; flex-shrink:0;
+  }
+  .benefit-text h4 { font-weight:700; font-size:0.92rem; margin-bottom:0.2rem; }
+  .benefit-text p { font-size:0.82rem; color:rgba(255,255,255,0.55); line-height:1.5; margin:0; }
+
+  .pricing-hint {
+    background:rgba(212,168,67,0.15); border:1px solid rgba(212,168,67,0.3);
+    border-radius:12px; padding:1.25rem; margin-top:1.5rem;
+  }
+  .pricing-hint h4 { color:var(--gold); font-weight:700; margin-bottom:0.5rem; }
+  .pricing-hint p { font-size:0.82rem; color:rgba(255,255,255,0.65); margin:0; line-height:1.6; }
+
+  /* FORM */
+  .form-wrap { padding:3rem 3.5rem; overflow-y:auto; }
+  .form-title {
+    font-family:'Tajawal',sans-serif; font-size:1.6rem; font-weight:800;
+    margin-bottom:0.5rem;
+  }
+  .form-subtitle { font-size:0.9rem; color:var(--muted); margin-bottom:2rem; }
+
+  /* STEPS */
+  .steps-indicator {
+    display:flex; gap:0; margin-bottom:2.5rem;
+  }
+  .step-dot {
+    flex:1; height:4px; background:var(--sand); border-radius:999px;
+    margin: 0 2px; transition:background 0.3s;
+  }
+  .step-dot.active { background:var(--terracotta); }
+
+  .step-label {
+    font-size:0.78rem; color:var(--muted); margin-bottom:1.5rem; font-weight:600;
+  }
+
+  /* FORM FIELDS */
+  .field { margin-bottom:1.25rem; }
+  .field label {
+    display:block; font-size:0.85rem; font-weight:700;
+    color:var(--dark); margin-bottom:0.4rem;
+  }
+  .field label span { color:var(--terracotta); }
+  .field input, .field select, .field textarea {
+    width:100%; padding:0.75rem 1rem;
+    border:1.5px solid rgba(200,149,108,0.3);
+    border-radius:10px; font-family:'Cairo',sans-serif; font-size:0.95rem;
+    color:var(--text); background:#fff; outline:none;
+    transition:border-color 0.2s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color:var(--terracotta);
+  }
+  .field textarea { min-height:100px; resize:vertical; }
+  .field-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+
+  /* UPLOAD ZONE */
+  .upload-zone {
+    border:2px dashed rgba(200,149,108,0.4); border-radius:12px;
+    padding:2rem; text-align:center; cursor:pointer;
+    transition:all 0.2s; background:#fff;
+  }
+  .upload-zone:hover { border-color:var(--terracotta); background:rgba(181,83,26,0.03); }
+  .upload-zone .upload-icon { font-size:2.5rem; margin-bottom:0.75rem; }
+  .upload-zone p { font-size:0.85rem; color:var(--muted); line-height:1.6; }
+  .upload-zone strong { color:var(--terracotta); }
+
+  /* PLAN CARDS */
+  .plans { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.25rem; }
+  .plan-card {
+    border:2px solid rgba(200,149,108,0.25); border-radius:14px;
+    padding:1.25rem; cursor:pointer; transition:all 0.2s;
+    position:relative; background:#fff;
+  }
+  .plan-card:hover { border-color:var(--clay); }
+  .plan-card.selected { border-color:var(--terracotta); background:rgba(181,83,26,0.04); }
+  .plan-card input { position:absolute; opacity:0; }
+  .plan-name { font-weight:700; font-size:1rem; margin-bottom:0.25rem; }
+  .plan-price { color:var(--terracotta); font-family:'Tajawal',sans-serif; font-weight:800; font-size:1.3rem; }
+  .plan-price span { font-size:0.78rem; font-weight:400; color:var(--muted); font-family:'Cairo',sans-serif; }
+  .plan-perks { margin-top:0.75rem; }
+  .perk { font-size:0.78rem; color:var(--muted); margin-bottom:0.3rem; }
+  .perk::before { content:'✓ '; color:var(--green); font-weight:700; }
+  .popular-badge {
+    position:absolute; top:-10px; right:12px;
+    background:var(--gold); color:var(--dark);
+    font-size:0.7rem; font-weight:700; padding:0.2rem 0.65rem;
+    border-radius:999px;
+  }
+
+  /* NAV BUTTONS */
+  .form-nav {
+    display:flex; gap:1rem; margin-top:2rem;
+  }
+  .btn-next {
+    flex:1; padding:0.9rem; border-radius:12px;
+    background:var(--terracotta); color:#fff;
+    font-family:'Cairo',sans-serif; font-weight:700; font-size:1rem;
+    border:none; cursor:pointer; transition:all 0.2s;
+  }
+  .btn-next:hover { background:var(--mid); transform:translateY(-1px); }
+  .btn-back {
+    padding:0.9rem 1.5rem; border-radius:12px;
+    border:1.5px solid rgba(200,149,108,0.3); color:var(--mid);
+    font-family:'Cairo',sans-serif; font-weight:700; font-size:1rem;
+    background:transparent; cursor:pointer; transition:all 0.2s;
+  }
+  .btn-back:hover { border-color:var(--terracotta); color:var(--terracotta); }
+
+  /* SUCCESS */
+  .success-screen {
+    display:none; text-align:center; padding:3rem 1rem;
+  }
+  .success-icon { font-size:4rem; margin-bottom:1.5rem; }
+  .success-screen h2 {
+    font-family:'Tajawal',sans-serif; font-size:1.8rem; font-weight:800;
+    color:var(--dark); margin-bottom:0.75rem;
+  }
+  .success-screen p { color:var(--muted); line-height:1.7; margin-bottom:2rem; }
+
+  /* STEP SECTIONS */
+  .step-section { display:none; }
+  .step-section.active { display:block; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">حِرَفي<span>.</span></a>
+  <a href="index.html" style="font-size:0.88rem;color:var(--muted);text-decoration:none;">العودة للرئيسية</a>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- SIDE PANEL -->
+  <aside class="side-panel">
+    <h2>سجّل حِرفتك<br>و<em>ابدأ بتلقي طلبات</em></h2>
+    <p>انضم لآلاف الحرفيين الجزائريين الذين يجدون عملاء جدد كل يوم عبر منصة حِرَفي.</p>
+
+    <div class="benefit">
+      <div class="benefit-icon">📍</div>
+      <div class="benefit-text">
+        <h4>ظهور على خريطة Google</h4>
+        <p>يراك العملاء مباشرة على الخريطة حسب موقعك الجغرافي</p>
+      </div>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">⭐</div>
+      <div class="benefit-text">
+        <h4>نظام تقييمات موثوق</h4>
+        <p>التقييمات الإيجابية تزيد من ظهورك وتجذب عملاء جدد</p>
+      </div>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">💳</div>
+      <div class="benefit-text">
+        <h4>دفع إلكتروني جزائري</h4>
+        <p>استقبل مدفوعات ببريدي موب و CIB مباشرة</p>
+      </div>
+    </div>
+    <div class="benefit">
+      <div class="benefit-icon">📢</div>
+      <div class="benefit-text">
+        <h4>إعلانات مميزة اختيارية</h4>
+        <p>احصل على ظهور أولوي في نتائج البحث</p>
+      </div>
+    </div>
+
+    <div class="pricing-hint">
+      <h4>🎉 مجاني في البداية</h4>
+      <p>تسجيل الملف الأساسي مجاني تماماً. باقات الإعلانات المميزة اختيارية تبدأ من 500 دج/شهر.</p>
+    </div>
+  </aside>
+
+  <!-- FORM -->
+  <div class="form-wrap">
+
+    <!-- STEPS INDICATOR -->
+    <div class="steps-indicator">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+      <div class="step-dot" id="dot-4"></div>
+    </div>
+
+    <div id="form-content">
+
+      <!-- STEP 1: Personal Info -->
+      <div class="step-section active" id="step-1">
+        <div class="form-title">معلوماتك الشخصية</div>
+        <div class="form-subtitle">الخطوة 1 من 4 — البيانات الأساسية</div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>الاسم الكامل <span>*</span></label>
+            <input type="text" placeholder="مثال: عبد الرحمن بوزيد">
+          </div>
+          <div class="field">
+            <label>رقم الهاتف <span>*</span></label>
+            <input type="tel" placeholder="0555 000 000" dir="ltr">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>البريد الإلكتروني</label>
+          <input type="email" placeholder="example@email.com" dir="ltr">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>الولاية <span>*</span></label>
+            <select>
+              <option value="">اختر الولاية...</option>
+              <option>الجزائر</option><option>وهران</option><option>قسنطينة</option>
+              <option>عنابة</option><option>بجاية</option><option>تلمسان</option>
+              <option>سطيف</option><option>تيزي وزو</option><option>بسكرة</option>
+              <option>الجلفة</option><option>المدية</option><option>البليدة</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>البلدية / الحي</label>
+            <input type="text" placeholder="مثال: حي الصنوبر">
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn-next" onclick="nextStep(1)">التالي ←</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Craft Info -->
+      <div class="step-section" id="step-2">
+        <div class="form-title">معلومات الحِرفة</div>
+        <div class="form-subtitle">الخطوة 2 من 4 — تفاصيل عملك</div>
+
+        <div class="field">
+          <label>نوع الحِرفة <span>*</span></label>
+          <select>
+            <option value="">اختر الحِرفة...</option>
+            <option>نجارة</option><option>كهرباء</option><option>سباكة</option>
+            <option>بناء وتشطيب</option><option>دهان</option><option>تبليط</option>
+            <option>لحام وحدادة</option><option>خياطة</option><option>تصليح سيارات</option>
+            <option>تبريد وتكييف</option><option>أخرى</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>التخصص الدقيق</label>
+          <input type="text" placeholder="مثال: مطابخ وخزائن مصمتة، نجارة تقليدية...">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>سنوات الخبرة</label>
+            <select>
+              <option>أقل من سنة</option><option>1-3 سنوات</option>
+              <option>3-7 سنوات</option><option>7-15 سنة</option><option>أكثر من 15 سنة</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>نطاق التنقل (كم)</label>
+            <select>
+              <option>5 كم</option><option>10 كم</option><option>20 كم</option>
+              <option>30 كم</option><option>الولاية كاملة</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>وصف عملك</label>
+          <textarea placeholder="اكتب هنا وصفاً لخدماتك، تخصصاتك، ونوع المشاريع التي تنجزها..."></textarea>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn-back" onclick="prevStep(2)">← رجوع</button>
+          <button class="btn-next" onclick="nextStep(2)">التالي ←</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Photos -->
+      <div class="step-section" id="step-3">
+        <div class="form-title">صور أعمالك</div>
+        <div class="form-subtitle">الخطوة 3 من 4 — أضف صور تجذب العملاء</div>
+
+        <div class="field">
+          <label>صورة الملف الشخصي</label>
+          <div class="upload-zone" onclick="document.getElementById('avatar-input').click()">
+            <input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="previewAvatar(this)">
+            <div class="upload-icon">🤳</div>
+            <p><strong>اضغط للرفع</strong><br>صورة واضحة لوجهك أو شعار ورشتك</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>صور الأعمال (حتى 10 صور)</label>
+          <div class="upload-zone" onclick="document.getElementById('works-input').click()">
+            <input type="file" id="works-input" accept="image/*" multiple style="display:none">
+            <div class="upload-icon">🖼️</div>
+            <p><strong>اضغط لرفع الصور</strong><br>JPG, PNG — الحجم الأقصى 5MB لكل صورة<br><span style="color:var(--terracotta)">صور الأعمال تزيد الطلبات بنسبة 3 أضعاف!</span></p>
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn-back" onclick="prevStep(3)">← رجوع</button>
+          <button class="btn-next" onclick="nextStep(3)">التالي ←</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Plan -->
+      <div class="step-section" id="step-4">
+        <div class="form-title">اختر باقتك</div>
+        <div class="form-subtitle">الخطوة 4 من 4 — ابدأ مجاناً أو احصل على ظهور أكثر</div>
+
+        <div class="plans">
+          <label class="plan-card selected" onclick="selectPlan(this)">
+            <input type="radio" name="plan" value="free" checked>
+            <div class="plan-name">🆓 أساسي</div>
+            <div class="plan-price">مجاني <span>للأبد</span></div>
+            <div class="plan-perks">
+              <div class="perk">ملف شخصي كامل</div>
+              <div class="perk">5 صور أعمال</div>
+              <div class="perk">ظهور في النتائج</div>
+              <div class="perk">اتصال مباشر</div>
+            </div>
+          </label>
+          <label class="plan-card" onclick="selectPlan(this)">
+            <div class="popular-badge">الأكثر طلباً</div>
+            <input type="radio" name="plan" value="pro">
+            <div class="plan-name">⭐ مميز</div>
+            <div class="plan-price">500 دج <span>/شهر</span></div>
+            <div class="plan-perks">
+              <div class="perk">كل مميزات الأساسي</div>
+              <div class="perk">20 صورة أعمال</div>
+              <div class="perk">ظهور في أعلى النتائج</div>
+              <div class="perk">شارة "حرفي مميز"</div>
+              <div class="perk">إحصائيات الملف</div>
+            </div>
+          </label>
+        </div>
+
+        <div class="field">
+          <label>وسيلة الدفع (للباقة المميزة)</label>
+          <select>
+            <option>بريدي موب</option>
+            <option>بطاقة CIB</option>
+            <option>Edahabia</option>
+          </select>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn-back" onclick="prevStep(4)">← رجوع</button>
+          <button class="btn-next" onclick="submitForm()">✓ إنشاء حسابي</button>
+        </div>
+      </div>
+
+    </div><!-- /form-content -->
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="success">
+      <div class="success-icon">🎉</div>
+      <h2>تم تسجيلك بنجاح!</h2>
+      <p>مرحباً بك في منصة حِرَفي. سيتم مراجعة ملفك خلال 24 ساعة ثم ستبدأ بتلقي طلبات العملاء.</p>
+      <a href="index.html" style="display:inline-block;padding:0.85rem 2.5rem;border-radius:12px;background:var(--terracotta);color:#fff;font-family:'Cairo',sans-serif;font-weight:700;text-decoration:none;font-size:1rem;">العودة للرئيسية</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let currentStep = 1;
+
+function nextStep(from) {
+  if(from < 4) {
+    document.getElementById('step-'+from).classList.remove('active');
+    document.getElementById('step-'+(from+1)).classList.add('active');
+    document.getElementById('dot-'+from).classList.remove('active');
+    document.getElementById('dot-'+(from+1)).classList.add('active');
+    currentStep = from + 1;
+  }
+}
+
+function prevStep(from) {
+  if(from > 1) {
+    document.getElementById('step-'+from).classList.remove('active');
+    document.getElementById('step-'+(from-1)).classList.add('active');
+    document.getElementById('dot-'+from).classList.remove('active');
+    currentStep = from - 1;
+  }
+}
+
+function selectPlan(label) {
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  label.classList.add('selected');
+}
+
+function submitForm() {
+  document.getElementById('form-content').style.display = 'none';
+  document.getElementById('success').style.display = 'block';
+  document.querySelector('.steps-indicator').style.display = 'none';
+}
+
+function previewAvatar(input) {
+  if(input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const zone = input.closest('.upload-zone');
+      zone.querySelector('.upload-icon').textContent = '✅';
+      zone.querySelector('p').innerHTML = '<strong>' + input.files[0].name + '</strong><br>تم الرفع بنجاح';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+</script>
+</body>
+</html>

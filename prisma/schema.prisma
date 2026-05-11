@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  role      String   // "CLIENT", "ARTISAN", "ADMIN"
+  phone     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  artisanProfile ArtisanProfile?
+  reviews        Review[]
+  payments       Payment[]
+}
+
+model ArtisanProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profession   String
+  wilaya       String
+  city         String?
+  lat          Float?
+  lng          Float?
+  bio          String?
+  isPremium    Boolean  @default(false)
+  isVerified   Boolean  @default(false)
+  
+  portfolios   Portfolio[]
+  reviews      Review[]
+}
+
+model Portfolio {
+  id               String         @id @default(cuid())
+  artisanProfileId String
+  artisanProfile   ArtisanProfile @relation(fields: [artisanProfileId], references: [id], onDelete: Cascade)
+  imageUrl         String
+  description      String?
+  createdAt        DateTime       @default(now())
+}
+
+model Review {
+  id               String         @id @default(cuid())
+  clientId         String
+  client           User           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  artisanProfileId String
+  artisanProfile   ArtisanProfile @relation(fields: [artisanProfileId], references: [id], onDelete: Cascade)
+  rating           Int
+  comment          String?
+  createdAt        DateTime       @default(now())
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount      Float
+  status      String   // "PENDING", "COMPLETED", "FAILED"
+  paymentType String   // "PREMIUM_ADS", "VERIFICATION", "COMMISSION"
+  createdAt   DateTime @default(now())
+}

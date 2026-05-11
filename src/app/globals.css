@@ -1,0 +1,116 @@
+/* ===== 1. @import MUST come first ===== */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap');
+@import "tailwindcss";
+
+/* ===== 2. Design Tokens ===== */
+:root {
+  --sand: #F5EDD8;
+  --clay: #C8956C;
+  --terracotta: #B5531A;
+  --dark: #1A1208;
+  --mid: #3D2B12;
+  --gold: #D4A843;
+  --cream: #FBF6EC;
+  --green: #2D5016;
+  --text: #2A1A08;
+  --muted: #7A6045;
+
+  --background: var(--cream);
+  --foreground: var(--text);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(26,18,8,0.08);
+  --shadow-md: 0 4px 24px rgba(26,18,8,0.10);
+  --shadow-lg: 0 12px 48px rgba(26,18,8,0.14);
+  --shadow-terracotta: 0 8px 32px rgba(181,83,26,0.22);
+  --shadow-gold: 0 8px 32px rgba(212,168,67,0.18);
+}
+
+@theme inline {
+  --color-sand: var(--sand);
+  --color-clay: var(--clay);
+  --color-terracotta: var(--terracotta);
+  --color-dark: var(--dark);
+  --color-mid: var(--mid);
+  --color-gold: var(--gold);
+  --color-cream: var(--cream);
+  --color-green: var(--green);
+  --color-muted: var(--muted);
+}
+
+/* ===== 3. Reset ===== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== 4. Base ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Cairo', 'Tajawal', sans-serif;
+  min-height: 100vh;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Tajawal', 'Cairo', sans-serif;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+button {
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+}
+
+input, select, textarea {
+  font-family: 'Cairo', sans-serif;
+}
+
+::selection {
+  background: var(--terracotta);
+  color: white;
+}
+
+/* ===== 5. Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb {
+  background: var(--clay);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--terracotta); }
+
+/* ===== 6. Utility Animations ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+.animate-fade-up  { animation: fadeUp 0.6s ease both; }
+.animate-fade-in  { animation: fadeIn 0.4s ease both; }
+.animate-pulse-soft { animation: pulse-soft 2s ease infinite; }

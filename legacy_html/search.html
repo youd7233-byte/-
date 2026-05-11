@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نتائج البحث | حِرَفي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand:#F5EDD8; --clay:#C8956C; --terracotta:#B5531A;
+    --dark:#1A1208; --mid:#3D2B12; --gold:#D4A843;
+    --cream:#FBF6EC; --green:#2D5016; --text:#2A1A08; --muted:#7A6045;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Cairo',sans-serif; background:var(--cream); color:var(--text); }
+
+  nav {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1rem 3rem; background:rgba(251,246,236,0.95);
+    backdrop-filter:blur(12px); border-bottom:1px solid rgba(200,149,108,0.2);
+    position:sticky; top:0; z-index:50;
+  }
+  .logo { font-family:'Tajawal',sans-serif; font-size:1.7rem; font-weight:800; color:var(--terracotta); text-decoration:none; }
+  .logo span { color:var(--gold); }
+
+  /* SEARCH BAR */
+  .search-bar {
+    background:#fff; border-bottom:1px solid rgba(200,149,108,0.2);
+    padding:1rem 3rem; display:flex; gap:1rem; align-items:center; flex-wrap:wrap;
+  }
+  .search-bar select, .search-bar input {
+    padding:0.6rem 1rem; border:1.5px solid rgba(200,149,108,0.3);
+    border-radius:8px; font-family:'Cairo',sans-serif; font-size:0.9rem;
+    background:#fff; color:var(--text); outline:none; transition:border-color 0.2s;
+  }
+  .search-bar select:focus, .search-bar input:focus { border-color:var(--terracotta); }
+  .search-bar select { min-width:160px; }
+  .search-btn {
+    padding:0.6rem 1.5rem; border-radius:8px;
+    background:var(--terracotta); color:#fff;
+    font-family:'Cairo',sans-serif; font-weight:700; font-size:0.9rem;
+    border:none; cursor:pointer; transition:background 0.2s;
+  }
+  .search-btn:hover { background:var(--mid); }
+
+  /* LAYOUT */
+  .page-body {
+    display:grid; grid-template-columns:280px 1fr;
+    gap:0; min-height:calc(100vh - 130px);
+  }
+  @media(max-width:900px) { .page-body { grid-template-columns:1fr; } .sidebar { display:none; } nav,search-bar { padding:1rem 1.5rem; } }
+
+  /* SIDEBAR FILTERS */
+  .sidebar {
+    background:#fff; border-left:1px solid rgba(200,149,108,0.18);
+    padding:1.5rem; overflow-y:auto; height:calc(100vh - 130px);
+    position:sticky; top:130px;
+  }
+  .filter-section { margin-bottom:1.75rem; }
+  .filter-title {
+    font-weight:700; font-size:0.9rem; color:var(--dark);
+    margin-bottom:0.85rem; padding-bottom:0.5rem;
+    border-bottom:1px solid rgba(200,149,108,0.18);
+  }
+  .filter-option {
+    display:flex; align-items:center; gap:0.6rem;
+    padding:0.4rem 0; cursor:pointer; font-size:0.88rem; color:var(--muted);
+    transition:color 0.2s;
+  }
+  .filter-option:hover { color:var(--terracotta); }
+  .filter-option input[type=checkbox] { accent-color:var(--terracotta); }
+
+  .range-slider { width:100%; accent-color:var(--terracotta); }
+  .range-labels { display:flex; justify-content:space-between; font-size:0.78rem; color:var(--muted); margin-top:0.25rem; }
+
+  /* RESULTS */
+  .results-area { padding:1.5rem 2rem; }
+  .results-header {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:1.25rem; flex-wrap:wrap; gap:0.75rem;
+  }
+  .results-count { font-weight:600; font-size:0.95rem; }
+  .results-count span { color:var(--terracotta); font-weight:700; }
+
+  .sort-select {
+    padding:0.4rem 0.85rem; border:1.5px solid rgba(200,149,108,0.3);
+    border-radius:8px; font-family:'Cairo',sans-serif; font-size:0.85rem;
+    background:#fff; color:var(--text); outline:none;
+  }
+
+  /* VIEW TOGGLE */
+  .view-toggle { display:flex; gap:0.25rem; }
+  .view-btn {
+    padding:0.4rem 0.7rem; border-radius:6px; border:1.5px solid rgba(200,149,108,0.3);
+    background:transparent; cursor:pointer; font-size:0.9rem; transition:all 0.2s;
+  }
+  .view-btn.active { background:var(--terracotta); color:#fff; border-color:var(--terracotta); }
+
+  /* ARTISAN LIST */
+  .artisans-list { display:flex; flex-direction:column; gap:1rem; }
+
+  .artisan-row {
+    background:#fff; border-radius:16px; padding:1.25rem;
+    border:1.5px solid rgba(200,149,108,0.18);
+    display:flex; gap:1.25rem; align-items:center;
+    cursor:pointer; transition:all 0.22s; text-decoration:none; color:var(--text);
+  }
+  .artisan-row:hover {
+    border-color:var(--terracotta);
+    box-shadow:0 6px 20px rgba(181,83,26,0.1);
+    transform:translateX(-2px);
+  }
+  .row-avatar {
+    width:70px; height:70px; border-radius:14px; flex-shrink:0;
+    background:linear-gradient(135deg, var(--sand), var(--clay));
+    display:flex; align-items:center; justify-content:center; font-size:2rem;
+  }
+  .row-main { flex:1; }
+  .row-name { font-weight:700; font-size:1rem; margin-bottom:2px; }
+  .row-craft { color:var(--terracotta); font-size:0.83rem; font-weight:600; }
+  .row-meta { display:flex; gap:1rem; margin-top:0.5rem; flex-wrap:wrap; }
+  .row-tag {
+    font-size:0.76rem; color:var(--muted);
+    background:var(--sand); padding:0.2rem 0.6rem; border-radius:999px;
+  }
+  .row-right { display:flex; flex-direction:column; align-items:flex-end; gap:0.5rem; min-width:120px; }
+  .stars { color:var(--gold); font-weight:700; font-size:0.88rem; }
+  .row-dist { font-size:0.8rem; color:var(--muted); }
+  .badge-verified {
+    background:rgba(45,80,22,0.1); color:var(--green);
+    font-size:0.7rem; font-weight:700; padding:0.2rem 0.5rem;
+    border-radius:999px;
+  }
+  .row-cta {
+    display:flex; gap:0.5rem;
+  }
+  .btn-xs {
+    padding:0.4rem 0.85rem; border-radius:7px;
+    font-family:'Cairo',sans-serif; font-size:0.78rem; font-weight:700;
+    cursor:pointer; transition:all 0.18s; text-decoration:none;
+  }
+  .btn-xs-outline { border:1.5px solid rgba(200,149,108,0.4); color:var(--mid); background:transparent; }
+  .btn-xs-outline:hover { border-color:var(--terracotta); color:var(--terracotta); }
+  .btn-xs-solid { background:var(--terracotta); color:#fff; border:none; }
+  .btn-xs-solid:hover { background:var(--mid); }
+
+  /* MAP TOGGLE */
+  .map-view {
+    width:100%; height:500px; border-radius:16px; margin-bottom:1rem;
+    background:linear-gradient(135deg,#c8e6c9,#a5d6a7);
+    display:none; align-items:center; justify-content:center;
+    flex-direction:column; gap:1rem; color:var(--green);
+    font-family:'Tajawal',sans-serif; font-weight:700; font-size:1.2rem;
+    border:2px dashed rgba(45,80,22,0.3);
+  }
+  .map-view.show { display:flex; }
+
+  /* PAGINATION */
+  .pagination { display:flex; gap:0.5rem; justify-content:center; margin-top:2rem; }
+  .page-btn {
+    width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+    border:1.5px solid rgba(200,149,108,0.3); background:#fff;
+    font-family:'Cairo',sans-serif; font-weight:600; font-size:0.9rem;
+    cursor:pointer; transition:all 0.2s; color:var(--mid);
+  }
+  .page-btn.active { background:var(--terracotta); color:#fff; border-color:var(--terracotta); }
+  .page-btn:hover:not(.active) { border-color:var(--terracotta); color:var(--terracotta); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">حِرَفي<span>.</span></a>
+  <div style="font-size:0.88rem;color:var(--muted)">نتائج البحث</div>
+</nav>
+
+<!-- SEARCH BAR -->
+<div class="search-bar">
+  <select id="s-craft">
+    <option>نجارة</option><option>كهرباء</option><option>سباكة</option>
+    <option>دهان</option><option>بناء</option>
+  </select>
+  <select id="s-wilaya">
+    <option>وهران</option><option>الجزائر</option><option>قسنطينة</option>
+    <option>تلمسان</option><option>سطيف</option>
+  </select>
+  <select id="s-sort">
+    <option>الأقرب أولاً</option><option>الأعلى تقييماً</option><option>الأحدث</option>
+  </select>
+  <button class="search-btn">🔍 تحديث</button>
+</div>
+
+<div class="page-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="filter-section">
+      <div class="filter-title">التقييم</div>
+      <label class="filter-option"><input type="checkbox" checked> 5 نجوم فقط</label>
+      <label class="filter-option"><input type="checkbox" checked> 4 نجوم وأكثر</label>
+      <label class="filter-option"><input type="checkbox"> 3 نجوم وأكثر</label>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">المسافة (كم)</div>
+      <input type="range" class="range-slider" min="1" max="50" value="20" oninput="document.getElementById('dist-val').textContent=this.value+'كم'">
+      <div class="range-labels"><span>1كم</span><span id="dist-val">20كم</span><span>50كم</span></div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">الحالة</div>
+      <label class="filter-option"><input type="checkbox" checked> ✓ حرفي موثوق فقط</label>
+      <label class="filter-option"><input type="checkbox"> متاح الآن</label>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">التخصص</div>
+      <label class="filter-option"><input type="checkbox" checked> مطابخ</label>
+      <label class="filter-option"><input type="checkbox"> غرف نوم</label>
+      <label class="filter-option"><input type="checkbox"> أبواب</label>
+      <label class="filter-option"><input type="checkbox"> ديكور</label>
+    </div>
+  </aside>
+
+  <!-- RESULTS -->
+  <main class="results-area">
+    <div class="results-header">
+      <div class="results-count">تم العثور على <span>24</span> حرفي في وهران</div>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <div class="view-toggle">
+          <button class="view-btn active" onclick="setView('list',this)">☰ قائمة</button>
+          <button class="view-btn" onclick="setView('map',this)">🗺️ خريطة</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="map-view" class="map-view">
+      <span style="font-size:3rem">🗺️</span>
+      <span>خريطة Google تعرض الحرفيين حسب موقعك</span>
+      <span style="font-size:0.85rem;opacity:0.7;font-family:'Cairo',sans-serif">يتطلب Google Maps API</span>
+    </div>
+
+    <div class="artisans-list" id="list-view">
+
+      <a class="artisan-row" href="artisan-profile.html">
+        <div class="row-avatar">🪚</div>
+        <div class="row-main">
+          <div class="row-name">عبد الرحمن بوزيد</div>
+          <div class="row-craft">نجارة وأثاث مصمت</div>
+          <div class="row-meta">
+            <span class="row-tag">📍 2.3 كم</span>
+            <span class="row-tag">87 مهمة</span>
+            <span class="row-tag">خشب طبيعي</span>
+          </div>
+        </div>
+        <div class="row-right">
+          <div class="stars">★ 4.9</div>
+          <span class="badge-verified">✓ موثوق</span>
+          <div class="row-cta">
+            <a class="btn-xs btn-xs-outline" href="artisan-profile.html">الملف</a>
+            <a class="btn-xs btn-xs-solid" href="tel:+213555000001">اتصال</a>
+          </div>
+        </div>
+      </a>
+
+      <a class="artisan-row" href="artisan-profile.html">
+        <div class="row-avatar">🪚</div>
+        <div class="row-main">
+          <div class="row-name">يوسف بن علي</div>
+          <div class="row-craft">نجارة مطابخ وألمنيوم</div>
+          <div class="row-meta">
+            <span class="row-tag">📍 3.8 كم</span>
+            <span class="row-tag">54 مهمة</span>
+            <span class="row-tag">مطابخ</span>
+          </div>
+        </div>
+        <div class="row-right">
+          <div class="stars">★ 4.7</div>
+          <span class="badge-verified">✓ موثوق</span>
+          <div class="row-cta">
+            <a class="btn-xs btn-xs-outline" href="artisan-profile.html">الملف</a>
+            <a class="btn-xs btn-xs-solid" href="tel:+213555000002">اتصال</a>
+          </div>
+        </div>
+      </a>
+
+      <a class="artisan-row" href="artisan-profile.html">
+        <div class="row-avatar">🪵</div>
+        <div class="row-main">
+          <div class="row-name">مراد بوطاجين</div>
+          <div class="row-craft">نجارة تقليدية وحديثة</div>
+          <div class="row-meta">
+            <span class="row-tag">📍 5.1 كم</span>
+            <span class="row-tag">32 مهمة</span>
+            <span class="row-tag">ديكور</span>
+          </div>
+        </div>
+        <div class="row-right">
+          <div class="stars">★ 4.5</div>
+          <div class="row-cta">
+            <a class="btn-xs btn-xs-outline" href="artisan-profile.html">الملف</a>
+            <a class="btn-xs btn-xs-solid" href="tel:+213555000003">اتصال</a>
+          </div>
+        </div>
+      </a>
+
+      <a class="artisan-row" href="artisan-profile.html">
+        <div class="row-avatar">🚪</div>
+        <div class="row-main">
+          <div class="row-name">عمر بلحاج</div>
+          <div class="row-craft">أبواب وشبابيك خشبية</div>
+          <div class="row-meta">
+            <span class="row-tag">📍 7.4 كم</span>
+            <span class="row-tag">41 مهمة</span>
+            <span class="row-tag">أبواب</span>
+          </div>
+        </div>
+        <div class="row-right">
+          <div class="stars">★ 4.6</div>
+          <span class="badge-verified">✓ موثوق</span>
+          <div class="row-cta">
+            <a class="btn-xs btn-xs-outline" href="artisan-profile.html">الملف</a>
+            <a class="btn-xs btn-xs-solid" href="tel:+213555000004">اتصال</a>
+          </div>
+        </div>
+      </a>
+
+      <a class="artisan-row" href="artisan-profile.html">
+        <div class="row-avatar">🛋️</div>
+        <div class="row-main">
+          <div class="row-name">خالد عمروش</div>
+          <div class="row-craft">أثاث مودرن وبناء</div>
+          <div class="row-meta">
+            <span class="row-tag">📍 9.2 كم</span>
+            <span class="row-tag">19 مهمة</span>
+            <span class="row-tag">غرف نوم</span>
+          </div>
+        </div>
+        <div class="row-right">
+          <div class="stars">★ 4.3</div>
+          <div class="row-cta">
+            <a class="btn-xs btn-xs-outline" href="artisan-profile.html">الملف</a>
+            <a class="btn-xs btn-xs-solid" href="tel:+213555000005">اتصال</a>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="pagination">
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">›</button>
+    </div>
+  </main>
+</div>
+
+<script>
+function setView(mode, btn) {
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('map-view').classList.toggle('show', mode==='map');
+  document.getElementById('list-view').style.display = mode==='list' ? 'flex' : 'none';
+}
+// Read URL params
+const params = new URLSearchParams(location.search);
+if(params.get('craft')) document.getElementById('s-craft').value = params.get('craft') || '';
+if(params.get('wilaya')) document.getElementById('s-wilaya').value = params.get('wilaya') || '';
+</script>
+</body>
+</html>

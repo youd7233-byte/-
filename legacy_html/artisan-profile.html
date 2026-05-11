@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عبد الرحمن بوزيد — نجار | حِرَفي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #F5EDD8; --clay: #C8956C; --terracotta: #B5531A;
+    --dark: #1A1208; --mid: #3D2B12; --gold: #D4A843;
+    --cream: #FBF6EC; --green: #2D5016; --text: #2A1A08; --muted: #7A6045;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Cairo', sans-serif; background: var(--cream); color: var(--text); }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 3rem; background: rgba(251,246,236,0.95);
+    backdrop-filter: blur(12px); border-bottom: 1px solid rgba(200,149,108,0.2);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .logo { font-family:'Tajawal',sans-serif; font-size:1.7rem; font-weight:800; color:var(--terracotta); text-decoration:none; }
+  .logo span { color:var(--gold); }
+  .back-btn {
+    display:flex; align-items:center; gap:0.5rem;
+    color:var(--mid); text-decoration:none; font-weight:600; font-size:0.9rem;
+    transition:color 0.2s;
+  }
+  .back-btn:hover { color:var(--terracotta); }
+
+  .profile-hero {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--mid) 100%);
+    padding: 3rem; color: #fff;
+    display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap;
+  }
+  .avatar {
+    width: 120px; height: 120px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--clay), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem; flex-shrink: 0;
+    border: 4px solid rgba(255,255,255,0.2);
+  }
+  .profile-info h1 { font-family:'Tajawal',sans-serif; font-size:2rem; font-weight:800; }
+  .profile-craft { color: var(--gold); font-weight:700; font-size:1.1rem; margin:0.25rem 0; }
+  .profile-meta { display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:0.75rem; font-size:0.88rem; color:rgba(255,255,255,0.7); }
+  .profile-meta span { display:flex; align-items:center; gap:4px; }
+
+  .verified-badge {
+    display:inline-flex; align-items:center; gap:6px;
+    background: rgba(45,80,22,0.9); color:#a8d88a;
+    padding:0.35rem 0.85rem; border-radius:999px;
+    font-size:0.78rem; font-weight:700; margin-top:0.75rem;
+  }
+
+  .profile-actions {
+    margin-right: auto; display:flex; flex-direction:column; gap:0.75rem;
+    min-width: 200px;
+  }
+  .btn-call {
+    padding:0.85rem 1.5rem; border-radius:12px;
+    background:var(--terracotta); color:#fff;
+    font-family:'Cairo',sans-serif; font-weight:700; font-size:1rem;
+    border:none; cursor:pointer; text-align:center;
+    text-decoration:none; display:block; transition:all 0.2s;
+  }
+  .btn-call:hover { background:#8b3a0e; transform:translateY(-1px); }
+  .btn-msg {
+    padding:0.85rem 1.5rem; border-radius:12px;
+    background:rgba(255,255,255,0.1); color:#fff;
+    border:1px solid rgba(255,255,255,0.25);
+    font-family:'Cairo',sans-serif; font-weight:700; font-size:1rem;
+    cursor:pointer; text-align:center; text-decoration:none; display:block;
+    transition:all 0.2s;
+  }
+  .btn-msg:hover { background:rgba(255,255,255,0.18); }
+
+  .profile-body {
+    display: grid; grid-template-columns: 1fr 340px;
+    gap: 2rem; padding: 2rem 3rem; max-width: 1200px; margin: 0 auto;
+  }
+  @media(max-width:900px) { .profile-body { grid-template-columns:1fr; padding:1.5rem; } .profile-hero { padding:2rem 1.5rem; } nav { padding:1rem 1.5rem; } }
+
+  .card {
+    background:#fff; border-radius:16px; padding:1.5rem;
+    border:1.5px solid rgba(200,149,108,0.18); margin-bottom:1.5rem;
+  }
+  .card-title {
+    font-family:'Tajawal',sans-serif; font-size:1.15rem; font-weight:700;
+    color:var(--dark); margin-bottom:1rem;
+    padding-bottom:0.75rem; border-bottom:1px solid rgba(200,149,108,0.18);
+  }
+
+  .about-text { line-height:1.8; color:var(--muted); font-size:0.95rem; }
+
+  /* GALLERY */
+  .gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; }
+  .gallery-item {
+    aspect-ratio:1; border-radius:10px;
+    background:linear-gradient(135deg, var(--sand), var(--clay));
+    display:flex; align-items:center; justify-content:center;
+    font-size:2.5rem; cursor:pointer; overflow:hidden; position:relative;
+    transition:transform 0.2s;
+  }
+  .gallery-item:hover { transform:scale(1.03); }
+  .gallery-item img { width:100%; height:100%; object-fit:cover; }
+
+  /* REVIEWS */
+  .review { padding:1rem 0; border-bottom:1px solid rgba(200,149,108,0.15); }
+  .review:last-child { border-bottom:none; }
+  .review-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; }
+  .reviewer-avatar {
+    width:36px; height:36px; border-radius:50%;
+    background:var(--sand); display:flex; align-items:center; justify-content:center;
+    font-size:0.85rem; font-weight:700; color:var(--mid);
+  }
+  .reviewer-name { font-weight:700; font-size:0.9rem; }
+  .review-date { font-size:0.75rem; color:var(--muted); margin-top:1px; }
+  .review-stars { margin-right:auto; color:var(--gold); font-size:0.85rem; }
+  .review-text { font-size:0.88rem; color:var(--muted); line-height:1.6; }
+
+  /* SIDEBAR */
+  .rating-big { text-align:center; padding:1rem 0; }
+  .rating-num { font-family:'Tajawal',sans-serif; font-size:3.5rem; font-weight:800; color:var(--terracotta); line-height:1; }
+  .rating-stars { color:var(--gold); font-size:1.5rem; margin:0.25rem 0; }
+  .rating-count { font-size:0.82rem; color:var(--muted); }
+
+  .rating-bars { margin-top:1rem; }
+  .rating-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; }
+  .rating-row-label { font-size:0.78rem; color:var(--muted); min-width:28px; text-align:left; }
+  .rating-bar { flex:1; height:6px; background:var(--sand); border-radius:999px; overflow:hidden; }
+  .rating-fill { height:100%; background:var(--gold); border-radius:999px; }
+  .rating-row-count { font-size:0.75rem; color:var(--muted); min-width:24px; }
+
+  .contact-item {
+    display:flex; align-items:center; gap:0.75rem;
+    padding:0.75rem 0; border-bottom:1px solid rgba(200,149,108,0.15);
+    font-size:0.9rem;
+  }
+  .contact-item:last-child { border:none; }
+  .contact-icon { font-size:1.2rem; width:32px; text-align:center; }
+  .contact-label { color:var(--muted); font-size:0.78rem; }
+  .contact-val { font-weight:600; }
+
+  .map-placeholder {
+    width:100%; height:220px; border-radius:12px;
+    background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    color:var(--green); font-weight:700; gap:0.5rem; cursor:pointer;
+    border:2px dashed rgba(45,80,22,0.3); transition:all 0.2s;
+    font-size:0.9rem;
+  }
+  .map-placeholder:hover { border-color:var(--green); }
+
+  .price-table { width:100%; }
+  .price-row {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:0.6rem 0; border-bottom:1px solid rgba(200,149,108,0.1);
+    font-size:0.88rem;
+  }
+  .price-row:last-child { border:none; }
+  .price-label { color:var(--muted); }
+  .price-val { font-weight:700; color:var(--terracotta); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">حِرَفي<span>.</span></a>
+  <a class="back-btn" href="search.html">← العودة للنتائج</a>
+</nav>
+
+<!-- HERO -->
+<div class="profile-hero">
+  <div class="avatar">🪚</div>
+  <div class="profile-info">
+    <h1>عبد الرحمن بوزيد</h1>
+    <div class="profile-craft">نجارة وأثاث مصمت — خشب طبيعي</div>
+    <div class="profile-meta">
+      <span>📍 وهران، حي الصنوبر</span>
+      <span>⏱️ عضو منذ 2023</span>
+      <span>✅ 87 مهمة منجزة</span>
+    </div>
+    <div class="verified-badge">✓ حرفي موثوق — هوية مُحقَّقة</div>
+  </div>
+  <div class="profile-actions">
+    <a class="btn-call" href="tel:+213555123456">📞 اتصال مباشر</a>
+    <a class="btn-msg" href="#">💬 إرسال رسالة</a>
+  </div>
+</div>
+
+<div class="profile-body">
+  <!-- MAIN COLUMN -->
+  <div>
+
+    <!-- About -->
+    <div class="card">
+      <div class="card-title">نبذة عني</div>
+      <p class="about-text">
+        أنا عبد الرحمن، نجّار محترف منذ أكثر من 15 سنة في مجال النجارة والأثاث المصمت.
+        متخصص في تصنيع المطابخ العصرية والكلاسيكية، غرف النوم، والأبواب بالخشب الطبيعي المستورد والمحلي.
+        أعتمد على معدات حديثة وأضمن جودة العمل مع ضمان سنة كاملة على جميع المنتجات.
+        أستقبل طلبات من جميع أنحاء ولاية وهران وضواحيها.
+      </p>
+    </div>
+
+    <!-- Gallery -->
+    <div class="card">
+      <div class="card-title">معرض الأعمال</div>
+      <div class="gallery">
+        <div class="gallery-item">🪵</div>
+        <div class="gallery-item">🛋️</div>
+        <div class="gallery-item">🚪</div>
+        <div class="gallery-item">🍳</div>
+        <div class="gallery-item">🛏️</div>
+        <div class="gallery-item">🪑</div>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="card">
+      <div class="card-title">تقييمات العملاء</div>
+
+      <div class="review">
+        <div class="review-header">
+          <div class="reviewer-avatar">ك م</div>
+          <div>
+            <div class="reviewer-name">كريم مزهود</div>
+            <div class="review-date">منذ أسبوع</div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+        </div>
+        <div class="review-text">عمل ممتاز، المطبخ طلع أحسن من المتوقع. عبد الرحمن جدي في شغله ومحترف. ننصح به 100%</div>
+      </div>
+
+      <div class="review">
+        <div class="review-header">
+          <div class="reviewer-avatar">س ب</div>
+          <div>
+            <div class="reviewer-name">سامية بوعلام</div>
+            <div class="review-date">منذ 3 أسابيع</div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+        </div>
+        <div class="review-text">صنع لي غرفة نوم كاملة بالخشب المصمت، الجودة عالية جداً والسعر معقول. شكراً عبد الرحمن!</div>
+      </div>
+
+      <div class="review">
+        <div class="review-header">
+          <div class="reviewer-avatar">ر ح</div>
+          <div>
+            <div class="reviewer-name">رشيد حمداوي</div>
+            <div class="review-date">منذ شهر</div>
+          </div>
+          <div class="review-stars">★★★★☆</div>
+        </div>
+        <div class="review-text">شغل رائع، تأخر قليلاً في الموعد لكن النتيجة النهائية ممتازة. سأتعامل معه مرة أخرى بإذن الله.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div>
+
+    <!-- Rating -->
+    <div class="card">
+      <div class="card-title">التقييم العام</div>
+      <div class="rating-big">
+        <div class="rating-num">4.9</div>
+        <div class="rating-stars">★★★★★</div>
+        <div class="rating-count">بناءً على 87 تقييم</div>
+      </div>
+      <div class="rating-bars">
+        <div class="rating-row"><span class="rating-row-label">5★</span><div class="rating-bar"><div class="rating-fill" style="width:85%"></div></div><span class="rating-row-count">74</span></div>
+        <div class="rating-row"><span class="rating-row-label">4★</span><div class="rating-bar"><div class="rating-fill" style="width:11%"></div></div><span class="rating-row-count">9</span></div>
+        <div class="rating-row"><span class="rating-row-label">3★</span><div class="rating-bar"><div class="rating-fill" style="width:4%"></div></div><span class="rating-row-count">3</span></div>
+        <div class="rating-row"><span class="rating-row-label">2★</span><div class="rating-bar"><div class="rating-fill" style="width:1%"></div></div><span class="rating-row-count">1</span></div>
+        <div class="rating-row"><span class="rating-row-label">1★</span><div class="rating-bar"><div class="rating-fill" style="width:0%"></div></div><span class="rating-row-count">0</span></div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="card">
+      <div class="card-title">معلومات التواصل</div>
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div><div class="contact-label">الهاتف</div><div class="contact-val">0555 123 456</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div><div class="contact-label">العنوان</div><div class="contact-val">وهران — حي الصنوبر، شارع الأمل</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🕐</div>
+        <div><div class="contact-label">ساعات العمل</div><div class="contact-val">السبت–الخميس: 8ص–6م</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🚗</div>
+        <div><div class="contact-label">نطاق التنقل</div><div class="contact-val">وهران وضواحيها (30 كم)</div></div>
+      </div>
+    </div>
+
+    <!-- Map -->
+    <div class="card">
+      <div class="card-title">الموقع على الخريطة</div>
+      <div class="map-placeholder" onclick="alert('ستُفتح خريطة Google')">
+        <span style="font-size:2rem">🗺️</span>
+        <span>عرض على Google Maps</span>
+        <span style="font-size:0.75rem;opacity:0.7">وهران — حي الصنوبر</span>
+      </div>
+    </div>
+
+    <!-- Prices -->
+    <div class="card">
+      <div class="card-title">تقدير الأسعار</div>
+      <div class="price-table">
+        <div class="price-row"><span class="price-label">مطبخ متوسط</span><span class="price-val">من 80,000 دج</span></div>
+        <div class="price-row"><span class="price-label">غرفة نوم كاملة</span><span class="price-val">من 120,000 دج</span></div>
+        <div class="price-row"><span class="price-label">باب خشبي</span><span class="price-val">من 15,000 دج</span></div>
+        <div class="price-row"><span class="price-label">خزانة حائط</span><span class="price-val">من 35,000 دج</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
