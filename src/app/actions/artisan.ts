@@ -33,7 +33,7 @@ export async function registerArtisan(formData: FormData) {
     }
 
     // Create user and artisan profile in a transaction
-    const user = await prisma.$transaction(async (tx) => {
+    const user = await prisma.$transaction(async (tx: any) => {
       const newUser = await tx.user.create({
         data: {
           name,
