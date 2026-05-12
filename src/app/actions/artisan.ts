@@ -19,8 +19,8 @@ export async function registerArtisan(formData: FormData) {
     const lng = formData.get("lng") ? parseFloat(formData.get("lng") as string) : null;
 
     // 1. Strict Validation
-    if (!name || !phone || !email || !password || !wilaya || !profession) {
-      return { success: false, error: "يرجى ملء جميع الحقول المطلوبة (الاسم، الهاتف، البريد، كلمة المرور، الولاية، الحرفة)" };
+    if (!name || !phone || !email || !password || !wilaya || !profession || !lat || !lng) {
+      return { success: false, error: "يرجى ملء جميع الحقول المطلوبة (الاسم، الهاتف، البريد، كلمة المرور، الولاية، الحرفة، وتحديد الموقع على الخريطة)" };
     }
 
     if (!email.includes("@")) {
@@ -82,3 +82,39 @@ export async function registerArtisan(formData: FormData) {
     return { success: false, error: "حدث خطأ غير متوقع أثناء التسجيل. يرجى المحاولة لاحقاً." };
   }
 }
+
+export async function getArtisans(profession?: string) {
+  try {
+    const artisans = await prisma.artisanProfile.findMany({
+      where: profession ? { profession } : {},
+      include: {
+        user: {
+          select: {
+            name: true,
+            phone: true,
+          },
+        },
+      },
+      orderBy: {
+        isPremium: "desc",
+      },
+    });
+
+    return {
+      success: true,
+      data: artisans.map((a) => ({
+        id: a.id,
+        name: a.user.name,
+        profession: a.profession,
+        lat: a.lat,
+        lng: a.lng,
+        phone: a.user.phone,
+        isPremium: a.isPremium,
+      })),
+    };
+  } catch (error) {
+    console.error("Error fetching artisans:", error);
+    return { success: false, error: "فشل في تحميل بيانات الحرفيين" };
+  }
+}
+

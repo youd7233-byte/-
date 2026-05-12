@@ -9,7 +9,7 @@ import dynamic from "next/dynamic";
 // Map must be dynamic to avoid SSR issues
 const MapPicker = dynamic(() => import("@/components/MapPicker"), { 
   ssr: false,
-  loading: () => <div style={{ height: "300px", background: "var(--sand)", animate: "pulse", borderRadius: "12px" }}>جاري تحميل الخريطة...</div>
+  loading: () => <div style={{ height: "300px", background: "var(--sand)", animation: "pulse-soft 2s ease infinite", borderRadius: "12px" }}>جاري تحميل الخريطة...</div>
 });
 
 const WILAYAS = [
@@ -39,12 +39,65 @@ export default function ArtisanRegisterForm() {
   const [plan, setPlan] = useState<"free" | "pro">("free");
   const [location, setLocation] = useState<{lat: number, lng: number} | null>(null);
 
-  const nextStep = () => setStep((s) => Math.min(s + 1, 4));
+  const nextStep = () => {
+    // Basic validation before moving to next step
+    if (step === 1) {
+      const name = (document.getElementById("field-name") as HTMLInputElement)?.value;
+      const phone = (document.getElementById("field-phone") as HTMLInputElement)?.value;
+      const email = (document.getElementById("field-email") as HTMLInputElement)?.value;
+      const password = (document.getElementById("field-password") as HTMLInputElement)?.value;
+      const wilaya = (document.getElementById("field-wilaya") as HTMLSelectElement)?.value;
+
+      if (!name || !phone || !email || !password || !wilaya) {
+        setError("يرجى ملء جميع الحقول المطلوبة (الاسم، الهاتف، الإيميل، كلمة المرور، الولاية)");
+        return;
+      }
+      
+      // Basic email & phone validation
+      if (!email.includes("@")) {
+        setError("يرجى إدخال بريد إلكتروني صحيح");
+        return;
+      }
+      if (phone.length < 8) {
+        setError("يرجى إدخال رقم هاتف صحيح");
+        return;
+      }
+    }
+
+    if (step === 2) {
+      const profession = (document.getElementById("field-profession") as HTMLSelectElement)?.value;
+      if (!profession) {
+        setError("يرجى اختيار الحِرفة");
+        return;
+      }
+      if (!location) {
+        setError("يرجى تحديد موقعك على الخريطة");
+        return;
+      }
+    }
+
+    setError("");
+    setStep(s => s + 1);
+    window.scrollTo(0, 0);
+  };
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
     setError("");
+    
+    // Final check
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const phone = formData.get("phone") as string;
+    const profession = formData.get("profession") as string;
+    
+    if (!name || !email || !phone || !profession || !location) {
+      setError("يرجى التأكد من ملء جميع المعلومات المطلوبة بما في ذلك الموقع على الخريطة");
+      setLoading(false);
+      return;
+    }
+
     formData.append("plan", plan);
     if (location) {
       formData.append("lat", location.lat.toString());
@@ -119,10 +172,10 @@ export default function ArtisanRegisterForm() {
           ))}
         </div>
 
-        <form action={handleSubmit}>
-          {/* ── Step 1: Personal Info ── */}
-          {step === 1 && (
-            <div>
+        <div className={styles.formContainer}>
+          <form action={handleSubmit}>
+            {/* ── Step 1: Personal Info ── */}
+            <div style={{ display: step === 1 ? 'block' : 'none' }} className="animate-fade-up">
               <h2 className={styles.title}>معلوماتك الشخصية</h2>
               <p className={styles.subtitle}>الخطوة 1 من 4 — البيانات الأساسية للبدء</p>
 
@@ -169,21 +222,20 @@ export default function ArtisanRegisterForm() {
 
               <div style={{ display: "flex", gap: "1rem", marginTop: "1.75rem" }}>
                 <button id="step1-next" type="button" onClick={nextStep} className={styles.btnNext}>
-                  المتابعة للخطوة التالية ←
+                  المتابعة للخطوة التالية
+                  <span style={{ fontSize: "1.2rem" }}>←</span>
                 </button>
               </div>
-              <p style={{ textAlign: "center", fontSize: "0.85rem", color: "var(--muted)", marginTop: "1.25rem" }}>
+              <p style={{ textAlign: "center", fontSize: "0.9rem", color: "var(--muted)", marginTop: "1.5rem" }}>
                 لديك حساب بالفعل؟{" "}
-                <Link href="/login" style={{ color: "var(--terracotta)", fontWeight: 700 }}>
+                <Link href="/login" style={{ color: "var(--terracotta)", fontWeight: 800, textDecoration: "underline" }}>
                   سجّل دخولك من هنا
                 </Link>
               </p>
             </div>
-          )}
 
-          {/* ── Step 2: Craft Info ── */}
-          {step === 2 && (
-            <div>
+            {/* ── Step 2: Craft Info ── */}
+            <div style={{ display: step === 2 ? 'block' : 'none' }} className="animate-fade-up">
               <h2 className={styles.title}>معلومات الحِرفة</h2>
               <p className={styles.subtitle}>الخطوة 2 من 4 — تفاصيل عملك</p>
 
@@ -236,15 +288,16 @@ export default function ArtisanRegisterForm() {
               </div>
 
               <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-                <button id="step2-back" type="button" onClick={prevStep} className={styles.btnBack}>← رجوع</button>
-                <button id="step2-next" type="button" onClick={nextStep} className={styles.btnNext}>التالي ←</button>
+                <button id="step2-back" type="button" onClick={prevStep} className={styles.btnBack}>→ رجوع</button>
+                <button id="step2-next" type="button" onClick={nextStep} className={styles.btnNext}>
+                  التالي
+                  <span style={{ fontSize: "1.2rem" }}>←</span>
+                </button>
               </div>
             </div>
-          )}
 
-          {/* ── Step 3: Photos ── */}
-          {step === 3 && (
-            <div>
+            {/* ── Step 3: Photos ── */}
+            <div style={{ display: step === 3 ? 'block' : 'none' }} className="animate-fade-up">
               <h2 className={styles.title}>صور أعمالك</h2>
               <p className={styles.subtitle}>الخطوة 3 من 4 — أضف صور تجذب العملاء</p>
 
@@ -257,9 +310,9 @@ export default function ArtisanRegisterForm() {
                   <input id="upload-avatar" name="avatar" type="file" accept="image/*" style={{ display: "none" }} />
                   <div className={styles.uploadIcon}>🤳</div>
                   <p>
-                    <strong>اضغط للرفع</strong>
+                    <strong style={{ fontSize: "1.1rem", color: "var(--dark)" }}>اضغط للرفع</strong>
                     <br />
-                    <span style={{ fontSize: "0.82rem", color: "var(--muted)" }}>
+                    <span style={{ fontSize: "0.85rem", color: "var(--muted)" }}>
                       صورة واضحة لوجهك أو شعار ورشتك
                     </span>
                   </p>
@@ -275,11 +328,11 @@ export default function ArtisanRegisterForm() {
                   <input id="upload-works" name="works" type="file" accept="image/*" multiple style={{ display: "none" }} />
                   <div className={styles.uploadIcon}>🖼️</div>
                   <p>
-                    <strong>اضغط لرفع الصور</strong>
+                    <strong style={{ fontSize: "1.1rem", color: "var(--dark)" }}>اضغط لرفع الصور</strong>
                     <br />
-                    <span style={{ fontSize: "0.82rem", color: "var(--muted)" }}>JPG, PNG — الحجم الأقصى 5MB لكل صورة</span>
+                    <span style={{ fontSize: "0.85rem", color: "var(--muted)" }}>JPG, PNG — الحجم الأقصى 5MB لكل صورة</span>
                     <br />
-                    <span style={{ fontSize: "0.82rem", color: "var(--terracotta)", fontWeight: 700 }}>
+                    <span style={{ fontSize: "0.85rem", color: "var(--terracotta)", fontWeight: 800, marginTop: "0.5rem", display: "block" }}>
                       صور الأعمال تزيد الطلبات بنسبة 3 أضعاف! 🚀
                     </span>
                   </p>
@@ -287,15 +340,16 @@ export default function ArtisanRegisterForm() {
               </div>
 
               <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-                <button id="step3-back" type="button" onClick={prevStep} className={styles.btnBack}>← رجوع</button>
-                <button id="step3-next" type="button" onClick={nextStep} className={styles.btnNext}>التالي ←</button>
+                <button id="step3-back" type="button" onClick={prevStep} className={styles.btnBack}>→ رجوع</button>
+                <button id="step3-next" type="button" onClick={nextStep} className={styles.btnNext}>
+                  التالي
+                  <span style={{ fontSize: "1.2rem" }}>←</span>
+                </button>
               </div>
             </div>
-          )}
 
-          {/* ── Step 4: Plan ── */}
-          {step === 4 && (
-            <div>
+            {/* ── Step 4: Plan ── */}
+            <div style={{ display: step === 4 ? 'block' : 'none' }} className="animate-fade-up">
               <h2 className={styles.title}>اختر باقتك</h2>
               <p className={styles.subtitle}>الخطوة 4 من 4 — ابدأ مجاناً أو احصل على ظهور أكثر</p>
 
@@ -306,12 +360,12 @@ export default function ArtisanRegisterForm() {
                   className={`${styles.planCard} ${plan === "free" ? styles.planCardSelected : ""}`}
                   onClick={() => setPlan("free")}
                 >
-                  <div style={{ fontWeight: 800, fontSize: "0.95rem", marginBottom: "0.2rem" }}>🆓 أساسي</div>
+                  <div style={{ fontWeight: 900, fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--dark)" }}>🆓 أساسي</div>
                   <div className={styles.planPrice}>
                     مجاني{" "}
-                    <span style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--muted)" }}>للأبد</span>
+                    <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--muted)" }}>للأبد</span>
                   </div>
-                  <ul style={{ marginTop: "1rem", fontSize: "0.82rem", color: "var(--muted)", listStyle: "none", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+                  <ul style={{ marginTop: "1.25rem", fontSize: "0.9rem", color: "var(--muted)", listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem", padding: 0 }}>
                     <li>✓ ملف شخصي كامل</li>
                     <li>✓ حتى 5 صور أعمال</li>
                     <li>✓ ظهور في نتائج البحث</li>
@@ -326,20 +380,21 @@ export default function ArtisanRegisterForm() {
                   onClick={() => setPlan("pro")}
                 >
                   <div style={{
-                    position: "absolute", top: "-11px", right: "14px",
+                    position: "absolute", top: "-14px", right: "20px",
                     background: "var(--gold)", color: "var(--dark)",
-                    padding: "2px 10px", borderRadius: "999px",
-                    fontSize: "0.68rem", fontWeight: 800,
+                    padding: "4px 14px", borderRadius: "999px",
+                    fontSize: "0.75rem", fontWeight: 900,
+                    boxShadow: "0 4px 12px rgba(212,168,67,0.3)"
                   }}>
                     ⭐ الأكثر طلباً
                   </div>
-                  <div style={{ fontWeight: 800, fontSize: "0.95rem", marginBottom: "0.2rem" }}>🚀 مميز</div>
+                  <div style={{ fontWeight: 900, fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--dark)" }}>🚀 مميز</div>
                   <div className={styles.planPrice}>
                     500 دج{" "}
-                    <span style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--muted)" }}>/شهر</span>
+                    <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--muted)" }}>/شهر</span>
                   </div>
-                  <ul style={{ marginTop: "1rem", fontSize: "0.82rem", color: "var(--muted)", listStyle: "none", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-                    <li>✓ كل مميزات الأساسي</li>
+                  <ul style={{ marginTop: "1.25rem", fontSize: "0.9rem", color: "var(--muted)", listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem", padding: 0 }}>
+                    <li style={{ color: "var(--dark)", fontWeight: 700 }}>✓ كل مميزات الأساسي</li>
                     <li>✓ حتى 20 صورة أعمال</li>
                     <li>✓ ظهور في أعلى النتائج</li>
                     <li>✓ شارة "حرفي موثّق"</li>
@@ -348,27 +403,33 @@ export default function ArtisanRegisterForm() {
               </div>
 
               {error && (
-                <div className={styles.errorMsg}>⚠️ {error}</div>
+                <div style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.2)", borderRadius: "12px", padding: "1rem", color: "#c53030", fontSize: "0.9rem", fontWeight: 700, marginBottom: "1.5rem", textAlign: "center" }}>
+                  ⚠️ {error}
+                </div>
               )}
 
               <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
-                <button id="step4-back" type="button" onClick={prevStep} className={styles.btnBack}>← رجوع</button>
+                <button id="step4-back" type="button" onClick={prevStep} className={styles.btnBack}>→ رجوع</button>
                 <button id="submit-register" type="submit" disabled={loading} className={styles.btnNext}>
                   {loading ? (
-                    <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}>
-                      <span style={{ display: "inline-block", width: "16px", height: "16px", border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+                    <>
+                      <span style={{ display: "inline-block", width: "18px", height: "18px", border: "3px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
                       جاري الإنشاء...
-                    </span>
-                  ) : "✓ إنشاء حسابي"}
+                    </>
+                  ) : (
+                    <>
+                      ✓ إنشاء حسابي الآن
+                    </>
+                  )}
                 </button>
               </div>
-
-              <style>{`
-                @keyframes spin { to { transform: rotate(360deg); } }
-              `}</style>
             </div>
-          )}
-        </form>
+          </form>
+        </div>
+
+        <style>{`
+          @keyframes spin { to { transform: rotate(360deg); } }
+        `}</style>
       </div>
     </div>
   );
