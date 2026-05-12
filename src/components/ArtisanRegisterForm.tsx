@@ -4,6 +4,13 @@ import { useState } from "react";
 import styles from "./ArtisanRegisterForm.module.css";
 import { registerArtisan } from "@/app/actions/artisan";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+// Map must be dynamic to avoid SSR issues
+const MapPicker = dynamic(() => import("@/components/MapPicker"), { 
+  ssr: false,
+  loading: () => <div style={{ height: "300px", background: "var(--sand)", animate: "pulse", borderRadius: "12px" }}>جاري تحميل الخريطة...</div>
+});
 
 const WILAYAS = [
   "أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار",
@@ -30,6 +37,7 @@ export default function ArtisanRegisterForm() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [plan, setPlan] = useState<"free" | "pro">("free");
+  const [location, setLocation] = useState<{lat: number, lng: number} | null>(null);
 
   const nextStep = () => setStep((s) => Math.min(s + 1, 4));
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
@@ -38,6 +46,10 @@ export default function ArtisanRegisterForm() {
     setLoading(true);
     setError("");
     formData.append("plan", plan);
+    if (location) {
+      formData.append("lat", location.lat.toString());
+      formData.append("lng", location.lng.toString());
+    }
     const result = await registerArtisan(formData);
     setLoading(false);
     if (result.success) {
@@ -210,6 +222,11 @@ export default function ArtisanRegisterForm() {
                     <option>الولاية كاملة</option>
                   </select>
                 </div>
+              </div>
+
+              <div className={styles.field}>
+                <label>حدد موقع ورشتك على الخريطة <span>*</span></label>
+                <MapPicker onLocationSelect={(lat, lng) => setLocation({lat, lng})} />
               </div>
 
               <div className={styles.field}>

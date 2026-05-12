@@ -150,7 +150,8 @@ export default function Home() {
               animation: "fadeUp 0.6s 0.3s ease both",
             }}
           >
-            <button
+            <Link
+              href="/search"
               id="search-artisan-btn"
               style={{
                 padding: "0.9rem 2.4rem",
@@ -163,6 +164,7 @@ export default function Home() {
                 cursor: "pointer",
                 boxShadow: "0 8px 28px rgba(26,18,8,0.18)",
                 transition: "all 0.22s",
+                display: "inline-block",
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
@@ -174,7 +176,7 @@ export default function Home() {
               }}
             >
               🔍 ابحث عن حرفي
-            </button>
+            </Link>
 
             <Link
               href="/register-artisan"

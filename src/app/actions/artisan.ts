@@ -15,6 +15,8 @@ export async function registerArtisan(formData: FormData) {
     const specialty = formData.get("specialty") as string;
     const bio = formData.get("bio") as string;
     const plan = formData.get("plan") as string;
+    const lat = formData.get("lat") ? parseFloat(formData.get("lat") as string) : null;
+    const lng = formData.get("lng") ? parseFloat(formData.get("lng") as string) : null;
 
     // 1. Strict Validation
     if (!name || !phone || !email || !password || !wilaya || !profession) {
@@ -58,6 +60,8 @@ export async function registerArtisan(formData: FormData) {
               profession,
               wilaya,
               city,
+              lat,
+              lng,
               bio: `${specialty ? `التخصص: ${specialty}\n` : ""}${bio}`,
               isPremium: plan === "pro",
             },
