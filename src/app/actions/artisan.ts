@@ -7,38 +7,51 @@ export async function registerArtisan(formData: FormData) {
   try {
     const name = formData.get("name") as string;
     const phone = formData.get("phone") as string;
-    const password = formData.get("password") as string;
     const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
     const wilaya = formData.get("wilaya") as string;
     const city = formData.get("city") as string;
     const profession = formData.get("profession") as string;
     const specialty = formData.get("specialty") as string;
-    const experience = formData.get("experience") as string;
-    const range = formData.get("range") as string;
     const bio = formData.get("bio") as string;
     const plan = formData.get("plan") as string;
 
-    // Basic validation
-    if (!name || !phone || !wilaya || !profession) {
-      return { error: "يرجى ملء جميع الحقول المطلوبة" };
+    // 1. Strict Validation
+    if (!name || !phone || !email || !password || !wilaya || !profession) {
+      return { success: false, error: "يرجى ملء جميع الحقول المطلوبة (الاسم، الهاتف، البريد، كلمة المرور، الولاية، الحرفة)" };
     }
 
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
+    if (!email.includes("@")) {
+      return { success: false, error: "يرجى إدخال بريد إلكتروني صحيح" };
+    }
+
+    if (phone.length < 9) {
+      return { success: false, error: "رقم الهاتف غير صحيح" };
+    }
+
+    // 2. Check for duplicates
+    const existingPhone = await prisma.user.findUnique({
       where: { phone },
     });
-
-    if (existingUser) {
-      return { error: "رقم الهاتف هذا مسجل بالفعل" };
+    if (existingPhone) {
+      return { success: false, error: "رقم الهاتف هذا مسجل بالفعل، يرجى تسجيل الدخول" };
     }
 
-    // Create user and artisan profile in a transaction
+    const existingEmail = await prisma.user.findUnique({
+      where: { email },
+    });
+    if (existingEmail) {
+      return { success: false, error: "البريد الإلكتروني هذا مستخدم بالفعل، يرجى استخدام بريد آخر" };
+    }
+
+    // 3. Create user and artisan profile in a transaction
     const user = await prisma.$transaction(async (tx: any) => {
-      const newUser = await tx.user.create({
+      return await tx.user.create({
         data: {
           name,
           phone,
-          password, // In a real app, hash this with bcrypt!
+          email,
+          password, // In a real production app, hash this!
           role: "ARTISAN",
           artisanProfile: {
             create: {
@@ -51,13 +64,17 @@ export async function registerArtisan(formData: FormData) {
           },
         },
       });
-      return newUser;
     });
 
     revalidatePath("/");
     return { success: true, userId: user.id };
-  } catch (error) {
+
+  } catch (error: any) {
     console.error("Registration error:", error);
-    return { error: "حدث خطأ أثناء التسجيل. يرجى المحاولة مرة أخرى." };
+    // Handle specific Prisma errors
+    if (error.code === 'P2002') {
+      return { success: false, error: "هذه البيانات (الهاتف أو البريد) مستخدمة بالفعل" };
+    }
+    return { success: false, error: "حدث خطأ غير متوقع أثناء التسجيل. يرجى المحاولة لاحقاً." };
   }
 }

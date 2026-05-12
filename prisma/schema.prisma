@@ -10,6 +10,7 @@ model User {
   id        String   @id @default(cuid())
   role      String   // "CLIENT", "ARTISAN", "ADMIN"
   phone     String   @unique
+  email     String?  @unique
   password  String
   name      String
   createdAt DateTime @default(now())

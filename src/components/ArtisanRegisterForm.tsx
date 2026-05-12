@@ -129,9 +129,9 @@ export default function ArtisanRegisterForm() {
 
               <div className={styles.fieldRow}>
                 <div className={styles.field}>
-                  <label>البريد الإلكتروني</label>
+                  <label>البريد الإلكتروني <span>*</span></label>
                   <input id="field-email" name="email" type="email" className={styles.input}
-                    placeholder="example@email.com" dir="ltr" />
+                    placeholder="example@email.com" dir="ltr" required />
                 </div>
                 <div className={styles.field}>
                   <label>كلمة المرور <span>*</span></label>
