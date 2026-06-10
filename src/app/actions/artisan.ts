@@ -98,9 +98,8 @@ export async function registerArtisan(
     if (error instanceof Error && "code" in error && (error as { code: string }).code === "P2002") {
       return { success: false, error: "هذه البيانات (الهاتف أو البريد) مستخدمة بالفعل" };
     }
-    const envKeys = Object.keys(process.env).filter(k => k.includes("POSTGRES") || k.includes("DATABASE")).join(", ");
-    const errMsg = error instanceof Error ? error.message : String(error);
-    return { success: false, error: "Env: " + envKeys + " | Error: " + errMsg };
+    console.error("Registration failed:", error);
+    return { success: false, error: "حدث خطأ غير متوقع أثناء التسجيل. يرجى المحاولة لاحقاً." };
   }
 
   // redirect OUTSIDE try/catch so Next.js can handle it properly
