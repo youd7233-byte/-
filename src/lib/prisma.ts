@@ -9,7 +9,7 @@ neonConfig.webSocketConstructor = ws;
 const prismaClientSingleton = () => {
   const url = process.env["POSTGRES_PRISMA_URL_DATABASE_URL"] || process.env["DATABASE_URL"] || "";
   const pool = new Pool({ connectionString: url });
-  const adapter = new PrismaNeon(pool);
+  const adapter = new PrismaNeon(pool as any);
 
   return new PrismaClient({
     adapter,
