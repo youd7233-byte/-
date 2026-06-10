@@ -117,6 +117,7 @@ export default async function DashboardPage() {
               </form>
             </div>
           </div>
+        </div>
 
         {/* Stats Grid */}
         {profile && (
