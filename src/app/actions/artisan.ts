@@ -98,7 +98,8 @@ export async function registerArtisan(
     if (error instanceof Error && "code" in error && (error as { code: string }).code === "P2002") {
       return { success: false, error: "هذه البيانات (الهاتف أو البريد) مستخدمة بالفعل" };
     }
-    return { success: false, error: "حدث خطأ غير متوقع أثناء التسجيل. يرجى المحاولة لاحقاً." };
+    const errMsg = error instanceof Error ? error.message : String(error);
+    return { success: false, error: "حدث خطأ: " + errMsg };
   }
 
   // redirect OUTSIDE try/catch so Next.js can handle it properly
