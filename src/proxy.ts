@@ -9,7 +9,7 @@ const AUTH_ROUTES = ["/login"];
 
 const SESSION_COOKIE = "hirafi_session";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const sessionToken = request.cookies.get(SESSION_COOKIE)?.value;
   const isLoggedIn = !!sessionToken; // Deep verification happens in Server Components
