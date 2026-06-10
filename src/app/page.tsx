@@ -413,6 +413,7 @@ export default function Home() {
       {/* ── CTA ── */}
       <section style={{ padding: "5rem 1.5rem" }}>
         <div
+          className="cta-box"
           style={{
             maxWidth: "860px",
             margin: "0 auto",
@@ -502,6 +503,7 @@ export default function Home() {
         }}
       >
         <div
+          className="footer-inner"
           style={{
             maxWidth: "1100px",
             margin: "0 auto",
@@ -522,7 +524,7 @@ export default function Home() {
           >
             حِرَفي<span style={{ color: "var(--gold)" }}>.</span>
           </div>
-          <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
+          <div className="footer-links" style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
             {["من نحن", "الشروط والأحكام", "سياسة الخصوصية", "اتصل بنا"].map((t) => (
               <a
                 key={t}

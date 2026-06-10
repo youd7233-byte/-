@@ -1,16 +1,23 @@
+import "server-only";
 import { PrismaClient } from "@prisma/client";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
 const prismaClientSingleton = () => {
+  const url = process.env.DATABASE_URL || "file:./dev.db";
+  const adapter = new PrismaBetterSqlite3({ url });
+
   return new PrismaClient({
-    log: ["query", "error", "warn"],
+    adapter,
+    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 };
 
-declare const globalThis: {
-  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
-} & typeof global;
+declare global {
+  var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
+}
 
-export const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
+
+export { prisma };
 
 if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = prisma;
-

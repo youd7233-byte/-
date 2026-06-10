@@ -1,15 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useActionState, useRef } from "react";
 import styles from "./ArtisanRegisterForm.module.css";
 import { registerArtisan } from "@/app/actions/artisan";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 // Map must be dynamic to avoid SSR issues
-const MapPicker = dynamic(() => import("@/components/MapPicker"), { 
+const MapPicker = dynamic(() => import("@/components/MapPicker"), {
   ssr: false,
-  loading: () => <div style={{ height: "300px", background: "var(--sand)", animation: "pulse-soft 2s ease infinite", borderRadius: "12px" }}>جاري تحميل الخريطة...</div>
+  loading: () => (
+    <div style={{ height: "300px", background: "var(--sand)", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--muted)" }}>
+      جاري تحميل الخريطة...
+    </div>
+  ),
 });
 
 const WILAYAS = [
@@ -31,102 +36,116 @@ const STEPS = [
   { label: "الباقة" },
 ];
 
+type FormFields = {
+  name: string;
+  phone: string;
+  email: string;
+  password: string;
+  wilaya: string;
+  city: string;
+  profession: string;
+  specialty: string;
+  experience: string;
+  range: string;
+  bio: string;
+};
+
+const INITIAL_FIELDS: FormFields = {
+  name: "", phone: "", email: "", password: "",
+  wilaya: "", city: "", profession: "",
+  specialty: "", experience: "1–3 سنوات", range: "10 كم", bio: "",
+};
+
 export default function ArtisanRegisterForm() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
   const [plan, setPlan] = useState<"free" | "pro">("free");
-  const [location, setLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [fields, setFields] = useState<FormFields>(INITIAL_FIELDS);
+  const [stepError, setStepError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const nextStep = () => {
-    // Basic validation before moving to next step
-    if (step === 1) {
-      const name = (document.getElementById("field-name") as HTMLInputElement)?.value;
-      const phone = (document.getElementById("field-phone") as HTMLInputElement)?.value;
-      const email = (document.getElementById("field-email") as HTMLInputElement)?.value;
-      const password = (document.getElementById("field-password") as HTMLInputElement)?.value;
-      const wilaya = (document.getElementById("field-wilaya") as HTMLSelectElement)?.value;
+  const [actionState, formAction, isPending] = useActionState(
+    registerArtisan,
+    undefined
+  );
 
-      if (!name || !phone || !email || !password || !wilaya) {
-        setError("يرجى ملء جميع الحقول المطلوبة (الاسم، الهاتف، الإيميل، كلمة المرور، الولاية)");
-        return;
-      }
-      
-      // Basic email & phone validation
-      if (!email.includes("@")) {
-        setError("يرجى إدخال بريد إلكتروني صحيح");
-        return;
-      }
-      if (phone.length < 8) {
-        setError("يرجى إدخال رقم هاتف صحيح");
-        return;
-      }
-    }
-
-    if (step === 2) {
-      const profession = (document.getElementById("field-profession") as HTMLSelectElement)?.value;
-      if (!profession) {
-        setError("يرجى اختيار الحِرفة");
-        return;
-      }
-      if (!location) {
-        setError("يرجى تحديد موقعك على الخريطة");
-        return;
-      }
-    }
-
-    setError("");
-    setStep(s => s + 1);
-    window.scrollTo(0, 0);
-  };
-  const prevStep = () => setStep((s) => Math.max(s - 1, 1));
-
-  async function handleSubmit(formData: FormData) {
-    setLoading(true);
-    setError("");
-    
-    // Final check
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const phone = formData.get("phone") as string;
-    const profession = formData.get("profession") as string;
-    
-    if (!name || !email || !phone || !profession || !location) {
-      setError("يرجى التأكد من ملء جميع المعلومات المطلوبة بما في ذلك الموقع على الخريطة");
-      setLoading(false);
-      return;
-    }
-
-    formData.append("plan", plan);
-    if (location) {
-      formData.append("lat", location.lat.toString());
-      formData.append("lng", location.lng.toString());
-    }
-    const result = await registerArtisan(formData);
-    setLoading(false);
-    if (result.success) {
-      setSuccess(true);
-    } else {
-      setError(result.error || "حدث خطأ غير متوقع");
-    }
+  // Handle successful registration → redirect to dashboard
+  if (actionState?.success) {
+    router.push("/dashboard");
   }
 
+  const updateField = (field: keyof FormFields, value: string) => {
+    setFields((prev) => ({ ...prev, [field]: value }));
+    setStepError("");
+  };
+
+  const validateStep = (): boolean => {
+    if (step === 1) {
+      if (!fields.name.trim() || fields.name.trim().length < 2) {
+        setStepError("يرجى إدخال الاسم الكامل (حرفان على الأقل)");
+        return false;
+      }
+      if (!/^(0)(5|6|7)[0-9]{8}$/.test(fields.phone.replace(/\s+/g, ""))) {
+        setStepError("يرجى إدخال رقم هاتف جزائري صحيح (مثال: 0555000000)");
+        return false;
+      }
+      if (!/^[\w.-]+@[\w.-]+\.[a-z]{2,}$/.test(fields.email)) {
+        setStepError("يرجى إدخال بريد إلكتروني صحيح");
+        return false;
+      }
+      if (fields.password.length < 8) {
+        setStepError("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
+        return false;
+      }
+      if (!fields.wilaya) {
+        setStepError("يرجى اختيار الولاية");
+        return false;
+      }
+    }
+    if (step === 2) {
+      if (!fields.profession) {
+        setStepError("يرجى اختيار الحِرفة");
+        return false;
+      }
+      if (!location) {
+        setStepError("يرجى تحديد موقعك على الخريطة بالضغط عليها");
+        return false;
+      }
+    }
+    setStepError("");
+    return true;
+  };
+
+  const nextStep = () => {
+    if (validateStep()) {
+      setStep((s) => s + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const prevStep = () => {
+    setStepError("");
+    setStep((s) => Math.max(s - 1, 1));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   /* ── Success Screen ── */
-  if (success) {
+  if (actionState?.success) {
     return (
       <div className={styles.successScreen}>
         <div style={{ fontSize: "5rem", marginBottom: "1.5rem", animation: "fadeUp 0.5s ease" }}>🎉</div>
         <h2>تم تسجيلك بنجاح!</h2>
         <p style={{ marginBottom: "2rem" }}>
-          مرحباً بك في منصة حِرَفي. سيتم مراجعة ملفك خلال 24 ساعة ثم ستبدأ بتلقي طلبات العملاء.
+          مرحباً بك في منصة حِرَفي. جاري تحويلك إلى لوحة التحكم...
         </p>
-        <Link href="/" className={styles.btnNext} style={{ textDecoration: "none", display: "inline-block", maxWidth: "220px" }}>
-          العودة للرئيسية
-        </Link>
       </div>
     );
   }
+
+  const serverError = actionState?.success === false ? actionState.error : "";
+  const displayError = stepError || serverError;
 
   return (
     <div className={styles.container}>
@@ -139,7 +158,7 @@ export default function ArtisanRegisterForm() {
         <p>انضم لآلاف الحرفيين الجزائريين الذين يجدون عملاء جدد كل يوم عبر منصة حِرَفي.</p>
 
         {[
-          { icon: "📍", title: "ظهور على خريطة Google", desc: "يراك العملاء مباشرة على الخريطة حسب موقعك الجغرافي" },
+          { icon: "📍", title: "ظهور على الخريطة", desc: "يراك العملاء مباشرة على الخريطة حسب موقعك الجغرافي" },
           { icon: "⭐", title: "نظام تقييمات موثوق", desc: "التقييمات الإيجابية تزيد من ظهورك وتجذب عملاء جدد" },
           { icon: "💳", title: "دفع إلكتروني جزائري", desc: "استقبل مدفوعات ببريدي موب و CIB مباشرة" },
           { icon: "🔔", title: "إشعارات فورية", desc: "تصلك طلبات العملاء على هاتفك لحظة بلحظة" },
@@ -163,273 +182,429 @@ export default function ArtisanRegisterForm() {
       <div className={styles.formWrap}>
         {/* Steps Bar */}
         <div className={styles.stepsIndicator}>
-          {STEPS.map((_, i) => (
+          {STEPS.map((s, i) => (
             <div
               key={i}
               className={`${styles.stepDot} ${step > i ? styles.stepDotActive : ""}`}
-              title={STEPS[i].label}
+              title={s.label}
+              aria-label={s.label}
             />
           ))}
         </div>
 
         <div className={styles.formContainer}>
-          <form action={handleSubmit}>
-            {/* ── Step 1: Personal Info ── */}
-            <div style={{ display: step === 1 ? 'block' : 'none' }} className="animate-fade-up">
-              <h2 className={styles.title}>معلوماتك الشخصية</h2>
-              <p className={styles.subtitle}>الخطوة 1 من 4 — البيانات الأساسية للبدء</p>
-
-              <div className={styles.fieldRow}>
-                <div className={styles.field}>
-                  <label>الاسم الكامل <span>*</span></label>
-                  <input id="field-name" name="name" type="text" className={styles.input}
-                    placeholder="مثال: عبد الرحمن بوزيد" required />
-                </div>
-                <div className={styles.field}>
-                  <label>رقم الهاتف <span>*</span></label>
-                  <input id="field-phone" name="phone" type="tel" className={styles.input}
-                    placeholder="0555 000 000" dir="ltr" required />
-                </div>
-              </div>
-
-              <div className={styles.fieldRow}>
-                <div className={styles.field}>
-                  <label>البريد الإلكتروني <span>*</span></label>
-                  <input id="field-email" name="email" type="email" className={styles.input}
-                    placeholder="example@email.com" dir="ltr" required />
-                </div>
-                <div className={styles.field}>
-                  <label>كلمة المرور <span>*</span></label>
-                  <input id="field-password" name="password" type="password" className={styles.input}
-                    placeholder="••••••••" required />
-                </div>
-              </div>
-
-              <div className={styles.fieldRow}>
-                <div className={styles.field}>
-                  <label>الولاية <span>*</span></label>
-                  <select id="field-wilaya" name="wilaya" className={styles.select} required>
-                    <option value="">اختر الولاية...</option>
-                    {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
-                  </select>
-                </div>
-                <div className={styles.field}>
-                  <label>البلدية / الحي</label>
-                  <input id="field-city" name="city" type="text" className={styles.input}
-                    placeholder="مثال: حي الصنوبر" />
-                </div>
-              </div>
-
-              <div style={{ display: "flex", gap: "1rem", marginTop: "1.75rem" }}>
-                <button id="step1-next" type="button" onClick={nextStep} className={styles.btnNext}>
-                  المتابعة للخطوة التالية
-                  <span style={{ fontSize: "1.2rem" }}>←</span>
-                </button>
-              </div>
-              <p style={{ textAlign: "center", fontSize: "0.9rem", color: "var(--muted)", marginTop: "1.5rem" }}>
-                لديك حساب بالفعل؟{" "}
-                <Link href="/login" style={{ color: "var(--terracotta)", fontWeight: 800, textDecoration: "underline" }}>
-                  سجّل دخولك من هنا
-                </Link>
-              </p>
+          {/* Error Banner */}
+          {displayError && (
+            <div
+              role="alert"
+              style={{
+                background: "rgba(220,38,38,0.08)",
+                border: "1px solid rgba(220,38,38,0.2)",
+                borderRadius: "12px",
+                padding: "1rem 1.25rem",
+                color: "#c53030",
+                fontSize: "0.9rem",
+                fontWeight: 700,
+                marginBottom: "1.5rem",
+                textAlign: "center",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                justifyContent: "center",
+              }}
+            >
+              ⚠️ {displayError}
             </div>
+          )}
+
+          <form ref={formRef} action={formAction}>
+            {/* Hidden fields for server action */}
+            <input type="hidden" name="name" value={fields.name} />
+            <input type="hidden" name="phone" value={fields.phone} />
+            <input type="hidden" name="email" value={fields.email} />
+            <input type="hidden" name="password" value={fields.password} />
+            <input type="hidden" name="wilaya" value={fields.wilaya} />
+            <input type="hidden" name="city" value={fields.city} />
+            <input type="hidden" name="profession" value={fields.profession} />
+            <input type="hidden" name="specialty" value={fields.specialty} />
+            <input type="hidden" name="bio" value={fields.bio} />
+            <input type="hidden" name="plan" value={plan} />
+            {location && (
+              <>
+                <input type="hidden" name="lat" value={location.lat} />
+                <input type="hidden" name="lng" value={location.lng} />
+              </>
+            )}
+
+            {/* ── Step 1: Personal Info ── */}
+            {step === 1 && (
+              <div className="animate-fade-up">
+                <h2 className={styles.title}>معلوماتك الشخصية</h2>
+                <p className={styles.subtitle}>الخطوة 1 من 4 — البيانات الأساسية للبدء</p>
+
+                <div className={styles.fieldRow}>
+                  <div className={styles.field}>
+                    <label htmlFor="field-name">الاسم الكامل <span>*</span></label>
+                    <input
+                      id="field-name"
+                      type="text"
+                      className={styles.input}
+                      placeholder="مثال: عبد الرحمن بوزيد"
+                      value={fields.name}
+                      onChange={(e) => updateField("name", e.target.value)}
+                      autoComplete="name"
+                    />
+                  </div>
+                  <div className={styles.field}>
+                    <label htmlFor="field-phone">رقم الهاتف <span>*</span></label>
+                    <input
+                      id="field-phone"
+                      type="tel"
+                      className={styles.input}
+                      placeholder="0555 000 000"
+                      dir="ltr"
+                      value={fields.phone}
+                      onChange={(e) => updateField("phone", e.target.value)}
+                      autoComplete="tel"
+                      inputMode="tel"
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.fieldRow}>
+                  <div className={styles.field}>
+                    <label htmlFor="field-email">البريد الإلكتروني <span>*</span></label>
+                    <input
+                      id="field-email"
+                      type="email"
+                      className={styles.input}
+                      placeholder="example@email.com"
+                      dir="ltr"
+                      value={fields.email}
+                      onChange={(e) => updateField("email", e.target.value)}
+                      autoComplete="email"
+                    />
+                  </div>
+                  <div className={styles.field}>
+                    <label htmlFor="field-password">كلمة المرور <span>*</span></label>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        id="field-password"
+                        type={showPassword ? "text" : "password"}
+                        className={styles.input}
+                        placeholder="8 أحرف على الأقل"
+                        value={fields.password}
+                        onChange={(e) => updateField("password", e.target.value)}
+                        autoComplete="new-password"
+                        style={{ paddingLeft: "3.5rem" }}
+                      />
+                      <button
+                        type="button"
+                        aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+                        onClick={() => setShowPassword((v) => !v)}
+                        style={{
+                          position: "absolute", left: "1rem", top: "50%",
+                          transform: "translateY(-50%)", background: "none",
+                          border: "none", color: "var(--muted)", cursor: "pointer",
+                          fontSize: "1.1rem", padding: "2px",
+                        }}
+                      >
+                        {showPassword ? "🙈" : "👁️"}
+                      </button>
+                    </div>
+                    {fields.password && (
+                      <div style={{ marginTop: "0.4rem", display: "flex", gap: "4px" }}>
+                        {[1, 2, 3, 4].map((lvl) => (
+                          <div
+                            key={lvl}
+                            style={{
+                              flex: 1, height: "4px", borderRadius: "2px",
+                              background: fields.password.length >= lvl * 2
+                                ? lvl <= 1 ? "#ef4444" : lvl === 2 ? "#f59e0b" : lvl === 3 ? "#22c55e" : "#16a34a"
+                                : "rgba(0,0,0,0.08)",
+                              transition: "background 0.3s",
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className={styles.fieldRow}>
+                  <div className={styles.field}>
+                    <label htmlFor="field-wilaya">الولاية <span>*</span></label>
+                    <select
+                      id="field-wilaya"
+                      className={styles.select}
+                      value={fields.wilaya}
+                      onChange={(e) => updateField("wilaya", e.target.value)}
+                    >
+                      <option value="">اختر الولاية...</option>
+                      {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
+                    </select>
+                  </div>
+                  <div className={styles.field}>
+                    <label htmlFor="field-city">البلدية / الحي</label>
+                    <input
+                      id="field-city"
+                      type="text"
+                      className={styles.input}
+                      placeholder="مثال: حي الصنوبر"
+                      value={fields.city}
+                      onChange={(e) => updateField("city", e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: "1rem", marginTop: "1.75rem" }}>
+                  <button id="step1-next" type="button" onClick={nextStep} className={styles.btnNext}>
+                    المتابعة للخطوة التالية
+                    <span style={{ fontSize: "1.2rem" }}>←</span>
+                  </button>
+                </div>
+                <p style={{ textAlign: "center", fontSize: "0.9rem", color: "var(--muted)", marginTop: "1.5rem" }}>
+                  لديك حساب بالفعل?{" "}
+                  <Link href="/login" style={{ color: "var(--terracotta)", fontWeight: 800, textDecoration: "underline" }}>
+                    سجّل دخولك من هنا
+                  </Link>
+                </p>
+              </div>
+            )}
 
             {/* ── Step 2: Craft Info ── */}
-            <div style={{ display: step === 2 ? 'block' : 'none' }} className="animate-fade-up">
-              <h2 className={styles.title}>معلومات الحِرفة</h2>
-              <p className={styles.subtitle}>الخطوة 2 من 4 — تفاصيل عملك</p>
+            {step === 2 && (
+              <div className="animate-fade-up">
+                <h2 className={styles.title}>معلومات الحِرفة</h2>
+                <p className={styles.subtitle}>الخطوة 2 من 4 — تفاصيل عملك</p>
 
-              <div className={styles.field}>
-                <label>نوع الحِرفة <span>*</span></label>
-                <select id="field-profession" name="profession" className={styles.select} required>
-                  <option value="">اختر الحِرفة...</option>
-                  {PROFESSIONS.map((p) => <option key={p} value={p}>{p}</option>)}
-                </select>
-              </div>
-
-              <div className={styles.field}>
-                <label>التخصص الدقيق</label>
-                <input id="field-specialty" name="specialty" type="text" className={styles.input}
-                  placeholder="مثال: مطابخ وخزائن مصمتة، نجارة تقليدية..." />
-              </div>
-
-              <div className={styles.fieldRow}>
                 <div className={styles.field}>
-                  <label>سنوات الخبرة</label>
-                  <select id="field-experience" name="experience" className={styles.select}>
-                    <option>أقل من سنة</option>
-                    <option>1–3 سنوات</option>
-                    <option>3–7 سنوات</option>
-                    <option>7–15 سنة</option>
-                    <option>أكثر من 15 سنة</option>
+                  <label htmlFor="field-profession">نوع الحِرفة <span>*</span></label>
+                  <select
+                    id="field-profession"
+                    className={styles.select}
+                    value={fields.profession}
+                    onChange={(e) => updateField("profession", e.target.value)}
+                  >
+                    <option value="">اختر الحِرفة...</option>
+                    {PROFESSIONS.map((p) => <option key={p} value={p}>{p}</option>)}
                   </select>
                 </div>
+
                 <div className={styles.field}>
-                  <label>نطاق التنقل</label>
-                  <select id="field-range" name="range" className={styles.select}>
-                    <option>5 كم</option>
-                    <option>10 كم</option>
-                    <option>20 كم</option>
-                    <option>30 كم</option>
-                    <option>الولاية كاملة</option>
-                  </select>
+                  <label htmlFor="field-specialty">التخصص الدقيق</label>
+                  <input
+                    id="field-specialty"
+                    type="text"
+                    className={styles.input}
+                    placeholder="مثال: مطابخ وخزائن مصمتة، نجارة تقليدية..."
+                    value={fields.specialty}
+                    onChange={(e) => updateField("specialty", e.target.value)}
+                  />
+                </div>
+
+                <div className={styles.fieldRow}>
+                  <div className={styles.field}>
+                    <label htmlFor="field-experience">سنوات الخبرة</label>
+                    <select
+                      id="field-experience"
+                      className={styles.select}
+                      value={fields.experience}
+                      onChange={(e) => updateField("experience", e.target.value)}
+                    >
+                      <option>أقل من سنة</option>
+                      <option>1–3 سنوات</option>
+                      <option>3–7 سنوات</option>
+                      <option>7–15 سنة</option>
+                      <option>أكثر من 15 سنة</option>
+                    </select>
+                  </div>
+                  <div className={styles.field}>
+                    <label htmlFor="field-range">نطاق التنقل</label>
+                    <select
+                      id="field-range"
+                      className={styles.select}
+                      value={fields.range}
+                      onChange={(e) => updateField("range", e.target.value)}
+                    >
+                      <option>5 كم</option>
+                      <option>10 كم</option>
+                      <option>20 كم</option>
+                      <option>30 كم</option>
+                      <option>الولاية كاملة</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className={styles.field}>
+                  <label>حدد موقع ورشتك على الخريطة <span>*</span></label>
+                  <MapPicker onLocationSelect={(lat, lng) => setLocation({ lat, lng })} />
+                  {location && (
+                    <p style={{ fontSize: "0.8rem", color: "var(--green)", marginTop: "0.4rem", fontWeight: 700 }}>
+                      ✓ تم تحديد الموقع: {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
+                    </p>
+                  )}
+                </div>
+
+                <div className={styles.field}>
+                  <label htmlFor="field-bio">وصف عملك</label>
+                  <textarea
+                    id="field-bio"
+                    className={styles.textarea}
+                    rows={4}
+                    placeholder="اكتب هنا وصفاً لخدماتك، تخصصاتك، ونوع المشاريع التي تنجزها..."
+                    value={fields.bio}
+                    onChange={(e) => updateField("bio", e.target.value)}
+                  />
+                </div>
+
+                <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
+                  <button id="step2-back" type="button" onClick={prevStep} className={styles.btnBack}>→ رجوع</button>
+                  <button id="step2-next" type="button" onClick={nextStep} className={styles.btnNext}>
+                    التالي <span style={{ fontSize: "1.2rem" }}>←</span>
+                  </button>
                 </div>
               </div>
-
-              <div className={styles.field}>
-                <label>حدد موقع ورشتك على الخريطة <span>*</span></label>
-                <MapPicker onLocationSelect={(lat, lng) => setLocation({lat, lng})} />
-              </div>
-
-              <div className={styles.field}>
-                <label>وصف عملك</label>
-                <textarea id="field-bio" name="bio" className={styles.textarea}
-                  placeholder="اكتب هنا وصفاً لخدماتك، تخصصاتك، ونوع المشاريع التي تنجزها..." />
-              </div>
-
-              <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-                <button id="step2-back" type="button" onClick={prevStep} className={styles.btnBack}>→ رجوع</button>
-                <button id="step2-next" type="button" onClick={nextStep} className={styles.btnNext}>
-                  التالي
-                  <span style={{ fontSize: "1.2rem" }}>←</span>
-                </button>
-              </div>
-            </div>
+            )}
 
             {/* ── Step 3: Photos ── */}
-            <div style={{ display: step === 3 ? 'block' : 'none' }} className="animate-fade-up">
-              <h2 className={styles.title}>صور أعمالك</h2>
-              <p className={styles.subtitle}>الخطوة 3 من 4 — أضف صور تجذب العملاء</p>
+            {step === 3 && (
+              <div className="animate-fade-up">
+                <h2 className={styles.title}>صور أعمالك</h2>
+                <p className={styles.subtitle}>الخطوة 3 من 4 — أضف صور تجذب العملاء</p>
 
-              <div className={styles.field}>
-                <label>صورة الملف الشخصي</label>
-                <div
-                  className={styles.uploadZone}
-                  onClick={() => document.getElementById("upload-avatar")?.click()}
-                >
-                  <input id="upload-avatar" name="avatar" type="file" accept="image/*" style={{ display: "none" }} />
-                  <div className={styles.uploadIcon}>🤳</div>
-                  <p>
-                    <strong style={{ fontSize: "1.1rem", color: "var(--dark)" }}>اضغط للرفع</strong>
-                    <br />
-                    <span style={{ fontSize: "0.85rem", color: "var(--muted)" }}>
-                      صورة واضحة لوجهك أو شعار ورشتك
-                    </span>
-                  </p>
+                <div className={styles.field}>
+                  <label>صورة الملف الشخصي</label>
+                  <div className={styles.uploadZone} onClick={() => document.getElementById("upload-avatar")?.click()}>
+                    <input id="upload-avatar" name="avatar" type="file" accept="image/*" style={{ display: "none" }} />
+                    <div className={styles.uploadIcon}>🤳</div>
+                    <p>
+                      <strong style={{ fontSize: "1.1rem", color: "var(--dark)" }}>اضغط للرفع</strong>
+                      <br />
+                      <span style={{ fontSize: "0.85rem", color: "var(--muted)" }}>صورة واضحة لوجهك أو شعار ورشتك</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className={styles.field}>
+                  <label>صور الأعمال <span style={{ color: "var(--muted)", fontWeight: 400 }}>(حتى 10 صور)</span></label>
+                  <div className={styles.uploadZone} onClick={() => document.getElementById("upload-works")?.click()}>
+                    <input id="upload-works" name="works" type="file" accept="image/*" multiple style={{ display: "none" }} />
+                    <div className={styles.uploadIcon}>🖼️</div>
+                    <p>
+                      <strong style={{ fontSize: "1.1rem", color: "var(--dark)" }}>اضغط لرفع الصور</strong>
+                      <br />
+                      <span style={{ fontSize: "0.85rem", color: "var(--muted)" }}>JPG, PNG — الحجم الأقصى 5MB لكل صورة</span>
+                      <br />
+                      <span style={{ fontSize: "0.85rem", color: "var(--terracotta)", fontWeight: 800, marginTop: "0.5rem", display: "block" }}>
+                        صور الأعمال تزيد الطلبات بنسبة 3 أضعاف! 🚀
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
+                  <button id="step3-back" type="button" onClick={prevStep} className={styles.btnBack}>→ رجوع</button>
+                  <button id="step3-next" type="button" onClick={nextStep} className={styles.btnNext}>
+                    التالي <span style={{ fontSize: "1.2rem" }}>←</span>
+                  </button>
                 </div>
               </div>
-
-              <div className={styles.field}>
-                <label>صور الأعمال <span style={{ color: "var(--muted)", fontWeight: 400 }}>(حتى 10 صور)</span></label>
-                <div
-                  className={styles.uploadZone}
-                  onClick={() => document.getElementById("upload-works")?.click()}
-                >
-                  <input id="upload-works" name="works" type="file" accept="image/*" multiple style={{ display: "none" }} />
-                  <div className={styles.uploadIcon}>🖼️</div>
-                  <p>
-                    <strong style={{ fontSize: "1.1rem", color: "var(--dark)" }}>اضغط لرفع الصور</strong>
-                    <br />
-                    <span style={{ fontSize: "0.85rem", color: "var(--muted)" }}>JPG, PNG — الحجم الأقصى 5MB لكل صورة</span>
-                    <br />
-                    <span style={{ fontSize: "0.85rem", color: "var(--terracotta)", fontWeight: 800, marginTop: "0.5rem", display: "block" }}>
-                      صور الأعمال تزيد الطلبات بنسبة 3 أضعاف! 🚀
-                    </span>
-                  </p>
-                </div>
-              </div>
-
-              <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-                <button id="step3-back" type="button" onClick={prevStep} className={styles.btnBack}>→ رجوع</button>
-                <button id="step3-next" type="button" onClick={nextStep} className={styles.btnNext}>
-                  التالي
-                  <span style={{ fontSize: "1.2rem" }}>←</span>
-                </button>
-              </div>
-            </div>
+            )}
 
             {/* ── Step 4: Plan ── */}
-            <div style={{ display: step === 4 ? 'block' : 'none' }} className="animate-fade-up">
-              <h2 className={styles.title}>اختر باقتك</h2>
-              <p className={styles.subtitle}>الخطوة 4 من 4 — ابدأ مجاناً أو احصل على ظهور أكثر</p>
+            {step === 4 && (
+              <div className="animate-fade-up">
+                <h2 className={styles.title}>اختر باقتك</h2>
+                <p className={styles.subtitle}>الخطوة 4 من 4 — ابدأ مجاناً أو احصل على ظهور أكثر</p>
 
-              <div className={styles.plans}>
-                {/* Free Plan */}
-                <div
-                  id="plan-free"
-                  className={`${styles.planCard} ${plan === "free" ? styles.planCardSelected : ""}`}
-                  onClick={() => setPlan("free")}
-                >
-                  <div style={{ fontWeight: 900, fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--dark)" }}>🆓 أساسي</div>
-                  <div className={styles.planPrice}>
-                    مجاني{" "}
-                    <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--muted)" }}>للأبد</span>
+                <div className={styles.plans}>
+                  {/* Free Plan */}
+                  <div
+                    id="plan-free"
+                    className={`${styles.planCard} ${plan === "free" ? styles.planCardSelected : ""}`}
+                    onClick={() => setPlan("free")}
+                    role="radio"
+                    aria-checked={plan === "free"}
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setPlan("free")}
+                  >
+                    <div style={{ fontWeight: 900, fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--dark)" }}>🆓 أساسي</div>
+                    <div className={styles.planPrice}>
+                      مجاني{" "}
+                      <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--muted)" }}>للأبد</span>
+                    </div>
+                    <ul style={{ marginTop: "1.25rem", fontSize: "0.9rem", color: "var(--muted)", listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem", padding: 0 }}>
+                      <li>✓ ملف شخصي كامل</li>
+                      <li>✓ حتى 5 صور أعمال</li>
+                      <li>✓ ظهور في نتائج البحث</li>
+                      <li>✓ التواصل مع العملاء</li>
+                    </ul>
                   </div>
-                  <ul style={{ marginTop: "1.25rem", fontSize: "0.9rem", color: "var(--muted)", listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem", padding: 0 }}>
-                    <li>✓ ملف شخصي كامل</li>
-                    <li>✓ حتى 5 صور أعمال</li>
-                    <li>✓ ظهور في نتائج البحث</li>
-                    <li>✓ التواصل مع العملاء</li>
-                  </ul>
+
+                  {/* Pro Plan */}
+                  <div
+                    id="plan-pro"
+                    className={`${styles.planCard} ${plan === "pro" ? styles.planCardSelected : ""}`}
+                    onClick={() => setPlan("pro")}
+                    role="radio"
+                    aria-checked={plan === "pro"}
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setPlan("pro")}
+                  >
+                    <div style={{
+                      position: "absolute", top: "-14px", right: "20px",
+                      background: "var(--gold)", color: "var(--dark)",
+                      padding: "4px 14px", borderRadius: "999px",
+                      fontSize: "0.75rem", fontWeight: 900,
+                      boxShadow: "0 4px 12px rgba(212,168,67,0.3)",
+                    }}>
+                      ⭐ الأكثر طلباً
+                    </div>
+                    <div style={{ fontWeight: 900, fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--dark)" }}>🚀 مميز</div>
+                    <div className={styles.planPrice}>
+                      500 دج{" "}
+                      <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--muted)" }}>/شهر</span>
+                    </div>
+                    <ul style={{ marginTop: "1.25rem", fontSize: "0.9rem", color: "var(--muted)", listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem", padding: 0 }}>
+                      <li style={{ color: "var(--dark)", fontWeight: 700 }}>✓ كل مميزات الأساسي</li>
+                      <li>✓ حتى 20 صورة أعمال</li>
+                      <li>✓ ظهور في أعلى النتائج</li>
+                      <li>✓ شارة &quot;حرفي موثّق&quot;</li>
+                    </ul>
+                  </div>
                 </div>
 
-                {/* Pro Plan */}
-                <div
-                  id="plan-pro"
-                  className={`${styles.planCard} ${plan === "pro" ? styles.planCardSelected : ""}`}
-                  onClick={() => setPlan("pro")}
-                >
-                  <div style={{
-                    position: "absolute", top: "-14px", right: "20px",
-                    background: "var(--gold)", color: "var(--dark)",
-                    padding: "4px 14px", borderRadius: "999px",
-                    fontSize: "0.75rem", fontWeight: 900,
-                    boxShadow: "0 4px 12px rgba(212,168,67,0.3)"
-                  }}>
-                    ⭐ الأكثر طلباً
-                  </div>
-                  <div style={{ fontWeight: 900, fontSize: "1.1rem", marginBottom: "0.5rem", color: "var(--dark)" }}>🚀 مميز</div>
-                  <div className={styles.planPrice}>
-                    500 دج{" "}
-                    <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--muted)" }}>/شهر</span>
-                  </div>
-                  <ul style={{ marginTop: "1.25rem", fontSize: "0.9rem", color: "var(--muted)", listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem", padding: 0 }}>
-                    <li style={{ color: "var(--dark)", fontWeight: 700 }}>✓ كل مميزات الأساسي</li>
-                    <li>✓ حتى 20 صورة أعمال</li>
-                    <li>✓ ظهور في أعلى النتائج</li>
-                    <li>✓ شارة "حرفي موثّق"</li>
-                  </ul>
+                <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+                  <button id="step4-back" type="button" onClick={prevStep} className={styles.btnBack}>→ رجوع</button>
+                  <button
+                    id="submit-register"
+                    type="submit"
+                    disabled={isPending}
+                    className={styles.btnNext}
+                    aria-busy={isPending}
+                  >
+                    {isPending ? (
+                      <>
+                        <span style={{
+                          display: "inline-block", width: "18px", height: "18px",
+                          border: "3px solid rgba(255,255,255,0.4)",
+                          borderTopColor: "#fff", borderRadius: "50%",
+                          animation: "spin 0.7s linear infinite",
+                        }} />
+                        جاري الإنشاء...
+                      </>
+                    ) : (
+                      <>✓ إنشاء حسابي الآن</>
+                    )}
+                  </button>
                 </div>
               </div>
-
-              {error && (
-                <div style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.2)", borderRadius: "12px", padding: "1rem", color: "#c53030", fontSize: "0.9rem", fontWeight: 700, marginBottom: "1.5rem", textAlign: "center" }}>
-                  ⚠️ {error}
-                </div>
-              )}
-
-              <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
-                <button id="step4-back" type="button" onClick={prevStep} className={styles.btnBack}>→ رجوع</button>
-                <button id="submit-register" type="submit" disabled={loading} className={styles.btnNext}>
-                  {loading ? (
-                    <>
-                      <span style={{ display: "inline-block", width: "18px", height: "18px", border: "3px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-                      جاري الإنشاء...
-                    </>
-                  ) : (
-                    <>
-                      ✓ إنشاء حسابي الآن
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
+            )}
           </form>
         </div>
 
-        <style>{`
-          @keyframes spin { to { transform: rotate(360deg); } }
-        `}</style>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     </div>
   );
