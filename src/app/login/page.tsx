@@ -246,11 +246,36 @@ export default function LoginPage() {
           {/* Divider */}
           <div style={{
             display: "flex", alignItems: "center", gap: "1rem",
-            margin: "1.75rem 0",
+            margin: "1.75rem 0 1rem",
           }}>
             <div style={{ flex: 1, height: "1px", background: "rgba(200,149,108,0.2)" }} />
             <span style={{ fontSize: "0.85rem", color: "var(--muted)", fontWeight: 600 }}>أو</span>
             <div style={{ flex: 1, height: "1px", background: "rgba(200,149,108,0.2)" }} />
+          </div>
+
+          {/* Google Login Button */}
+          <div style={{ marginBottom: "1.5rem" }}>
+            <a
+              href="/api/auth/google"
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem",
+                width: "100%", padding: "1.05rem", borderRadius: "16px",
+                background: "#fff", color: "#333", fontWeight: 800, fontSize: "1.05rem",
+                textDecoration: "none", border: "2px solid rgba(0,0,0,0.08)",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.05)", transition: "all 0.25s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "#f9fafb";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,0,0,0.15)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "#fff";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,0,0,0.08)";
+              }}
+            >
+              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: "24px", height: "24px" }} />
+              تسجيل الدخول بحساب Google
+            </a>
           </div>
 
           <div style={{ textAlign: "center" }}>

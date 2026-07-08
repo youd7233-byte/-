@@ -186,7 +186,7 @@ export async function getArtisans(profession?: string, wilaya?: string) {
         city: a.city,
         lat: a.lat,
         lng: a.lng,
-        phone: a.user.phone,
+        phone: a.user.phone || "",
         isPremium: a.isPremium,
         isVerified: a.isVerified,
         bio: a.bio,
@@ -226,7 +226,7 @@ export async function getArtisanById(id: string) {
       data: {
         id: profile.id,
         name: profile.user.name,
-        phone: profile.user.phone,
+        phone: profile.user.phone || "",
         profession: profile.profession,
         wilaya: profile.wilaya,
         city: profile.city,

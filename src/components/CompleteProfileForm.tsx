@@ -2,8 +2,7 @@
 
 import { useState, useActionState, useRef } from "react";
 import styles from "./ArtisanRegisterForm.module.css";
-import { registerArtisan } from "@/app/actions/artisan";
-import Link from "next/link";
+import { completeProfile } from "@/app/actions/complete-profile";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
@@ -30,17 +29,14 @@ const PROFESSIONS = [
 ];
 
 const STEPS = [
-  { label: "البيانات الشخصية" },
+  { label: "الاتصال والمكان" },
   { label: "معلومات الحرفة" },
   { label: "صور الأعمال" },
   { label: "الباقة" },
 ];
 
 type FormFields = {
-  name: string;
   phone: string;
-  email: string;
-  password: string;
   wilaya: string;
   city: string;
   profession: string;
@@ -51,23 +47,22 @@ type FormFields = {
 };
 
 const INITIAL_FIELDS: FormFields = {
-  name: "", phone: "", email: "", password: "",
+  phone: "",
   wilaya: "", city: "", profession: "",
   specialty: "", experience: "1–3 سنوات", range: "10 كم", bio: "",
 };
 
-export default function ArtisanRegisterForm() {
+export default function CompleteProfileForm() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [plan, setPlan] = useState<"free" | "pro">("free");
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [fields, setFields] = useState<FormFields>(INITIAL_FIELDS);
   const [stepError, setStepError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   const [actionState, formAction, isPending] = useActionState(
-    registerArtisan,
+    completeProfile,
     undefined
   );
 
@@ -83,20 +78,8 @@ export default function ArtisanRegisterForm() {
 
   const validateStep = (): boolean => {
     if (step === 1) {
-      if (!fields.name.trim() || fields.name.trim().length < 2) {
-        setStepError("يرجى إدخال الاسم الكامل (حرفان على الأقل)");
-        return false;
-      }
       if (!/^(0)(5|6|7)[0-9]{8}$/.test(fields.phone.replace(/\s+/g, ""))) {
         setStepError("يرجى إدخال رقم هاتف جزائري صحيح (مثال: 0555000000)");
-        return false;
-      }
-      if (!/^[\w.-]+@[\w.-]+\.[a-z]{2,}$/.test(fields.email)) {
-        setStepError("يرجى إدخال بريد إلكتروني صحيح");
-        return false;
-      }
-      if (fields.password.length < 8) {
-        setStepError("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
         return false;
       }
       if (!fields.wilaya) {
@@ -136,7 +119,7 @@ export default function ArtisanRegisterForm() {
     return (
       <div className={styles.successScreen}>
         <div style={{ fontSize: "5rem", marginBottom: "1.5rem", animation: "fadeUp 0.5s ease" }}>🎉</div>
-        <h2>تم تسجيلك بنجاح!</h2>
+        <h2>تم الحفظ بنجاح!</h2>
         <p style={{ marginBottom: "2rem" }}>
           مرحباً بك في منصة حِرَفي. جاري تحويلك إلى لوحة التحكم...
         </p>
@@ -152,10 +135,10 @@ export default function ArtisanRegisterForm() {
       {/* ── Side Panel ── */}
       <aside className={styles.sidePanel}>
         <h2>
-          سجّل حِرفتك<br />
+          أكمل ملفك<br />
           و<em>ابدأ بتلقي طلبات</em>
         </h2>
-        <p>انضم لآلاف الحرفيين الجزائريين الذين يجدون عملاء جدد كل يوم عبر منصة حِرَفي.</p>
+        <p>العملاء يبحثون عن محترفين مثلك. أكمل بياناتك لتظهر في نتائج البحث.</p>
 
         {[
           { icon: "📍", title: "ظهور على الخريطة", desc: "يراك العملاء مباشرة على الخريطة حسب موقعك الجغرافي" },
@@ -171,11 +154,6 @@ export default function ArtisanRegisterForm() {
             </div>
           </div>
         ))}
-
-        <div className={styles.pricingHint}>
-          <h4>🎉 مجاني في البداية</h4>
-          <p>تسجيل الملف الأساسي مجاني تماماً. باقات الإعلانات المميزة اختيارية تبدأ من 500 دج/شهر.</p>
-        </div>
       </aside>
 
       {/* ── Form Area ── */}
@@ -218,11 +196,7 @@ export default function ArtisanRegisterForm() {
           )}
 
           <form ref={formRef} action={formAction}>
-            {/* Hidden fields for server action */}
-            <input type="hidden" name="name" value={fields.name} />
             <input type="hidden" name="phone" value={fields.phone} />
-            <input type="hidden" name="email" value={fields.email} />
-            <input type="hidden" name="password" value={fields.password} />
             <input type="hidden" name="wilaya" value={fields.wilaya} />
             <input type="hidden" name="city" value={fields.city} />
             <input type="hidden" name="profession" value={fields.profession} />
@@ -236,133 +210,25 @@ export default function ArtisanRegisterForm() {
               </>
             )}
 
-            {/* ── Step 1: Personal Info ── */}
+            {/* ── Step 1: Contact & Location ── */}
             {step === 1 && (
               <div className="animate-fade-up">
-                <h2 className={styles.title}>معلوماتك الشخصية</h2>
-                <p className={styles.subtitle}>الخطوة 1 من 4 — البيانات الأساسية للبدء</p>
+                <h2 className={styles.title}>كيف يتواصل معك العملاء؟</h2>
+                <p className={styles.subtitle}>الخطوة 1 من 4 — أضف رقمك ومنطقتك</p>
 
-                {/* Google Login Button */}
-                <div style={{ marginBottom: "1.5rem" }}>
-                  <a
-                    href="/api/auth/google"
-                    style={{
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem",
-                      width: "100%", padding: "1rem", borderRadius: "14px",
-                      background: "#fff", color: "#333", fontWeight: 800, fontSize: "1.05rem",
-                      textDecoration: "none", border: "2px solid rgba(0,0,0,0.08)",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.05)", transition: "all 0.25s",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = "#f9fafb";
-                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,0,0,0.15)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = "#fff";
-                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,0,0,0.08)";
-                    }}
-                  >
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: "24px", height: "24px" }} />
-                    التسجيل السريع باستخدام Google
-                  </a>
-                </div>
-
-                <div style={{
-                  display: "flex", alignItems: "center", gap: "1rem",
-                  margin: "1.5rem 0",
-                }}>
-                  <div style={{ flex: 1, height: "1px", background: "rgba(200,149,108,0.2)" }} />
-                  <span style={{ fontSize: "0.85rem", color: "var(--muted)", fontWeight: 600 }}>أو التسجيل العادي</span>
-                  <div style={{ flex: 1, height: "1px", background: "rgba(200,149,108,0.2)" }} />
-                </div>
-
-                <div className={styles.fieldRow}>
-                  <div className={styles.field}>
-                    <label htmlFor="field-name">الاسم الكامل <span>*</span></label>
-                    <input
-                      id="field-name"
-                      type="text"
-                      className={styles.input}
-                      placeholder="مثال: عبد الرحمن بوزيد"
-                      value={fields.name}
-                      onChange={(e) => updateField("name", e.target.value)}
-                      autoComplete="name"
-                    />
-                  </div>
-                  <div className={styles.field}>
-                    <label htmlFor="field-phone">رقم الهاتف <span>*</span></label>
-                    <input
-                      id="field-phone"
-                      type="tel"
-                      className={styles.input}
-                      placeholder="0555 000 000"
-                      dir="ltr"
-                      value={fields.phone}
-                      onChange={(e) => updateField("phone", e.target.value)}
-                      autoComplete="tel"
-                      inputMode="tel"
-                    />
-                  </div>
-                </div>
-
-                <div className={styles.fieldRow}>
-                  <div className={styles.field}>
-                    <label htmlFor="field-email">البريد الإلكتروني <span>*</span></label>
-                    <input
-                      id="field-email"
-                      type="email"
-                      className={styles.input}
-                      placeholder="example@email.com"
-                      dir="ltr"
-                      value={fields.email}
-                      onChange={(e) => updateField("email", e.target.value)}
-                      autoComplete="email"
-                    />
-                  </div>
-                  <div className={styles.field}>
-                    <label htmlFor="field-password">كلمة المرور <span>*</span></label>
-                    <div style={{ position: "relative" }}>
-                      <input
-                        id="field-password"
-                        type={showPassword ? "text" : "password"}
-                        className={styles.input}
-                        placeholder="8 أحرف على الأقل"
-                        value={fields.password}
-                        onChange={(e) => updateField("password", e.target.value)}
-                        autoComplete="new-password"
-                        style={{ paddingLeft: "3.5rem" }}
-                      />
-                      <button
-                        type="button"
-                        aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
-                        onClick={() => setShowPassword((v) => !v)}
-                        style={{
-                          position: "absolute", left: "1rem", top: "50%",
-                          transform: "translateY(-50%)", background: "none",
-                          border: "none", color: "var(--muted)", cursor: "pointer",
-                          fontSize: "1.1rem", padding: "2px",
-                        }}
-                      >
-                        {showPassword ? "🙈" : "👁️"}
-                      </button>
-                    </div>
-                    {fields.password && (
-                      <div style={{ marginTop: "0.4rem", display: "flex", gap: "4px" }}>
-                        {[1, 2, 3, 4].map((lvl) => (
-                          <div
-                            key={lvl}
-                            style={{
-                              flex: 1, height: "4px", borderRadius: "2px",
-                              background: fields.password.length >= lvl * 2
-                                ? lvl <= 1 ? "#ef4444" : lvl === 2 ? "#f59e0b" : lvl === 3 ? "#22c55e" : "#16a34a"
-                                : "rgba(0,0,0,0.08)",
-                              transition: "background 0.3s",
-                            }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                <div className={styles.field}>
+                  <label htmlFor="field-phone">رقم الهاتف <span>*</span></label>
+                  <input
+                    id="field-phone"
+                    type="tel"
+                    className={styles.input}
+                    placeholder="0555 000 000"
+                    dir="ltr"
+                    value={fields.phone}
+                    onChange={(e) => updateField("phone", e.target.value)}
+                    autoComplete="tel"
+                    inputMode="tel"
+                  />
                 </div>
 
                 <div className={styles.fieldRow}>
@@ -397,12 +263,6 @@ export default function ArtisanRegisterForm() {
                     <span style={{ fontSize: "1.2rem" }}>←</span>
                   </button>
                 </div>
-                <p style={{ textAlign: "center", fontSize: "0.9rem", color: "var(--muted)", marginTop: "1.5rem" }}>
-                  لديك حساب بالفعل?{" "}
-                  <Link href="/login" style={{ color: "var(--terracotta)", fontWeight: 800, textDecoration: "underline" }}>
-                    سجّل دخولك من هنا
-                  </Link>
-                </p>
               </div>
             )}
 
@@ -604,7 +464,7 @@ export default function ArtisanRegisterForm() {
                       <li style={{ color: "var(--dark)", fontWeight: 700 }}>✓ كل مميزات الأساسي</li>
                       <li>✓ حتى 20 صورة أعمال</li>
                       <li>✓ ظهور في أعلى النتائج</li>
-                      <li>✓ شارة &quot;حرفي موثّق&quot;</li>
+                      <li>✓ شارة "حرفي موثّق"</li>
                     </ul>
                   </div>
                 </div>
@@ -626,10 +486,10 @@ export default function ArtisanRegisterForm() {
                           borderTopColor: "#fff", borderRadius: "50%",
                           animation: "spin 0.7s linear infinite",
                         }} />
-                        جاري الإنشاء...
+                        جاري الحفظ...
                       </>
                     ) : (
-                      <>✓ إنشاء حسابي الآن</>
+                      <>✓ حفظ ملفي الشخصي</>
                     )}
                   </button>
                 </div>
