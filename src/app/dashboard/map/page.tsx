@@ -1,10 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import dynamic from "next/dynamic";
-
-const Map = dynamic(() => import("@/components/Map"), {
-  ssr: false,
-  loading: () => <div style={{ height: "600px", background: "#e5e7eb", borderRadius: "24px", display: "flex", alignItems: "center", justifyContent: "center" }}>جاري تحميل الخريطة...</div>
-});
+import MapWrapper from "./MapWrapper";
 
 export const dynamicParams = true;
 export const revalidate = 0; // Don't cache so map is always updated
@@ -45,9 +40,7 @@ export default async function MapDashboardPage() {
         </div>
       </div>
 
-      <div style={{ height: "600px", borderRadius: "24px", overflow: "hidden", boxShadow: "0 12px 40px rgba(0,0,0,0.1)" }}>
-        <Map artisans={formattedArtisans} interactive={true} />
-      </div>
+      <MapWrapper artisans={formattedArtisans} />
     </div>
   );
 }
