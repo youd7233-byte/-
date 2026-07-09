@@ -3,6 +3,12 @@ import { NextResponse } from "next/server";
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  const url =
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_PRISMA_URL_DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.POSTGRES_PRISMA_URL;
+    
   try {
     const { prisma } = await import("@/lib/prisma");
     // Test the exact query used on the homepage
@@ -26,6 +32,7 @@ export async function GET() {
       success: false, 
       error: error.message,
       stack: error.stack,
+      maskedUrl: typeof url === 'string' ? url.replace(/:[^:@]+@/, ':***@') : String(url),
     });
   }
 }
