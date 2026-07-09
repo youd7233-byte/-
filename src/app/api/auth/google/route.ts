@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   }
   
   const scope = encodeURIComponent("openid email profile");
-  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=online`;
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=online&prompt=select_account`;
 
   return NextResponse.redirect(authUrl);
 }

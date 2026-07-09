@@ -236,19 +236,18 @@ export default function ArtisanRegisterForm() {
               </>
             )}
 
-            {/* ── Step 1: Personal Info ── */}
+            {/* ── Step 1: تسجيل الدخول عبر Google ── */}
             {step === 1 && (
               <div className="animate-fade-up">
-                <h2 className={styles.title}>معلوماتك الشخصية</h2>
-                <p className={styles.subtitle}>الخطوة 1 من 4 — البيانات الأساسية للبدء</p>
+                <h2 className={styles.title}>سجّل حرفتك وابدأ</h2>
+                <p className={styles.subtitle}>الخطوة 1 من 4 — سجّل دخولك للبدء</p>
 
-                {/* Google Login Button */}
-                <div style={{ marginBottom: "1.5rem" }}>
+                <div style={{ marginTop: "2.5rem", marginBottom: "2rem" }}>
                   <a
                     href="/api/auth/google"
                     style={{
                       display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem",
-                      width: "100%", padding: "1rem", borderRadius: "14px",
+                      width: "100%", padding: "1.1rem", borderRadius: "14px",
                       background: "#fff", color: "#333", fontWeight: 800, fontSize: "1.05rem",
                       textDecoration: "none", border: "2px solid rgba(0,0,0,0.08)",
                       boxShadow: "0 4px 12px rgba(0,0,0,0.05)", transition: "all 0.25s",
@@ -267,137 +266,7 @@ export default function ArtisanRegisterForm() {
                   </a>
                 </div>
 
-                <div style={{
-                  display: "flex", alignItems: "center", gap: "1rem",
-                  margin: "1.5rem 0",
-                }}>
-                  <div style={{ flex: 1, height: "1px", background: "rgba(200,149,108,0.2)" }} />
-                  <span style={{ fontSize: "0.85rem", color: "var(--muted)", fontWeight: 600 }}>أو التسجيل العادي</span>
-                  <div style={{ flex: 1, height: "1px", background: "rgba(200,149,108,0.2)" }} />
-                </div>
-
-                <div className={styles.fieldRow}>
-                  <div className={styles.field}>
-                    <label htmlFor="field-name">الاسم الكامل <span>*</span></label>
-                    <input
-                      id="field-name"
-                      type="text"
-                      className={styles.input}
-                      placeholder="مثال: عبد الرحمن بوزيد"
-                      value={fields.name}
-                      onChange={(e) => updateField("name", e.target.value)}
-                      autoComplete="name"
-                    />
-                  </div>
-                  <div className={styles.field}>
-                    <label htmlFor="field-phone">رقم الهاتف <span>*</span></label>
-                    <input
-                      id="field-phone"
-                      type="tel"
-                      className={styles.input}
-                      placeholder="0555 000 000"
-                      dir="ltr"
-                      value={fields.phone}
-                      onChange={(e) => updateField("phone", e.target.value)}
-                      autoComplete="tel"
-                      inputMode="tel"
-                    />
-                  </div>
-                </div>
-
-                <div className={styles.fieldRow}>
-                  <div className={styles.field}>
-                    <label htmlFor="field-email">البريد الإلكتروني <span>*</span></label>
-                    <input
-                      id="field-email"
-                      type="email"
-                      className={styles.input}
-                      placeholder="example@email.com"
-                      dir="ltr"
-                      value={fields.email}
-                      onChange={(e) => updateField("email", e.target.value)}
-                      autoComplete="email"
-                    />
-                  </div>
-                  <div className={styles.field}>
-                    <label htmlFor="field-password">كلمة المرور <span>*</span></label>
-                    <div style={{ position: "relative" }}>
-                      <input
-                        id="field-password"
-                        type={showPassword ? "text" : "password"}
-                        className={styles.input}
-                        placeholder="8 أحرف على الأقل"
-                        value={fields.password}
-                        onChange={(e) => updateField("password", e.target.value)}
-                        autoComplete="new-password"
-                        style={{ paddingLeft: "3.5rem" }}
-                      />
-                      <button
-                        type="button"
-                        aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
-                        onClick={() => setShowPassword((v) => !v)}
-                        style={{
-                          position: "absolute", left: "1rem", top: "50%",
-                          transform: "translateY(-50%)", background: "none",
-                          border: "none", color: "var(--muted)", cursor: "pointer",
-                          fontSize: "1.1rem", padding: "2px",
-                        }}
-                      >
-                        {showPassword ? "🙈" : "👁️"}
-                      </button>
-                    </div>
-                    {fields.password && (
-                      <div style={{ marginTop: "0.4rem", display: "flex", gap: "4px" }}>
-                        {[1, 2, 3, 4].map((lvl) => (
-                          <div
-                            key={lvl}
-                            style={{
-                              flex: 1, height: "4px", borderRadius: "2px",
-                              background: fields.password.length >= lvl * 2
-                                ? lvl <= 1 ? "#ef4444" : lvl === 2 ? "#f59e0b" : lvl === 3 ? "#22c55e" : "#16a34a"
-                                : "rgba(0,0,0,0.08)",
-                              transition: "background 0.3s",
-                            }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className={styles.fieldRow}>
-                  <div className={styles.field}>
-                    <label htmlFor="field-wilaya">الولاية <span>*</span></label>
-                    <select
-                      id="field-wilaya"
-                      className={styles.select}
-                      value={fields.wilaya}
-                      onChange={(e) => updateField("wilaya", e.target.value)}
-                    >
-                      <option value="">اختر الولاية...</option>
-                      {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
-                    </select>
-                  </div>
-                  <div className={styles.field}>
-                    <label htmlFor="field-city">البلدية / الحي</label>
-                    <input
-                      id="field-city"
-                      type="text"
-                      className={styles.input}
-                      placeholder="مثال: حي الصنوبر"
-                      value={fields.city}
-                      onChange={(e) => updateField("city", e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div style={{ display: "flex", gap: "1rem", marginTop: "1.75rem" }}>
-                  <button id="step1-next" type="button" onClick={nextStep} className={styles.btnNext}>
-                    المتابعة للخطوة التالية
-                    <span style={{ fontSize: "1.2rem" }}>←</span>
-                  </button>
-                </div>
-                <p style={{ textAlign: "center", fontSize: "0.9rem", color: "var(--muted)", marginTop: "1.5rem" }}>
+                <p style={{ textAlign: "center", fontSize: "0.9rem", color: "var(--muted)", marginTop: "2rem" }}>
                   لديك حساب بالفعل?{" "}
                   <Link href="/login" style={{ color: "var(--terracotta)", fontWeight: 800, textDecoration: "underline" }}>
                     سجّل دخولك من هنا
@@ -405,6 +274,7 @@ export default function ArtisanRegisterForm() {
                 </p>
               </div>
             )}
+
 
             {/* ── Step 2: Craft Info ── */}
             {step === 2 && (
