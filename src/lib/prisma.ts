@@ -1,7 +1,10 @@
 import "server-only";
 import { PrismaClient } from "@prisma/client";
-import { neon } from "@neondatabase/serverless";
-import { PrismaNeonHTTP } from "@prisma/adapter-neon";
+import { Pool, neonConfig } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import ws from "ws";
+
+neonConfig.webSocketConstructor = ws;
 
 const prismaClientSingleton = () => {
   const urlRaw =
@@ -16,8 +19,8 @@ const prismaClientSingleton = () => {
     throw new Error(`No database URL found.`);
   }
 
-  const sql = neon(url);
-  const adapter = new PrismaNeonHTTP(sql as any);
+  const pool = new Pool({ connectionString: url });
+  const adapter = new PrismaNeon(pool as any);
 
   return new PrismaClient({
     adapter,
