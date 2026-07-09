@@ -9,6 +9,17 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env.DATABASE_URL || process.env.POSTGRES_PRISMA_URL_DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL,
+    url: (() => {
+      let raw = process.env.DATABASE_URL || process.env.POSTGRES_PRISMA_URL_DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL || "";
+      raw = raw.trim();
+      if (raw.includes("channel_binding")) {
+        try {
+          const parsed = new URL(raw);
+          parsed.searchParams.delete("channel_binding");
+          raw = parsed.toString();
+        } catch(e) {}
+      }
+      return raw;
+    })(),
   },
 });
