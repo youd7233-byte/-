@@ -13,7 +13,15 @@ const prismaClientSingleton = () => {
     process.env.POSTGRES_URL ||
     process.env.POSTGRES_PRISMA_URL;
 
-  const url = urlRaw ? urlRaw.trim() : "";
+  let url = urlRaw ? urlRaw.trim() : "";
+
+  if (url.includes("channel_binding")) {
+    try {
+      const parsed = new URL(url);
+      parsed.searchParams.delete("channel_binding");
+      url = parsed.toString();
+    } catch(e) {}
+  }
 
   if (!url) {
     throw new Error(`No database URL found.`);

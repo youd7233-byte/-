@@ -3,12 +3,22 @@ import { NextResponse } from "next/server";
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const url =
+  const urlRaw =
     process.env.DATABASE_URL ||
     process.env.POSTGRES_PRISMA_URL_DATABASE_URL ||
     process.env.POSTGRES_URL ||
     process.env.POSTGRES_PRISMA_URL;
     
+  let url = urlRaw ? urlRaw.trim() : "";
+  
+  if (url.includes("channel_binding")) {
+    try {
+      const parsed = new URL(url);
+      parsed.searchParams.delete("channel_binding");
+      url = parsed.toString();
+    } catch(e) {}
+  }
+
   try {
     const { prisma } = await import("@/lib/prisma");
     // Test the exact query used on the homepage
