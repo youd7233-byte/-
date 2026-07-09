@@ -8,17 +8,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { profession, wilaya, city, bio, lat, lng } = await req.json();
+  const { profession, wilaya, city, bio, phone, lat, lng } = await req.json();
 
   if (!profession || !wilaya) {
     return NextResponse.json({ error: "الحرفة والولاية مطلوبان" }, { status: 400 });
   }
 
   try {
-    // Ensure user role is ARTISAN
+    // Ensure user role is ARTISAN and update phone
     await prisma.user.update({
       where: { id: session.userId },
-      data: { role: "ARTISAN" },
+      data: { role: "ARTISAN", phone: phone || null },
     });
 
     // Upsert artisan profile

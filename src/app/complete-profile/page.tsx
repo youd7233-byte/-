@@ -1,8 +1,14 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import dynamic from "next/dynamic";
+
+const Map = dynamic(() => import("@/components/Map"), {
+  ssr: false,
+  loading: () => <div style={{ height: "400px", background: "#e5e7eb", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center" }}>جاري تحميل الخريطة...</div>
+});
 
 const WILAYAS = [
   "أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار","البليدة","البويرة",
@@ -24,6 +30,7 @@ interface FormData {
   wilaya: string;
   city: string;
   bio: string;
+  phone: string;
   lat: number | null;
   lng: number | null;
 }
@@ -34,22 +41,35 @@ export default function CompleteProfilePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState<FormData>({
-    profession: "", wilaya: "", city: "", bio: "", lat: null, lng: null,
+    profession: "", wilaya: "", city: "", bio: "", phone: "", lat: null, lng: null,
   });
 
   const update = (field: keyof FormData, value: string | number | null) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const getLocation = () => {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition((pos) => {
-      update("lat", pos.coords.latitude);
-      update("lng", pos.coords.longitude);
-    });
+    if (!navigator.geolocation) {
+      setError("المتصفح الخاص بك لا يدعم تحديد الموقع");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        update("lat", pos.coords.latitude);
+        update("lng", pos.coords.longitude);
+      },
+      (err) => {
+        setError("تعذر الحصول على الموقع. يرجى تحديده يدوياً من الخريطة.");
+      }
+    );
+  };
+
+  const handleMapSelect = (lat: number, lng: number) => {
+    update("lat", lat);
+    update("lng", lng);
   };
 
   const handleSubmit = async () => {
-    if (!form.profession || !form.wilaya) {
+    if (!form.profession || !form.wilaya || !form.phone) {
       setError("الرجاء ملء جميع الحقول الإلزامية");
       return;
     }
@@ -80,7 +100,7 @@ export default function CompleteProfilePage() {
     boxShadow: "0 20px 70px rgba(26,18,8,0.1)",
     border: "1px solid rgba(200,149,108,0.18)",
     width: "100%",
-    maxWidth: "560px",
+    maxWidth: "600px",
     animation: "fadeUp 0.5s ease both",
   };
 
@@ -111,7 +131,7 @@ export default function CompleteProfilePage() {
     marginTop: "1.5rem", transition: "all 0.2s",
   };
 
-  const steps = ["الحرفة والموقع", "نبذة عنك", "تحديد موقعك"];
+  const steps = ["الحرفة والموقع", "التواصل ونبذة", "تحديد موقعك"];
 
   return (
     <div dir="rtl" style={{ minHeight: "100vh", background: "var(--cream)" }}>
@@ -207,16 +227,28 @@ export default function CompleteProfilePage() {
           {step === 2 && (
             <div>
               <h2 style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--dark)", marginBottom: "0.5rem" }}>
-                📝 نبذة عنك
+                📝 التواصل ونبذة عنك
               </h2>
               <p style={{ color: "var(--muted)", marginBottom: "2rem", fontSize: "0.95rem" }}>
-                اشرح للعملاء خبرتك وما تقدمه من خدمات
+                رقم الهاتف الخاص بك ونبذة تظهر للعملاء
               </p>
+              
+              <div style={{ marginBottom: "1.25rem" }}>
+                <label style={labelStyle}>رقم الهاتف <span style={{ color: "var(--terracotta)" }}>*</span></label>
+                <input
+                  type="tel"
+                  dir="ltr"
+                  placeholder="0555 55 55 55"
+                  value={form.phone}
+                  onChange={(e) => update("phone", e.target.value)}
+                  style={{ ...inputStyle, textAlign: "right" }}
+                />
+              </div>
 
               <div>
                 <label style={labelStyle}>نبذة مختصرة عن عملك</label>
                 <textarea
-                  rows={5}
+                  rows={4}
                   placeholder="مثال: خبرة 10 سنوات في النجارة، أصنع أثاثاً حسب الطلب بجودة عالية..."
                   value={form.bio}
                   onChange={(e) => update("bio", e.target.value)}
@@ -231,7 +263,10 @@ export default function CompleteProfilePage() {
                   background: "transparent", color: "var(--muted)", fontFamily: "'Cairo', sans-serif",
                   fontWeight: 700, fontSize: "1rem", cursor: "pointer",
                 }}>→ السابق</button>
-                <button style={{ ...nextBtnStyle, flex: 2, marginTop: 0 }} onClick={() => { setError(""); setStep(3); }}>
+                <button style={{ ...nextBtnStyle, flex: 2, marginTop: 0 }} onClick={() => { 
+                  if (!form.phone) { setError("يرجى إدخال رقم الهاتف"); return; }
+                  setError(""); setStep(3); 
+                }}>
                   التالي ←
                 </button>
               </div>
@@ -240,46 +275,42 @@ export default function CompleteProfilePage() {
 
           {/* Step 3 */}
           {step === 3 && (
-            <div>
+            <div style={{ width: "100%" }}>
               <h2 style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--dark)", marginBottom: "0.5rem" }}>
                 📍 موقعك على الخريطة
               </h2>
-              <p style={{ color: "var(--muted)", marginBottom: "2rem", fontSize: "0.95rem" }}>
-                حدّد موقعك ليجدك العملاء القريبون منك
+              <p style={{ color: "var(--muted)", marginBottom: "1rem", fontSize: "0.95rem" }}>
+                انقر على الخريطة لتحديد موقعك أو استخدم التحديد التلقائي
               </p>
-
-              <div style={{
-                background: "rgba(181,83,26,0.04)", border: "2px dashed rgba(181,83,26,0.2)",
-                borderRadius: "16px", padding: "2rem", textAlign: "center", marginBottom: "1.5rem",
-              }}>
-                {form.lat ? (
-                  <div>
-                    <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>✅</div>
-                    <p style={{ fontWeight: 700, color: "var(--terracotta)" }}>تم تحديد موقعك!</p>
-                    <p style={{ fontSize: "0.85rem", color: "var(--muted)", marginTop: "0.25rem" }}>
-                      {form.lat.toFixed(4)}°, {form.lng?.toFixed(4)}°
-                    </p>
-                  </div>
-                ) : (
-                  <div>
-                    <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>📍</div>
-                    <p style={{ color: "var(--muted)", marginBottom: "1rem", fontSize: "0.95rem" }}>
-                      اضغط الزر لتحديد موقعك تلقائياً
-                    </p>
-                    <button onClick={getLocation} style={{
-                      padding: "0.85rem 2rem", borderRadius: "12px",
-                      background: "var(--terracotta)", color: "#fff",
-                      fontFamily: "'Cairo', sans-serif", fontWeight: 700, fontSize: "0.95rem",
-                      border: "none", cursor: "pointer",
-                    }}>
-                      📡 تحديد موقعي تلقائياً
-                    </button>
-                  </div>
-                )}
+              
+              <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
+                <button onClick={getLocation} style={{
+                  padding: "0.6rem 1rem", borderRadius: "8px",
+                  background: "var(--terracotta)", color: "#fff",
+                  fontFamily: "'Cairo', sans-serif", fontWeight: 700, fontSize: "0.85rem",
+                  border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem"
+                }}>
+                  📡 تحديد تلقائي
+                </button>
               </div>
 
+              <div style={{ height: "350px", width: "100%", marginBottom: "1.5rem" }}>
+                <Map 
+                  interactive={true} 
+                  onLocationSelect={handleMapSelect} 
+                  defaultCenter={form.lat && form.lng ? [form.lat, form.lng] : [36.75, 3.05]}
+                  selectedLocation={form.lat && form.lng ? { lat: form.lat, lng: form.lng } : null}
+                />
+              </div>
+
+              {form.lat && (
+                <div style={{ textAlign: "center", marginBottom: "1rem", color: "var(--terracotta)", fontWeight: 700, fontSize: "0.9rem" }}>
+                  تم تحديد الموقع: {form.lat.toFixed(4)}, {form.lng?.toFixed(4)}
+                </div>
+              )}
+
               <p style={{ fontSize: "0.85rem", color: "var(--muted)", textAlign: "center", marginBottom: "1.5rem" }}>
-                * يمكنك تخطي هذه الخطوة وإضافة الموقع لاحقاً من لوحة التحكم
+                * يمكنك تخطي الخريطة وإضافة الموقع لاحقاً
               </p>
 
               <div style={{ display: "flex", gap: "1rem" }}>
@@ -294,7 +325,7 @@ export default function CompleteProfilePage() {
                   disabled={loading}
                   style={{ ...nextBtnStyle, flex: 2, marginTop: 0, opacity: loading ? 0.7 : 1, cursor: loading ? "not-allowed" : "pointer" }}
                 >
-                  {loading ? "جاري الحفظ..." : "🚀 إنشاء ملفي الشخصي"}
+                  {loading ? "جاري الحفظ..." : "🚀 إنشاء ملفي"}
                 </button>
               </div>
             </div>

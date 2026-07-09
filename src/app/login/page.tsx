@@ -1,9 +1,49 @@
-﻿"use client";
+"use client";
 
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    
+    try {
+      const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
+      const payload = isLogin ? { email, password } : { name, email, password };
+      
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || "حدث خطأ ما");
+      }
+      
+      router.push(data.redirect || "/");
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div dir="rtl" style={{ minHeight: "100vh", background: "var(--cream)" }}>
       <Navbar />
@@ -47,11 +87,95 @@ export default function LoginPage() {
               fontSize: "1.85rem", fontWeight: 900, color: "var(--dark)",
               marginBottom: "0.5rem",
             }}>
-              مرحباً بك مجدداً
+              {isLogin ? "مرحباً بك مجدداً" : "إنشاء حساب جديد"}
             </h1>
             <p style={{ color: "var(--muted)", fontWeight: 500, fontSize: "0.95rem" }}>
-              سجل دخولك بحساب Google للمتابعة
+              {isLogin ? "سجل دخولك للمتابعة" : "أدخل بياناتك للانضمام إلى منصة حرفي"}
             </p>
+          </div>
+
+          {error && (
+            <div style={{
+              padding: "1rem", borderRadius: "12px", background: "rgba(239,68,68,0.1)",
+              color: "#b91c1c", marginBottom: "1.5rem", fontSize: "0.9rem", textAlign: "center",
+              border: "1px solid rgba(239,68,68,0.2)"
+            }}>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "1.5rem" }}>
+            {!isLogin && (
+              <div>
+                <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.9rem", fontWeight: 700, color: "var(--dark)" }}>
+                  الاسم الكامل
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="مثال: محمد بن علي"
+                  required
+                  style={{
+                    width: "100%", padding: "0.85rem 1rem", borderRadius: "12px",
+                    border: "1px solid rgba(200,149,108,0.3)", outline: "none",
+                    fontFamily: "inherit", fontSize: "1rem", boxSizing: "border-box"
+                  }}
+                />
+              </div>
+            )}
+            <div>
+              <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.9rem", fontWeight: 700, color: "var(--dark)" }}>
+                البريد الإلكتروني
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="example@mail.com"
+                required
+                style={{
+                  width: "100%", padding: "0.85rem 1rem", borderRadius: "12px",
+                  border: "1px solid rgba(200,149,108,0.3)", outline: "none",
+                  fontFamily: "inherit", fontSize: "1rem", boxSizing: "border-box"
+                }}
+              />
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.9rem", fontWeight: 700, color: "var(--dark)" }}>
+                كلمة المرور
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                style={{
+                  width: "100%", padding: "0.85rem 1rem", borderRadius: "12px",
+                  border: "1px solid rgba(200,149,108,0.3)", outline: "none",
+                  fontFamily: "inherit", fontSize: "1rem", boxSizing: "border-box"
+                }}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: "100%", padding: "1rem", borderRadius: "14px",
+                background: "var(--terracotta)", color: "#fff", fontWeight: 800,
+                fontSize: "1rem", border: "none", cursor: loading ? "not-allowed" : "pointer",
+                marginTop: "0.5rem", opacity: loading ? 0.7 : 1, transition: "opacity 0.2s"
+              }}
+            >
+              {loading ? "جاري المعالجة..." : (isLogin ? "تسجيل الدخول" : "إنشاء حساب")}
+            </button>
+          </form>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", margin: "1.5rem 0", color: "var(--muted)" }}>
+            <hr style={{ flex: 1, border: "none", borderTop: "1px solid rgba(200,149,108,0.2)" }} />
+            <span style={{ fontSize: "0.85rem", fontWeight: 600 }}>أو</span>
+            <hr style={{ flex: 1, border: "none", borderTop: "1px solid rgba(200,149,108,0.2)" }} />
           </div>
 
           <a
@@ -59,38 +183,31 @@ export default function LoginPage() {
             id="google-login-btn"
             style={{
               display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem",
-              width: "100%", padding: "1.1rem", borderRadius: "18px",
-              background: "#fff", color: "#333", fontWeight: 800, fontSize: "1.05rem",
+              width: "100%", padding: "1rem", borderRadius: "14px",
+              background: "#fff", color: "#333", fontWeight: 800, fontSize: "1rem",
               textDecoration: "none", border: "2px solid rgba(0,0,0,0.08)",
-              boxShadow: "0 6px 20px rgba(0,0,0,0.08)", transition: "all 0.25s",
-              marginBottom: "2rem",
-              boxSizing: "border-box",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.05)", transition: "all 0.25s",
+              marginBottom: "1.5rem", boxSizing: "border-box",
             }}
           >
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: "26px", height: "26px" }} />
-            تسجيل الدخول بحساب Google
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: "24px", height: "24px" }} />
+            المتابعة باستخدام Google
           </a>
 
           <div style={{ textAlign: "center" }}>
-            <p style={{ color: "var(--muted)", fontWeight: 600, marginBottom: "0.75rem", fontSize: "0.9rem" }}>
-              ليس لديك حساب بعد؟
+            <p style={{ color: "var(--muted)", fontWeight: 600, marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+              {isLogin ? "ليس لديك حساب بعد؟" : "لديك حساب بالفعل؟"}
             </p>
-            <Link
-              href="/register-artisan"
+            <button
+              onClick={() => setIsLogin(!isLogin)}
               style={{
-                display: "inline-block",
-                padding: "0.85rem 2.5rem",
-                borderRadius: "14px",
-                border: "2px solid rgba(181,83,26,0.25)",
-                color: "var(--terracotta)",
-                fontWeight: 800,
-                fontSize: "0.95rem",
-                transition: "all 0.22s",
-                background: "transparent",
+                background: "none", border: "none", color: "var(--terracotta)",
+                fontWeight: 800, fontSize: "0.95rem", cursor: "pointer",
+                padding: "0.5rem 1rem", textDecoration: "underline"
               }}
             >
-              سجل كحرفي الآن
-            </Link>
+              {isLogin ? "سجل الآن" : "تسجيل الدخول"}
+            </button>
           </div>
         </div>
       </main>

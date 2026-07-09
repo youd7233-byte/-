@@ -22,6 +22,10 @@ model User {
   artisanProfile ArtisanProfile?
   reviews        Review[]
   payments       Payment[]
+
+  clientConversations  Conversation[] @relation("ClientConversations")
+  artisanConversations Conversation[] @relation("ArtisanConversations")
+  sentMessages         Message[]      @relation("SentMessages")
 }
 
 
@@ -70,4 +74,29 @@ model Payment {
   status      String   // "PENDING", "COMPLETED", "FAILED"
   paymentType String   // "PREMIUM_ADS", "VERIFICATION", "COMMISSION"
   createdAt   DateTime @default(now())
+}
+
+model Conversation {
+  id           String    @id @default(cuid())
+  clientId     String
+  client       User      @relation("ClientConversations", fields: [clientId], references: [id], onDelete: Cascade)
+  artisanId    String
+  artisan      User      @relation("ArtisanConversations", fields: [artisanId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  messages     Message[]
+
+  @@unique([clientId, artisanId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  content        String
+  isRead         Boolean      @default(false)
+  createdAt      DateTime     @default(now())
 }

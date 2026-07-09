@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
+import MessageButton from "./MessageButton";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -79,14 +80,15 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
               </div>
             )}
           </div>
-          <div>
-            <a href="tel:" style={{
+          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+            <MessageButton artisanId={id} />
+            <a href={`tel:${user.phone || ""}`} style={{
               display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 1.75rem",
               background: "linear-gradient(135deg, var(--terracotta) 0%, #d45e1a 100%)",
               color: "#fff", borderRadius: "14px", fontFamily: "'Cairo',sans-serif",
               fontWeight: 800, fontSize: "1rem", textDecoration: "none",
               boxShadow: "0 6px 20px rgba(181,83,26,0.3)",
-            }}>📞 تواصل</a>
+            }}>📞 اتصال</a>
           </div>
         </div>
 
