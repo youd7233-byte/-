@@ -8,11 +8,13 @@ neonConfig.webSocketConstructor = ws;
 
 const prismaClientSingleton = () => {
   // Try multiple env var names (Vercel Neon integration uses different names)
-  const url =
+  const urlRaw =
     process.env.DATABASE_URL ||
     process.env.POSTGRES_PRISMA_URL_DATABASE_URL ||
     process.env.POSTGRES_URL ||
     process.env.POSTGRES_PRISMA_URL;
+
+  const url = urlRaw ? urlRaw.trim() : "";
 
   if (!url) {
     throw new Error(
