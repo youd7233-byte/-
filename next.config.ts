@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Prisma needs to run on the server only
-  serverExternalPackages: ["@prisma/client", "prisma"],
+  // These packages use native Node.js modules - keep them external
+  serverExternalPackages: ["@prisma/client", "@prisma/adapter-neon", "@neondatabase/serverless", "ws"],
 
   // Security headers
   async headers() {

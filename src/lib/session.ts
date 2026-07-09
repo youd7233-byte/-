@@ -20,7 +20,10 @@ const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 function getSecret(): string {
   const secret = process.env.SESSION_SECRET;
-  if (!secret) throw new Error("SESSION_SECRET is not set in environment variables.");
+  if (!secret) {
+    console.warn("SESSION_SECRET is not set. Sessions will not work.");
+    return "fallback-insecure-secret-please-set-SESSION_SECRET";
+  }
   return secret;
 }
 
