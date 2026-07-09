@@ -5,7 +5,8 @@ export async function GET(req: NextRequest) {
   const envKey = Object.keys(process.env).find(k => k.trim() === 'GOOGLE_CLIENT_ID');
   const clientId = envKey ? process.env[envKey]?.trim() : undefined;
 
-  const redirectUri = `${req.nextUrl.origin}/api/auth/google/callback`;
+  // Hardcoded redirect URI to prevent redirect_uri_mismatch on Vercel preview URLs
+  const redirectUri = `https://two-gamma-33.vercel.app/api/auth/google/callback`;
   
   if (!clientId) {
     return NextResponse.json({ error: "Missing GOOGLE_CLIENT_ID environment variable" }, { status: 500 });

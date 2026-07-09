@@ -22,7 +22,8 @@ export async function GET(req: NextRequest) {
     const envKeySecret = Object.keys(process.env).find(k => k.trim() === 'GOOGLE_CLIENT_SECRET');
     const clientSecret = envKeySecret ? process.env[envKeySecret]?.trim() : undefined;
 
-    const redirectUri = `${req.nextUrl.origin}/api/auth/google/callback`;
+    // Hardcoded redirect URI to prevent redirect_uri_mismatch on Vercel preview URLs
+    const redirectUri = `https://two-gamma-33.vercel.app/api/auth/google/callback`;
 
     if (!clientId || !clientSecret) {
       throw new Error("Missing Google OAuth credentials");
