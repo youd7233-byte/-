@@ -1,8 +1,11 @@
-﻿import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
+
+export const dynamic = 'force-dynamic';
+
 
 export const metadata = { title: "لوحة التحكم | حِرَفي" };
 

@@ -4,6 +4,9 @@ import { prisma } from "@/lib/prisma";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
+
 export default async function HomePage() {
   const session = await getSession();
 

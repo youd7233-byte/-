@@ -1,4 +1,4 @@
-﻿import "server-only";
+import "server-only";
 import { PrismaClient } from "@prisma/client";
 import { Pool, neonConfig } from "@neondatabase/serverless";
 import { PrismaNeon } from "@prisma/adapter-neon";
@@ -7,8 +7,19 @@ import ws from "ws";
 neonConfig.webSocketConstructor = ws;
 
 const prismaClientSingleton = () => {
-  const url = process.env.DATABASE_URL;
-  if (!url) throw new Error("DATABASE_URL is not set");
+  // Try multiple env var names (Vercel Neon integration uses different names)
+  const url =
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_PRISMA_URL_DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.POSTGRES_PRISMA_URL;
+
+  if (!url) {
+    throw new Error(
+      `No database URL found. Tried: DATABASE_URL, POSTGRES_PRISMA_URL_DATABASE_URL, POSTGRES_URL, POSTGRES_PRISMA_URL. ` +
+      `Available env keys starting with POSTGRES/DATABASE: ${Object.keys(process.env).filter(k => k.startsWith('POSTGRES') || k.startsWith('DATABASE')).join(', ')}`
+    );
+  }
 
   const pool = new Pool({ connectionString: url });
   const adapter = new PrismaNeon(pool as any);
