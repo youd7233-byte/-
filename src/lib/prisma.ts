@@ -15,7 +15,6 @@ const prismaClientSingleton = () => {
   }
 
   return new PrismaClient({
-    datasourceUrl: url,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 };
