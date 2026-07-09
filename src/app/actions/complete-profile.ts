@@ -1,5 +1,6 @@
 "use server";
 
+
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
@@ -51,14 +52,32 @@ export async function completeProfile(
       return { success: false, error: "رقم الهاتف هذا مسجل بالفعل لحساب آخر" };
     }
 
-    // Update user phone & create artisan profile
-    await prisma.$transaction(async (tx) => {
-      await tx.user.update({
-        where: { id: userId! },
-        data: { phone },
-      });
+    // Update user phone & create/update artisan profile
+    await prisma.user.update({
+      where: { id: userId! },
+      data: { phone },
+    });
 
-      await tx.artisanProfile.create({
+    // Check if profile already exists (upsert)
+    const existingProfile = await prisma.artisanProfile.findUnique({
+      where: { userId: userId! },
+    });
+
+    if (existingProfile) {
+      await prisma.artisanProfile.update({
+        where: { userId: userId! },
+        data: {
+          profession,
+          wilaya,
+          city: city || null,
+          lat,
+          lng,
+          bio: `${specialty ? `التخصص: ${specialty}\n` : ""}${bio || ""}`.trim() || null,
+          isPremium: plan === "pro",
+        },
+      });
+    } else {
+      await prisma.artisanProfile.create({
         data: {
           userId: userId!,
           profession,
@@ -70,7 +89,7 @@ export async function completeProfile(
           isPremium: plan === "pro",
         },
       });
-    });
+    }
 
   } catch (error) {
     console.error("Complete profile error:", error);

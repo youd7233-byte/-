@@ -6,50 +6,59 @@ import Link from "next/link";
 
 export const dynamic = 'force-dynamic';
 
-
 export default async function HomePage() {
   const session = await getSession();
 
   // Redirect logged-in users to appropriate pages
   if (session?.userId) {
-    const user = await prisma.user.findUnique({
-      where: { id: session.userId },
-      include: { artisanProfile: true },
-    });
-    if (user) {
-      if (!user.role) redirect("/choose-role");
-      if (user.role === "ARTISAN" && !user.artisanProfile) redirect("/complete-profile");
-      if (user.role === "ARTISAN") redirect("/dashboard");
-      // CLIENT falls through to homepage
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: session.userId },
+        include: { artisanProfile: true },
+      });
+      if (user) {
+        if (!user.role) redirect("/choose-role");
+        if (user.role === "ARTISAN" && !user.artisanProfile) redirect("/complete-profile");
+        if (user.role === "ARTISAN") redirect("/dashboard");
+        // CLIENT falls through to homepage
+      }
+    } catch (e) {
+      console.error("Homepage session check error:", e);
+      // Continue to show homepage even if DB fails
     }
   }
 
   // Get featured artisans for homepage
-  const featuredArtisans = await prisma.artisanProfile.findMany({
-    where: { OR: [{ isPremium: true }, { isVerified: true }] },
-    include: {
-      user: { select: { id: true, name: true, image: true } },
-      reviews: { select: { rating: true } },
-    },
-    take: 6,
-    orderBy: [{ isPremium: "desc" }, { isVerified: "desc" }],
-  });
+  let featuredArtisans: any[] = [];
+  try {
+    featuredArtisans = await prisma.artisanProfile.findMany({
+      where: { OR: [{ isPremium: true }, { isVerified: true }] },
+      include: {
+        user: { select: { id: true, name: true, image: true } },
+        reviews: { select: { rating: true } },
+      },
+      take: 6,
+      orderBy: [{ isPremium: "desc" }, { isVerified: "desc" }],
+    });
+  } catch (e) {
+    console.error("Featured artisans fetch error:", e);
+  }
 
   const STATS = [
-    { icon: "??", value: "+10,000", label: "????? ??? ???" },
-    { icon: "??", value: "+2,500", label: "???? ?????", featured: true },
-    { icon: "?", value: "4.9/5", label: "??? ???????" },
+    { icon: "🤝", value: "+10,000", label: "عميل راضٍ حتى الآن" },
+    { icon: "🔨", value: "+2,500", label: "حرفي محترف", featured: true },
+    { icon: "⭐", value: "4.9/5", label: "متوسط التقييم" },
   ];
 
   const CRAFTS = [
-    { icon: "???", label: "?????" },
-    { icon: "?", label: "??????" },
-    { icon: "??", label: "?????" },
-    { icon: "??", label: "????" },
-    { icon: "???", label: "????" },
-    { icon: "??", label: "?????" },
-    { icon: "??", label: "????????" },
-    { icon: "??", label: "????" },
+    { icon: "🪵", label: "نجارة" },
+    { icon: "⚡", label: "كهرباء" },
+    { icon: "🔧", label: "سباكة" },
+    { icon: "🏗️", label: "بناء" },
+    { icon: "🎨", label: "دهان" },
+    { icon: "❄️", label: "تبريد" },
+    { icon: "📡", label: "إلكترونيات" },
+    { icon: "🔒", label: "أبواب" },
   ];
 
   return (
@@ -74,7 +83,7 @@ export default async function HomePage() {
           fontSize: "0.88rem", fontWeight: 700, color: "var(--terracotta)",
           marginBottom: "2rem", animation: "fadeUp 0.5s ease both",
         }}>
-          <span>?</span> ?????? ????????? ????????
+          <span>🇩🇿</span> المنصة الجزائرية للحرفيين
         </div>
 
         <h1 style={{
@@ -82,8 +91,8 @@ export default async function HomePage() {
           color: "var(--dark)", maxWidth: "800px", marginBottom: "1.5rem",
           animation: "fadeUp 0.6s ease 0.1s both",
         }}>
-          ???? ??? <span style={{ color: "var(--terracotta)" }}>???? ????????</span>
-          <br />?? ?????? ?????
+          ابحث عن <span style={{ color: "var(--terracotta)" }}>حرفي موثوق</span>
+          <br />في منطقتك بسهولة
         </h1>
 
         <p style={{
@@ -91,7 +100,7 @@ export default async function HomePage() {
           lineHeight: 1.75, marginBottom: "2.5rem",
           animation: "fadeUp 0.6s ease 0.2s both",
         }}>
-          ???? ???????? ?????????? ??????? ??????? ??????? ?? ?????? ??? ????????? ?????
+          وصّل العملاء بالحرفيين المحترفين الأقرب إليهم. سباكة، كهرباء، نجارة وأكثر.
         </p>
 
         <div style={{
@@ -106,7 +115,7 @@ export default async function HomePage() {
             textDecoration: "none", boxShadow: "0 12px 36px rgba(181,83,26,0.32)",
             transition: "all 0.25s",
           }}>
-            ?? ???? ?? ????
+            🔍 ابحث عن حرفي
           </Link>
           <Link href="/register-artisan" style={{
             display: "inline-flex", alignItems: "center", gap: "0.6rem",
@@ -116,7 +125,7 @@ export default async function HomePage() {
             textDecoration: "none", background: "rgba(255,255,255,0.7)",
             backdropFilter: "blur(8px)", transition: "all 0.25s",
           }}>
-            ?? ???? ?????
+            🔨 سجّل كحرفي
           </Link>
         </div>
       </header>
@@ -146,9 +155,9 @@ export default async function HomePage() {
       {/* Craft Categories */}
       <section style={{ padding: "3rem 1.5rem", maxWidth: "1100px", margin: "0 auto" }}>
         <h2 style={{ fontSize: "1.7rem", fontWeight: 900, textAlign: "center", color: "var(--dark)", marginBottom: "0.5rem" }}>
-          ???? ??? ???????
+          تصفح حسب التخصص
         </h2>
-        <p style={{ textAlign: "center", color: "var(--muted)", marginBottom: "2.5rem" }}>???? ??? ?????? ???? ???????</p>
+        <p style={{ textAlign: "center", color: "var(--muted)", marginBottom: "2.5rem" }}>اختر نوع الخدمة التي تحتاج إليها</p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "1rem" }}>
           {CRAFTS.map((c) => (
             <Link key={c.label} href={`/search?profession=${encodeURIComponent(c.label)}`} style={{ textDecoration: "none" }}>
@@ -158,20 +167,7 @@ export default async function HomePage() {
                 textAlign: "center", cursor: "pointer",
                 border: "1px solid rgba(200,149,108,0.14)",
                 boxShadow: "0 4px 16px rgba(26,18,8,0.06)", transition: "all 0.22s",
-              }}
-                onMouseEnter={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.transform = "translateY(-6px)";
-                  el.style.boxShadow = "0 12px 36px rgba(181,83,26,0.15)";
-                  el.style.borderColor = "rgba(181,83,26,0.3)";
-                }}
-                onMouseLeave={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.transform = "translateY(0)";
-                  el.style.boxShadow = "0 4px 16px rgba(26,18,8,0.06)";
-                  el.style.borderColor = "rgba(200,149,108,0.14)";
-                }}
-              >
+              }}>
                 <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>{c.icon}</div>
                 <div style={{ fontWeight: 800, color: "var(--dark)", fontSize: "0.95rem" }}>{c.label}</div>
               </div>
@@ -186,20 +182,20 @@ export default async function HomePage() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}>
             <div>
               <h2 style={{ fontSize: "1.7rem", fontWeight: 900, color: "var(--dark)", marginBottom: "0.3rem" }}>
-                ? ?????? ??????
+                ⭐ حرفيو الشهر
               </h2>
-              <p style={{ color: "var(--muted)" }}>?????? ??????? ???????</p>
+              <p style={{ color: "var(--muted)" }}>الأعلى تقييماً وتوثيقاً</p>
             </div>
             <Link href="/search" style={{
               padding: "0.7rem 1.5rem", borderRadius: "12px",
               border: "2px solid rgba(181,83,26,0.22)",
               color: "var(--terracotta)", fontWeight: 700, textDecoration: "none", fontSize: "0.9rem",
-            }}>??? ???? ?</Link>
+            }}>عرض الكل ←</Link>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1.25rem" }}>
             {featuredArtisans.map((a) => {
               const avg = a.reviews.length > 0
-                ? (a.reviews.reduce((s, r) => s + r.rating, 0) / a.reviews.length).toFixed(1)
+                ? (a.reviews.reduce((s: number, r: any) => s + r.rating, 0) / a.reviews.length).toFixed(1)
                 : null;
               return (
                 <Link key={a.id} href={`/artisan/${a.userId}`} style={{ textDecoration: "none" }}>
@@ -209,10 +205,7 @@ export default async function HomePage() {
                     boxShadow: a.isPremium ? "0 6px 30px rgba(212,168,67,0.2)" : "0 4px 20px rgba(26,18,8,0.07)",
                     border: a.isPremium ? "2px solid rgba(212,168,67,0.35)" : "1px solid rgba(200,149,108,0.14)",
                     transition: "all 0.22s", cursor: "pointer",
-                  }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
-                  >
+                  }}>
                     <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                       <div style={{
                         width: "56px", height: "56px", borderRadius: "50%", flexShrink: 0,
@@ -220,19 +213,19 @@ export default async function HomePage() {
                         boxShadow: "0 4px 14px rgba(181,83,26,0.2)",
                         display: "flex", alignItems: "center", justifyContent: "center",
                         fontSize: "1.5rem",
-                      }}>{!a.user.image && "??"}</div>
+                      }}>{!a.user.image && "👷"}</div>
                       <div>
                         <div style={{ display: "flex", gap: "0.35rem", alignItems: "center" }}>
                           <div style={{ fontWeight: 900, color: "var(--dark)", fontSize: "1rem" }}>{a.user.name}</div>
-                          {a.isVerified && <span style={{ color: "#16a34a", fontSize: "0.8rem" }}>?</span>}
+                          {a.isVerified && <span style={{ color: "#16a34a", fontSize: "0.8rem" }}>✓</span>}
                         </div>
                         <div style={{ color: "var(--terracotta)", fontWeight: 700, fontSize: "0.88rem" }}>{a.profession}</div>
-                        <div style={{ color: "var(--muted)", fontSize: "0.82rem" }}>?? {a.wilaya}</div>
+                        <div style={{ color: "var(--muted)", fontSize: "0.82rem" }}>📍 {a.wilaya}</div>
                       </div>
                     </div>
                     {avg && (
                       <div style={{ marginTop: "0.9rem", display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                        <span style={{ color: "#f59e0b" }}>?</span>
+                        <span style={{ color: "#f59e0b" }}>⭐</span>
                         <span style={{ fontWeight: 800, fontSize: "0.9rem" }}>{avg}</span>
                         <span style={{ color: "var(--muted)", fontSize: "0.82rem" }}>({a.reviews.length})</span>
                       </div>
@@ -253,10 +246,10 @@ export default async function HomePage() {
           boxShadow: "0 20px 60px rgba(181,83,26,0.3)",
         }}>
           <h2 style={{ fontSize: "1.9rem", fontWeight: 900, color: "#fff", marginBottom: "1rem" }}>
-            ??? ????? ???? ???? ??????!
+            أنت حرفي وتريد زبائن أكثر؟
           </h2>
           <p style={{ color: "rgba(255,255,255,0.85)", marginBottom: "2rem", fontSize: "1.05rem", lineHeight: 1.7 }}>
-            ???? ??????? ????????. ???? ???? ?????? ????? ?? ???? ??????? ?????
+            سجّل مجاناً الآن. آلاف العملاء ينتظرون حرفياً موثوقاً مثلك.
           </p>
           <Link href="/register-artisan" style={{
             display: "inline-flex", alignItems: "center", gap: "0.6rem",
@@ -265,13 +258,17 @@ export default async function HomePage() {
             fontWeight: 900, fontSize: "1.1rem", textDecoration: "none",
             boxShadow: "0 8px 28px rgba(0,0,0,0.15)",
           }}>
-            ?? ???? ?????? ????
+            🔨 سجّل كحرفي مجاناً
           </Link>
         </div>
       </section>
 
       <style>{`
         @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        @media (max-width: 768px) {
+          section div[style*="repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
+          section div[style*="repeat(4,1fr)"] { grid-template-columns: repeat(2,1fr) !important; }
+        }
       `}</style>
     </div>
   );
