@@ -90,7 +90,7 @@ export async function registerArtisan(
     });
 
     // ── Auto-login after registration ──
-    await createSession(user.id, user.role, user.name);
+    await createSession(user.id, user.role ?? "ARTISAN", user.name);
     revalidatePath("/");
 
   } catch (error: unknown) {
@@ -140,7 +140,7 @@ export async function loginArtisan(
     }
 
     userId = user.id;
-    userRole = user.role;
+    userRole = user.role ?? "ARTISAN";
     userName = user.name;
 
   } catch (error) {
