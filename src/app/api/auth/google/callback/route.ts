@@ -56,6 +56,7 @@ export async function GET(req: NextRequest) {
     const email = profileData.email;
     const name = profileData.name;
     const googleId = profileData.id;
+    const image = profileData.picture;
 
     // 3. Find or Create User
     let user = await prisma.user.findFirst({
@@ -69,13 +70,14 @@ export async function GET(req: NextRequest) {
     });
 
     if (!user) {
-      // Create new user (NO password needed)
+      // Create new user with no role (pending selection)
       user = await prisma.user.create({
         data: {
           email,
           name,
           googleId,
-          role: "ARTISAN", // Default role
+          image,
+          role: null,
         },
         include: { artisanProfile: true }
       });
@@ -83,21 +85,30 @@ export async function GET(req: NextRequest) {
       // Link existing account
       user = await prisma.user.update({
         where: { id: user.id },
-        data: { googleId },
+        data: { googleId, image: image || user.image },
         include: { artisanProfile: true }
       });
     }
 
-    // 4. Create Session
-    await createSession(user.id, user.role, user.name);
 
-    // 5. Redirect
-    // If they don't have an artisan profile yet, send them to complete it
-    if (!user.artisanProfile) {
+    // 4. Create Session
+    await createSession(user.id, user.role ?? "PENDING", user.name);
+
+    // 5. Redirect based on role
+    if (!user.role) {
+      // New user - choose their role
+      return NextResponse.redirect(new URL("/choose-role", req.url));
+    }
+    if (user.role === "ARTISAN" && !user.artisanProfile) {
+      // Artisan who hasn't completed profile
       return NextResponse.redirect(new URL("/complete-profile", req.url));
     }
+    if (user.role === "ARTISAN") {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+    // CLIENT → main page
+    return NextResponse.redirect(new URL("/", req.url));
 
-    return NextResponse.redirect(new URL("/dashboard", req.url));
 
   } catch (error: any) {
     console.error("Google Callback Error:", error);
