@@ -16,9 +16,17 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const clientId = process.env.GOOGLE_CLIENT_ID!;
-    const clientSecret = process.env.GOOGLE_CLIENT_SECRET!;
+    const envKeyId = Object.keys(process.env).find(k => k.trim() === 'GOOGLE_CLIENT_ID');
+    const clientId = envKeyId ? process.env[envKeyId]?.trim() : undefined;
+
+    const envKeySecret = Object.keys(process.env).find(k => k.trim() === 'GOOGLE_CLIENT_SECRET');
+    const clientSecret = envKeySecret ? process.env[envKeySecret]?.trim() : undefined;
+
     const redirectUri = `${req.nextUrl.origin}/api/auth/google/callback`;
+
+    if (!clientId || !clientSecret) {
+      throw new Error("Missing Google OAuth credentials");
+    }
 
     // 1. Exchange code for access token & id token
     const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
