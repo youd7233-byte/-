@@ -5,7 +5,12 @@ export async function GET(req: NextRequest) {
   const redirectUri = `${req.nextUrl.origin}/api/auth/google/callback`;
   
   if (!clientId) {
-    return NextResponse.json({ error: "Missing GOOGLE_CLIENT_ID environment variable" }, { status: 500 });
+    const googleKeys = Object.keys(process.env).filter(k => k.toLowerCase().includes('google'));
+    return NextResponse.json({ 
+      error: "Missing GOOGLE_CLIENT_ID environment variable",
+      found_google_keys: googleKeys,
+      hint: "أعد التحقق من اسم المتغير في Vercel"
+    }, { status: 500 });
   }
 
   const scope = encodeURIComponent("openid email profile");
