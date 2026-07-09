@@ -130,6 +130,10 @@ export async function loginArtisan(
       return { success: false, error: "رقم الهاتف أو كلمة المرور غير صحيحة" };
     }
 
+    if (!user.password) {
+      return { success: false, error: "هذا الحساب مسجل عبر Google، يرجى استخدام زر الدخول بـ Google." };
+    }
+
     const isValid = await verifyPassword(password, user.password);
     if (!isValid) {
       return { success: false, error: "رقم الهاتف أو كلمة المرور غير صحيحة" };
