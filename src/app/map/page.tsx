@@ -2,12 +2,7 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import Navbar from "@/components/Navbar";
-import dynamic from "next/dynamic";
-
-const Map = dynamic(() => import("@/components/Map"), {
-  ssr: false,
-  loading: () => <div style={{ height: "calc(100vh - 70px)", background: "#e5e7eb", display: "flex", alignItems: "center", justifyContent: "center" }}>جاري تحميل الخريطة...</div>
-});
+import ClientMap from "./ClientMap";
 
 const WILAYA_COORDS: Record<string, [number, number]> = {
   "الجزائر": [36.7538, 3.0588],
@@ -100,7 +95,7 @@ export default async function MapPage() {
           </button>
         </div>
 
-        <Map artisans={artisans} defaultCenter={center} />
+        <ClientMap artisans={artisans} center={center} />
       </main>
     </div>
   );
