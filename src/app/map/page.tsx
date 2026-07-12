@@ -53,16 +53,27 @@ export default async function MapPage() {
     include: { user: true }
   });
 
-  const artisans = artisansDb
-    .filter(a => a.lat && a.lng)
-    .map(a => ({
+  const artisans = artisansDb.map(a => {
+    let lat = a.lat;
+    let lng = a.lng;
+    
+    // Fallback to Wilaya center if no exact location is set
+    if (!lat || !lng) {
+      const coords = WILAYA_COORDS[a.wilaya] || WILAYA_COORDS["default"];
+      // Add a tiny random offset so multiple artisans in the same wilaya without exact locations don't overlap perfectly
+      lat = coords[0] + (Math.random() - 0.5) * 0.05;
+      lng = coords[1] + (Math.random() - 0.5) * 0.05;
+    }
+
+    return {
       id: a.id,
-      lat: a.lat!,
-      lng: a.lng!,
+      lat,
+      lng,
       profession: a.profession,
       name: a.user.name,
       userId: a.user.id
-    }));
+    };
+  });
 
   return (
     <div dir="rtl" style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -95,7 +106,9 @@ export default async function MapPage() {
           </button>
         </div>
 
-        <ClientMap artisans={artisans} center={center} />
+        <div style={{ position: "absolute", inset: 0, zIndex: 1 }}>
+          <ClientMap artisans={artisans} center={center} />
+        </div>
       </main>
     </div>
   );
