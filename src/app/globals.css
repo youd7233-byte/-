@@ -230,12 +230,58 @@ html, body {
 }
 
 /* ── Hero Section ── */
-@media (max-width: 640px) {
-  header {
-    padding: 4rem 1rem 5rem !important;
+@media (max-width: 380px) {
+  .hero-title {
+    font-size: 1.75rem !important;
   }
-  h1 {
-    font-size: clamp(1.8rem, 8vw, 3rem) !important;
+
+  .stats-value {
+    font-size: 1.8rem !important;
+  }
+}
+
+/* ===== 8. Dashboard Mobile Responsive ===== */
+@media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column !important;
+  }
+
+  .dashboard-sidebar {
+    width: 100% !important;
+    border-left: none !important;
+    border-bottom: 1px solid rgba(200,149,108,0.2) !important;
+    padding: 1rem !important;
+  }
+
+  .dashboard-sidebar > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem !important;
+  }
+
+  .dashboard-sidebar > div:first-child p {
+    margin-bottom: 0 !important;
+  }
+
+  .dashboard-nav {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding-bottom: 0.5rem !important;
+    gap: 0.5rem !important;
+  }
+
+  .dashboard-nav::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .dashboard-nav a {
+    white-space: nowrap !important;
+    padding: 0.6rem 1rem !important;
+  }
+
+  .dashboard-main {
+    padding: 1.25rem 1rem !important;
   }
 }
 
@@ -347,5 +393,116 @@ html, body {
 @media (max-width: 400px) {
   .artisan-contact-btns {
     flex-direction: column !important;
+  }
+}
+
+/* ==========================================================================
+   Responsive Overrides for unified dashboard and new pages
+   ========================================================================== */
+
+/* Dashboard Layout */
+.dashboard-container {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+.dashboard-sidebar {
+  width: 260px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(200,149,108,0.2);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+}
+.dashboard-main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Responsive Grid Utilities */
+.grid-cols-2-responsive {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+.grid-cols-3-responsive {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+/* Messages Layout */
+.messages-layout {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 120px);
+}
+.messages-sidebar {
+  width: 300px;
+  border-left: 1px solid rgba(200,149,108,0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mobile Media Queries */
+@media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+  .dashboard-sidebar {
+    width: 100%;
+    border-left: none;
+    border-bottom: 1px solid rgba(200,149,108,0.2);
+    padding: 1rem;
+    flex-direction: row;
+    overflow-x: auto;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .dashboard-sidebar > div:first-child {
+    display: none; /* Hide welcome text in mobile sidebar */
+  }
+  .dashboard-sidebar nav {
+    flex-direction: row !important;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .dashboard-sidebar nav a {
+    padding: 0.5rem 1rem !important;
+    white-space: nowrap;
+  }
+  .dashboard-main-content {
+    padding: 1rem;
+  }
+  
+  .grid-cols-2-responsive,
+  .grid-cols-3-responsive {
+    grid-template-columns: 1fr !important;
+  }
+
+  .messages-layout {
+    flex-direction: column;
+    height: calc(100vh - 200px);
+  }
+  .messages-sidebar {
+    width: 100%;
+    border-left: none;
+    border-bottom: 1px solid rgba(200,149,108,0.2);
+    height: 150px;
+  }
+  
+  /* Hero card in Artisan Profile */
+  .artisan-hero-card {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center;
+  }
+  
+  /* Complete profile forms */
+  .complete-profile-card {
+    padding: 1.5rem !important;
   }
 }

@@ -22,9 +22,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div dir="rtl" style={{ minHeight: "100vh", background: "var(--cream)", display: "flex", flexDirection: "column" }}>
       <Navbar />
-      <div style={{ flex: 1, display: "flex" }}>
+      <div className="dashboard-container" style={{ flex: 1, display: "flex" }}>
         <Sidebar role={user.role} name={user.name} />
-        <main style={{ flex: 1, padding: "2rem", overflowY: "auto", position: "relative" }}>
+        <main className="dashboard-main" style={{ flex: 1, padding: "2rem", overflowY: "auto", position: "relative" }}>
           <div style={{
             position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0,
             background: "radial-gradient(ellipse 80% 40% at 0% 0%, rgba(181,83,26,0.06) 0%, transparent 50%)",

@@ -15,7 +15,7 @@ export default function Sidebar({ role, name }: { role: string, name: string }) 
   ];
 
   return (
-    <aside style={{
+    <aside className="dashboard-sidebar" style={{
       width: "260px",
       background: "rgba(255,255,255,0.7)",
       backdropFilter: "blur(20px)",
@@ -33,7 +33,7 @@ export default function Sidebar({ role, name }: { role: string, name: string }) 
         </h2>
       </div>
 
-      <nav style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+      <nav className="dashboard-nav" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         {links.map((link) => {
           const isActive = pathname === link.href;
           return (
