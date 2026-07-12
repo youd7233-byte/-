@@ -20,6 +20,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   artisanProfile ArtisanProfile?
+  clientProfile  ClientProfile?
   reviews        Review[]
   payments       Payment[]
 
@@ -28,6 +29,13 @@ model User {
   sentMessages         Message[]      @relation("SentMessages")
 }
 
+model ClientProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wilaya    String
+  createdAt DateTime @default(now())
+}
 
 model ArtisanProfile {
   id           String   @id @default(cuid())
@@ -39,6 +47,7 @@ model ArtisanProfile {
   lat          Float?
   lng          Float?
   bio          String?
+  age          Int?
   isPremium    Boolean  @default(false)
   isVerified   Boolean  @default(false)
   

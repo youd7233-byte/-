@@ -33,6 +33,7 @@ interface FormData {
   phone: string;
   lat: number | null;
   lng: number | null;
+  age: number | null;
 }
 
 export default function CompleteProfilePage() {
@@ -41,7 +42,7 @@ export default function CompleteProfilePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState<FormData>({
-    profession: "", wilaya: "", city: "", bio: "", phone: "", lat: null, lng: null,
+    profession: "", wilaya: "", city: "", bio: "", phone: "", lat: null, lng: null, age: null
   });
 
   const update = (field: keyof FormData, value: string | number | null) =>
@@ -233,16 +234,30 @@ export default function CompleteProfilePage() {
                 رقم الهاتف الخاص بك ونبذة تظهر للعملاء
               </p>
               
-              <div style={{ marginBottom: "1.25rem" }}>
-                <label style={labelStyle}>رقم الهاتف <span style={{ color: "var(--terracotta)" }}>*</span></label>
-                <input
-                  type="tel"
-                  dir="ltr"
-                  placeholder="0555 55 55 55"
-                  value={form.phone}
-                  onChange={(e) => update("phone", e.target.value)}
-                  style={{ ...inputStyle, textAlign: "right" }}
-                />
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.25rem" }}>
+                <div>
+                  <label style={labelStyle}>رقم الهاتف <span style={{ color: "var(--terracotta)" }}>*</span></label>
+                  <input
+                    type="tel"
+                    dir="ltr"
+                    placeholder="0555 55 55 55"
+                    value={form.phone}
+                    onChange={(e) => update("phone", e.target.value)}
+                    style={{ ...inputStyle, textAlign: "right" }}
+                  />
+                </div>
+                <div>
+                  <label style={labelStyle}>العمر</label>
+                  <input
+                    type="number"
+                    min="18"
+                    max="100"
+                    placeholder="مثال: 30"
+                    value={form.age || ""}
+                    onChange={(e) => update("age", parseInt(e.target.value) || null)}
+                    style={inputStyle}
+                  />
+                </div>
               </div>
 
               <div>

@@ -155,8 +155,8 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
         </div>
 
         <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
-          <Link href="/search" style={{ color: "var(--terracotta)", fontWeight: 700, textDecoration: "underline", fontSize: "0.95rem" }}>
-            ← العودة للبحث عن حرفيين
+          <Link href="/map" style={{ color: "var(--terracotta)", fontWeight: 700, textDecoration: "underline", fontSize: "0.95rem" }}>
+            ← العودة للخريطة
           </Link>
         </div>
       </main>

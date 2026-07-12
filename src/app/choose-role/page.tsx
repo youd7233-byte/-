@@ -22,7 +22,7 @@ export default function ChooseRolePage() {
       if (selected === "ARTISAN") {
         router.push("/complete-profile");
       } else {
-        router.push("/");
+        router.push("/complete-client-profile");
       }
     } catch {
       setLoading(false);

@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
           { email }
         ]
       },
-      include: { artisanProfile: true }
+      include: { artisanProfile: true, clientProfile: true }
     });
 
     if (!user) {
@@ -79,14 +79,14 @@ export async function GET(req: NextRequest) {
           image,
           role: null,
         },
-        include: { artisanProfile: true }
+        include: { artisanProfile: true, clientProfile: true }
       });
     } else if (!user.googleId) {
       // Link existing account
       user = await prisma.user.update({
         where: { id: user.id },
         data: { googleId, image: image || user.image },
-        include: { artisanProfile: true }
+        include: { artisanProfile: true, clientProfile: true }
       });
     }
 
@@ -103,10 +103,17 @@ export async function GET(req: NextRequest) {
       // Artisan who hasn't completed profile
       return NextResponse.redirect(new URL("/complete-profile", req.url));
     }
+    if (user.role === "CLIENT" && !user.clientProfile) {
+      // Client who hasn't chosen wilaya
+      return NextResponse.redirect(new URL("/complete-client-profile", req.url));
+    }
     if (user.role === "ARTISAN") {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
-    // CLIENT → main page
+    if (user.role === "CLIENT") {
+      return NextResponse.redirect(new URL("/map", req.url));
+    }
+    
     return NextResponse.redirect(new URL("/", req.url));
 
 

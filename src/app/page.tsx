@@ -1,273 +1,121 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/session";
-import { prisma } from "@/lib/prisma";
+"use client";
+
 import Navbar from "@/components/Navbar";
-import Link from "next/link";
 
-export const dynamic = 'force-dynamic';
-
-export default async function HomePage() {
-  const session = await getSession();
-
-  // Redirect logged-in users to appropriate pages
-  if (session?.userId) {
-    try {
-      const user = await prisma.user.findUnique({
-        where: { id: session.userId },
-        include: { artisanProfile: true },
-      });
-      if (user) {
-        if (!user.role) redirect("/choose-role");
-        if (user.role === "ARTISAN" && !user.artisanProfile) redirect("/complete-profile");
-        if (user.role === "ARTISAN") redirect("/dashboard");
-        // CLIENT falls through to homepage
-      }
-    } catch (e) {
-      console.error("Homepage session check error:", e);
-      // Continue to show homepage even if DB fails
-    }
-  }
-
-  // Get featured artisans for homepage
-  let featuredArtisans: any[] = [];
-  try {
-    featuredArtisans = await prisma.artisanProfile.findMany({
-      where: { OR: [{ isPremium: true }, { isVerified: true }] },
-      include: {
-        user: { select: { id: true, name: true, image: true } },
-        reviews: { select: { rating: true } },
-      },
-      take: 6,
-      orderBy: [{ isPremium: "desc" }, { isVerified: "desc" }],
-    });
-  } catch (e) {
-    console.error("Featured artisans fetch error:", e);
-  }
-
-  const STATS = [
-    { icon: "🤝", value: "+10,000", label: "عميل راضٍ حتى الآن" },
-    { icon: "🔨", value: "+2,500", label: "حرفي محترف", featured: true },
-    { icon: "⭐", value: "4.9/5", label: "متوسط التقييم" },
-  ];
-
-  const CRAFTS = [
-    { icon: "🪵", label: "نجارة" },
-    { icon: "⚡", label: "كهرباء" },
-    { icon: "🔧", label: "سباكة" },
-    { icon: "🏗️", label: "بناء" },
-    { icon: "🎨", label: "دهان" },
-    { icon: "❄️", label: "تبريد" },
-    { icon: "📡", label: "إلكترونيات" },
-    { icon: "🔒", label: "أبواب" },
-  ];
+export default function Home() {
+  const handleGoogleLogin = () => {
+    window.location.href = "/api/auth/google";
+  };
 
   return (
-    <div dir="rtl" style={{ minHeight: "100vh", background: "var(--cream)", color: "var(--text)" }}>
+    <div dir="rtl" style={{ minHeight: "100vh", background: "var(--cream)", color: "var(--text)", display: "flex", flexDirection: "column" }}>
       <Navbar />
 
-      {/* Hero */}
-      <header style={{
-        minHeight: "90vh", display: "flex", alignItems: "center", justifyContent: "center",
-        flexDirection: "column", textAlign: "center", padding: "6rem 1.5rem 4rem",
-        position: "relative", overflow: "hidden",
+      <main style={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "2rem 1.5rem",
+        position: "relative",
+        overflow: "hidden"
       }}>
+        {/* Decorative Background */}
         <div style={{
-          position: "absolute", inset: 0, pointerEvents: "none",
-          background: "radial-gradient(ellipse 80% 60% at 50% -5%, rgba(181,83,26,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(212,168,67,0.09) 0%, transparent 55%)",
+          position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0,
+          background: "radial-gradient(ellipse 80% 60% at 20% 10%, rgba(181,83,26,0.08) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 80% 90%, rgba(212,168,67,0.06) 0%, transparent 60%)",
         }} />
 
         <div style={{
-          display: "inline-flex", alignItems: "center", gap: "0.6rem",
-          background: "rgba(181,83,26,0.08)", border: "1px solid rgba(181,83,26,0.15)",
-          padding: "0.6rem 1.4rem", borderRadius: "40px",
-          fontSize: "0.88rem", fontWeight: 700, color: "var(--terracotta)",
-          marginBottom: "2rem", animation: "fadeUp 0.5s ease both",
+          position: "relative",
+          zIndex: 1,
+          textAlign: "center",
+          maxWidth: "600px",
+          width: "100%",
+          animation: "fadeUp 0.6s ease both"
         }}>
-          <span>🇩🇿</span> المنصة الجزائرية للحرفيين
-        </div>
-
-        <h1 style={{
-          fontSize: "clamp(2.4rem, 6vw, 4.2rem)", fontWeight: 900, lineHeight: 1.15,
-          color: "var(--dark)", maxWidth: "800px", marginBottom: "1.5rem",
-          animation: "fadeUp 0.6s ease 0.1s both",
-        }}>
-          ابحث عن <span style={{ color: "var(--terracotta)" }}>حرفي موثوق</span>
-          <br />في منطقتك بسهولة
-        </h1>
-
-        <p style={{
-          fontSize: "1.15rem", color: "var(--muted)", maxWidth: "560px",
-          lineHeight: 1.75, marginBottom: "2.5rem",
-          animation: "fadeUp 0.6s ease 0.2s both",
-        }}>
-          وصّل العملاء بالحرفيين المحترفين الأقرب إليهم. سباكة، كهرباء، نجارة وأكثر.
-        </p>
-
-        <div style={{
-          display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center",
-          animation: "fadeUp 0.6s ease 0.3s both",
-        }}>
-          <Link href="/search" style={{
-            display: "inline-flex", alignItems: "center", gap: "0.6rem",
-            padding: "1.1rem 2.5rem", borderRadius: "18px",
-            background: "linear-gradient(135deg, var(--terracotta) 0%, #d45e1a 100%)",
-            color: "#fff", fontWeight: 900, fontSize: "1.1rem",
-            textDecoration: "none", boxShadow: "0 12px 36px rgba(181,83,26,0.32)",
-            transition: "all 0.25s",
+          <div style={{
+            fontSize: "4rem",
+            marginBottom: "1.5rem",
+            filter: "drop-shadow(0 4px 12px rgba(181,83,26,0.2))",
           }}>
-            🔍 ابحث عن حرفي
-          </Link>
-          <Link href="/register-artisan" style={{
-            display: "inline-flex", alignItems: "center", gap: "0.6rem",
-            padding: "1.1rem 2.5rem", borderRadius: "18px",
-            border: "2px solid rgba(181,83,26,0.22)",
-            color: "var(--terracotta)", fontWeight: 800, fontSize: "1.05rem",
-            textDecoration: "none", background: "rgba(255,255,255,0.7)",
-            backdropFilter: "blur(8px)", transition: "all 0.25s",
+            🛠️
+          </div>
+          
+          <h1 style={{
+            fontSize: "clamp(2.5rem, 6vw, 4rem)",
+            fontWeight: 900,
+            color: "var(--dark)",
+            lineHeight: 1.2,
+            marginBottom: "1.5rem",
           }}>
-            🔨 سجّل كحرفي
-          </Link>
-        </div>
-      </header>
-
-      {/* Stats */}
-      <section style={{ padding: "3rem 1.5rem", maxWidth: "900px", margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1.25rem" }}>
-          {STATS.map((s) => (
-            <div key={s.label} style={{
-              background: s.featured
-                ? "linear-gradient(135deg, var(--terracotta) 0%, #d45e1a 100%)"
-                : "rgba(255,255,255,0.85)",
-              backdropFilter: "blur(12px)",
-              borderRadius: "22px", padding: "2rem",
-              textAlign: "center",
-              boxShadow: s.featured ? "0 12px 40px rgba(181,83,26,0.28)" : "0 4px 20px rgba(26,18,8,0.07)",
-              border: s.featured ? "none" : "1px solid rgba(200,149,108,0.15)",
-            }}>
-              <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>{s.icon}</div>
-              <div style={{ fontSize: "2rem", fontWeight: 900, color: s.featured ? "#fff" : "var(--terracotta)", marginBottom: "0.3rem" }}>{s.value}</div>
-              <div style={{ fontSize: "0.9rem", color: s.featured ? "rgba(255,255,255,0.85)" : "var(--muted)", fontWeight: 600 }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Craft Categories */}
-      <section style={{ padding: "3rem 1.5rem", maxWidth: "1100px", margin: "0 auto" }}>
-        <h2 style={{ fontSize: "1.7rem", fontWeight: 900, textAlign: "center", color: "var(--dark)", marginBottom: "0.5rem" }}>
-          تصفح حسب التخصص
-        </h2>
-        <p style={{ textAlign: "center", color: "var(--muted)", marginBottom: "2.5rem" }}>اختر نوع الخدمة التي تحتاج إليها</p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "1rem" }}>
-          {CRAFTS.map((c) => (
-            <Link key={c.label} href={`/search?profession=${encodeURIComponent(c.label)}`} style={{ textDecoration: "none" }}>
-              <div style={{
-                background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)",
-                borderRadius: "18px", padding: "1.75rem 1rem",
-                textAlign: "center", cursor: "pointer",
-                border: "1px solid rgba(200,149,108,0.14)",
-                boxShadow: "0 4px 16px rgba(26,18,8,0.06)", transition: "all 0.22s",
-              }}>
-                <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>{c.icon}</div>
-                <div style={{ fontWeight: 800, color: "var(--dark)", fontSize: "0.95rem" }}>{c.label}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Featured Artisans */}
-      {featuredArtisans.length > 0 && (
-        <section style={{ padding: "3rem 1.5rem", maxWidth: "1100px", margin: "0 auto" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem" }}>
-            <div>
-              <h2 style={{ fontSize: "1.7rem", fontWeight: 900, color: "var(--dark)", marginBottom: "0.3rem" }}>
-                ⭐ حرفيو الشهر
-              </h2>
-              <p style={{ color: "var(--muted)" }}>الأعلى تقييماً وتوثيقاً</p>
-            </div>
-            <Link href="/search" style={{
-              padding: "0.7rem 1.5rem", borderRadius: "12px",
-              border: "2px solid rgba(181,83,26,0.22)",
-              color: "var(--terracotta)", fontWeight: 700, textDecoration: "none", fontSize: "0.9rem",
-            }}>عرض الكل ←</Link>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1.25rem" }}>
-            {featuredArtisans.map((a) => {
-              const avg = a.reviews.length > 0
-                ? (a.reviews.reduce((s: number, r: any) => s + r.rating, 0) / a.reviews.length).toFixed(1)
-                : null;
-              return (
-                <Link key={a.id} href={`/artisan/${a.userId}`} style={{ textDecoration: "none" }}>
-                  <div style={{
-                    background: "rgba(255,255,255,0.9)", backdropFilter: "blur(12px)",
-                    borderRadius: "20px", padding: "1.5rem",
-                    boxShadow: a.isPremium ? "0 6px 30px rgba(212,168,67,0.2)" : "0 4px 20px rgba(26,18,8,0.07)",
-                    border: a.isPremium ? "2px solid rgba(212,168,67,0.35)" : "1px solid rgba(200,149,108,0.14)",
-                    transition: "all 0.22s", cursor: "pointer",
-                  }}>
-                    <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                      <div style={{
-                        width: "56px", height: "56px", borderRadius: "50%", flexShrink: 0,
-                        background: a.user.image ? `url(${a.user.image}) center/cover` : "linear-gradient(135deg, var(--terracotta), #d45e1a)",
-                        boxShadow: "0 4px 14px rgba(181,83,26,0.2)",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: "1.5rem",
-                      }}>{!a.user.image && "👷"}</div>
-                      <div>
-                        <div style={{ display: "flex", gap: "0.35rem", alignItems: "center" }}>
-                          <div style={{ fontWeight: 900, color: "var(--dark)", fontSize: "1rem" }}>{a.user.name}</div>
-                          {a.isVerified && <span style={{ color: "#16a34a", fontSize: "0.8rem" }}>✓</span>}
-                        </div>
-                        <div style={{ color: "var(--terracotta)", fontWeight: 700, fontSize: "0.88rem" }}>{a.profession}</div>
-                        <div style={{ color: "var(--muted)", fontSize: "0.82rem" }}>📍 {a.wilaya}</div>
-                      </div>
-                    </div>
-                    {avg && (
-                      <div style={{ marginTop: "0.9rem", display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                        <span style={{ color: "#f59e0b" }}>⭐</span>
-                        <span style={{ fontWeight: 800, fontSize: "0.9rem" }}>{avg}</span>
-                        <span style={{ color: "var(--muted)", fontSize: "0.82rem" }}>({a.reviews.length})</span>
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* CTA for artisans */}
-      <section style={{ padding: "4rem 1.5rem", maxWidth: "800px", margin: "0 auto", textAlign: "center" }}>
-        <div style={{
-          background: "linear-gradient(135deg, var(--terracotta) 0%, #d45e1a 60%, var(--mid) 100%)",
-          borderRadius: "28px", padding: "3.5rem 2.5rem",
-          boxShadow: "0 20px 60px rgba(181,83,26,0.3)",
-        }}>
-          <h2 style={{ fontSize: "1.9rem", fontWeight: 900, color: "#fff", marginBottom: "1rem" }}>
-            أنت حرفي وتريد زبائن أكثر؟
-          </h2>
-          <p style={{ color: "rgba(255,255,255,0.85)", marginBottom: "2rem", fontSize: "1.05rem", lineHeight: 1.7 }}>
-            سجّل مجاناً الآن. آلاف العملاء ينتظرون حرفياً موثوقاً مثلك.
+            حِرَفي
+            <span style={{ color: "var(--terracotta)" }}>.</span>
+          </h1>
+          
+          <p style={{
+            fontSize: "1.2rem",
+            color: "var(--muted)",
+            marginBottom: "3rem",
+            lineHeight: 1.6,
+            fontWeight: 500
+          }}>
+            المنصة الأولى لربط الحرفيين المهرة بالعملاء في الجزائر.
+            <br />
+            تواصل، اتفق، وانجز أعمالك بسهولة.
           </p>
-          <Link href="/register-artisan" style={{
-            display: "inline-flex", alignItems: "center", gap: "0.6rem",
-            padding: "1.1rem 3rem", borderRadius: "16px",
-            background: "#fff", color: "var(--terracotta)",
-            fontWeight: 900, fontSize: "1.1rem", textDecoration: "none",
-            boxShadow: "0 8px 28px rgba(0,0,0,0.15)",
-          }}>
-            🔨 سجّل كحرفي مجاناً
-          </Link>
+
+          <button
+            onClick={handleGoogleLogin}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "1rem",
+              width: "100%",
+              maxWidth: "360px",
+              margin: "0 auto",
+              padding: "1.1rem 1.5rem",
+              borderRadius: "16px",
+              background: "#fff",
+              border: "1px solid rgba(200,149,108,0.3)",
+              boxShadow: "0 12px 32px rgba(26,18,8,0.08)",
+              cursor: "pointer",
+              transition: "all 0.25s",
+              fontSize: "1.1rem",
+              fontWeight: 800,
+              color: "var(--dark)",
+              fontFamily: "'Cairo', sans-serif"
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 40px rgba(181,83,26,0.15)";
+              (e.currentTarget as HTMLElement).style.borderColor = "var(--terracotta)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 32px rgba(26,18,8,0.08)";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(200,149,108,0.3)";
+            }}
+          >
+            <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+              <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
+                <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/>
+                <path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z"/>
+                <path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z"/>
+                <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z"/>
+              </g>
+            </svg>
+            المتابعة باستخدام حساب Google
+          </button>
         </div>
-      </section>
+      </main>
 
       <style>{`
-        @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-        @media (max-width: 768px) {
-          section div[style*="repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
-          section div[style*="repeat(4,1fr)"] { grid-template-columns: repeat(2,1fr) !important; }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(24px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </div>

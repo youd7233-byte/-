@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { profession, wilaya, city, bio, phone, lat, lng } = await req.json();
+  const { profession, wilaya, city, bio, phone, lat, lng, age } = await req.json();
 
   if (!profession || !wilaya) {
     return NextResponse.json({ error: "الحرفة والولاية مطلوبان" }, { status: 400 });
@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
         bio: bio || null,
         lat: lat || null,
         lng: lng || null,
+        age: age || null,
       },
       update: {
         profession,
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
         bio: bio || null,
         lat: lat || null,
         lng: lng || null,
+        age: age || null,
       },
     });
 
