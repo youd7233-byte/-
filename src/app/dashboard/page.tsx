@@ -433,6 +433,7 @@ export default async function DashboardPage() {
             fontWeight: 700, fontSize: "0.9rem", textDecoration: "none", flexShrink: 0,
           }}>إضافة الموقع</Link>
         </div>
+      )}
       <style>{`
         @media (max-width: 768px) {
           .client-actions-grid {
