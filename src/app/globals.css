@@ -506,3 +506,17 @@ html, body {
     padding: 1.5rem !important;
   }
 }
+
+/* Mobile Bottom Nav Spacing */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 70px; /* Space for the bottom nav */
+  }
+  .dashboard-main-content {
+    padding-bottom: 80px !important;
+  }
+  .dashboard-main {
+    padding-bottom: 80px !important;
+  }
+}
+

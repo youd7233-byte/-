@@ -11,7 +11,25 @@ export async function GET() {
 
     const user = await prisma.user.findUnique({
       where: { id: session.userId },
-      select: { name: true, email: true, image: true, role: true },
+      select: {
+        name: true,
+        email: true,
+        phone: true,
+        image: true,
+        role: true,
+        artisanProfile: {
+          select: {
+            profession: true,
+            bio: true,
+            wilaya: true,
+            city: true,
+            lat: true,
+            lng: true,
+            isPremium: true,
+            isVerified: true,
+          },
+        },
+      },
     });
 
     if (!user) {

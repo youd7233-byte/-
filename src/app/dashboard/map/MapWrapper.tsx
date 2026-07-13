@@ -1,16 +1,21 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import DynamicClusterMap from "@/components/DynamicClusterMap";
+import type { ArtisanMarker } from "@/components/ClusterMap";
 
-const Map = dynamic(() => import("@/components/Map"), {
-  ssr: false,
-  loading: () => <div style={{ height: "600px", background: "#e5e7eb", borderRadius: "24px", display: "flex", alignItems: "center", justifyContent: "center" }}>جاري تحميل الخريطة...</div>
-});
-
-export default function MapWrapper({ artisans }: { artisans: any[] }) {
+export default function MapWrapper({ artisans }: { artisans: ArtisanMarker[] }) {
   return (
-    <div style={{ height: "600px", borderRadius: "24px", overflow: "hidden", boxShadow: "0 12px 40px rgba(0,0,0,0.1)" }}>
-      <Map artisans={artisans} interactive={true} />
+    <div style={{
+      height: "500px", borderRadius: "20px", overflow: "hidden",
+      boxShadow: "0 4px 24px rgba(26,18,8,0.07)",
+      border: "1px solid rgba(200,149,108,0.15)",
+    }}>
+      <DynamicClusterMap
+        artisans={artisans}
+        center={[28.0339, 1.6596]}
+        zoom={5}
+        height="500px"
+      />
     </div>
   );
 }
