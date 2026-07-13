@@ -55,7 +55,7 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
             {name.split(" ")[0]}
           </div>
           <div style={{
-            fontSize: "0.75rem", color: "var(--muted)", fontWeight: 700,
+            fontSize: "0.75rem", fontWeight: 700,
             background: role === "ARTISAN" ? "rgba(181,83,26,0.1)" : "rgba(3,105,161,0.1)",
             color: role === "ARTISAN" ? "var(--terracotta)" : "#0369a1",
             padding: "0.2rem 0.6rem", borderRadius: "10px",
