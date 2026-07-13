@@ -155,7 +155,7 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div style={{
+    <div className="settings-container" style={{
       background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px)",
       borderRadius: "24px", padding: "2rem",
       boxShadow: "0 8px 40px rgba(26,18,8,0.08)",
@@ -179,7 +179,7 @@ export default function SettingsPage() {
       )}
 
       {/* Tabs */}
-      <div style={{
+      <div className="settings-tabs" style={{
         display: "flex", gap: "0.5rem", marginBottom: "2rem",
         background: "rgba(181,83,26,0.06)", borderRadius: "14px", padding: "0.4rem",
       }}>
@@ -433,6 +433,8 @@ export default function SettingsPage() {
       <style>{`
         @media (max-width: 600px) {
           .settings-grid { grid-template-columns: 1fr !important; }
+          .settings-container { padding: 1.25rem !important; }
+          .settings-tabs { flex-wrap: wrap !important; }
         }
       `}</style>
     </div>

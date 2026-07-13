@@ -433,20 +433,42 @@ export default async function DashboardPage() {
             fontWeight: 700, fontSize: "0.9rem", textDecoration: "none", flexShrink: 0,
           }}>إضافة الموقع</Link>
         </div>
-      )}
-
       <style>{`
-        @media (max-width: 900px) {
-          .artisan-stats-grid { grid-template-columns: repeat(2,1fr) !important; }
-          .artisan-bottom-grid { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 600px) {
-          .artisan-stats-grid { grid-template-columns: 1fr 1fr !important; }
-          .artisan-actions-grid { grid-template-columns: 1fr 1fr !important; }
-          .client-actions-grid { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 420px) {
-          .artisan-actions-grid { grid-template-columns: 1fr !important; }
+        @media (max-width: 768px) {
+          .client-actions-grid {
+            grid-template-columns: 1fr 1fr !important;
+            gap: 1rem !important;
+          }
+          .client-actions-grid > a {
+            flex-direction: column !important;
+            text-align: center !important;
+            padding: 1.25rem 0.5rem !important;
+          }
+          .client-actions-grid > a > div:first-child {
+            margin: 0 auto 0.5rem auto !important;
+          }
+          
+          .artisan-stats-grid {
+            grid-template-columns: 1fr 1fr !important;
+            gap: 1rem !important;
+          }
+          
+          .artisan-actions-grid {
+            grid-template-columns: 1fr 1fr !important;
+            gap: 1rem !important;
+          }
+          .artisan-actions-grid > a {
+            flex-direction: column !important;
+            text-align: center !important;
+            padding: 1.25rem 0.5rem !important;
+          }
+          .artisan-actions-grid > a > div:first-child {
+            margin: 0 auto 0.5rem auto !important;
+          }
+          
+          .artisan-bottom-grid {
+            grid-template-columns: 1fr !important;
+          }
         }
       `}</style>
     </div>

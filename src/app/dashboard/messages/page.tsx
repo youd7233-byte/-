@@ -84,7 +84,7 @@ export default function MessagesPage() {
   if (loading) return <div style={{ textAlign: "center", padding: "3rem" }}>جاري تحميل الرسائل...</div>;
 
   return (
-    <div style={{
+    <div className="messages-layout" style={{
       display: "flex", height: "calc(100vh - 120px)",
       background: "rgba(255,255,255,0.85)", backdropFilter: "blur(16px)",
       borderRadius: "24px", overflow: "hidden",
@@ -92,7 +92,7 @@ export default function MessagesPage() {
       border: "1px solid rgba(200,149,108,0.15)"
     }}>
       {/* Conversations List */}
-      <div style={{
+      <div className="conversations-sidebar" style={{
         width: "300px", borderLeft: "1px solid rgba(200,149,108,0.2)",
         display: "flex", flexDirection: "column"
       }}>
@@ -192,6 +192,20 @@ export default function MessagesPage() {
           </div>
         )}
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .messages-layout {
+            flex-direction: column !important;
+            height: calc(100vh - 150px) !important;
+          }
+          .conversations-sidebar {
+            width: 100% !important;
+            height: 35% !important;
+            border-left: none !important;
+            border-bottom: 1px solid rgba(200,149,108,0.2) !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
