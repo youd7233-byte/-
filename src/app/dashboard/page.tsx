@@ -26,6 +26,26 @@ export default async function DashboardPage() {
   const isClient = user.role === "CLIENT";
 
   if (isClient) {
+    // Get top artisans overall for the client dashboard
+    const topArtisans = await prisma.artisanProfile.findMany({
+      include: { user: true, reviews: true },
+      take: 6,
+    });
+    
+    const topRankedArtisans = topArtisans
+      .map((a) => ({
+        userId: a.userId,
+        name: a.user.name,
+        profession: a.profession,
+        image: a.user.image,
+        wilaya: a.wilaya,
+        avgRating: a.reviews.length > 0
+          ? a.reviews.reduce((s, r) => s + r.rating, 0) / a.reviews.length
+          : 0,
+      }))
+      .sort((a, b) => b.avgRating - a.avgRating)
+      .slice(0, 4);
+
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
         {/* Client Welcome */}
@@ -69,6 +89,52 @@ export default async function DashboardPage() {
               </div>
             </Link>
           ))}
+        </div>
+
+        {/* Top Artisans Section for Client */}
+        <div style={{
+          background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)",
+          borderRadius: "20px", padding: "1.5rem",
+          boxShadow: "0 4px 20px rgba(26,18,8,0.06)",
+          border: "1px solid rgba(200,149,108,0.12)",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 900, color: "var(--dark)" }}>
+              🏆 أفضل الحرفيين تقييماً
+            </h2>
+            <Link href="/dashboard/map" style={{
+              fontSize: "0.85rem", fontWeight: 700, color: "var(--terracotta)",
+              padding: "0.4rem 0.85rem", borderRadius: "8px",
+              border: "1px solid rgba(181,83,26,0.2)",
+            }}>عرض الكل في الخريطة ←</Link>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+            {topRankedArtisans.map((artisan, i) => (
+              <Link key={artisan.userId} href={`/artisan/${artisan.userId}`} style={{
+                display: "flex", flexDirection: "column", alignItems: "center",
+                gap: "0.5rem", padding: "1.25rem 1rem",
+                background: i === 0 ? "rgba(212,168,67,0.08)" : "rgba(181,83,26,0.04)",
+                border: `1px solid ${i === 0 ? "rgba(212,168,67,0.25)" : "rgba(200,149,108,0.12)"}`,
+                borderRadius: "16px", textDecoration: "none",
+                transition: "all 0.2s",
+              }}>
+                <div style={{
+                  width: "56px", height: "56px", borderRadius: "50%",
+                  background: artisan.image ? `url(${artisan.image}) center/cover` : "linear-gradient(135deg, var(--terracotta), #d45e1a)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "#fff", fontWeight: 900, fontSize: "1.2rem",
+                  boxShadow: "0 2px 10px rgba(181,83,26,0.2)",
+                }}>
+                  {!artisan.image && artisan.name.charAt(0)}
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "var(--dark)" }}>{artisan.name}</div>
+                  <div style={{ fontSize: "0.8rem", color: "var(--terracotta)", fontWeight: 700 }}>{artisan.profession}</div>
+                  <div style={{ fontSize: "0.85rem", color: "#D4A843", fontWeight: 800 }}>★ {artisan.avgRating.toFixed(1)}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     );

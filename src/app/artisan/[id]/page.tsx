@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import MessageButton from "./MessageButton";
+import ReviewForm from "./ReviewForm";
+import { getSession } from "@/lib/session";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -16,6 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function ArtisanProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const session = await getSession();
 
   const user = await prisma.user.findUnique({
     where: { id },
@@ -226,7 +229,9 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
                     style={{
                       borderRadius: "14px", overflow: "hidden", aspectRatio: "1",
                       boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
-                      background: `url(${p.imageUrl}) center/cover`,
+                      backgroundImage: `url('${p.imageUrl}')`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
                       cursor: "pointer", transition: "transform 0.2s",
                       position: "relative",
                     }}
@@ -294,6 +299,11 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
                   </div>
                 ))}
               </div>
+            )}
+            
+            {/* Review Form - Only show if logged in and not the profile owner */}
+            {session && session.userId !== user.id && (
+              <ReviewForm artisanProfileId={profile.id} />
             )}
           </div>
 
