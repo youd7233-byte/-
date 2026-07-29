@@ -87,7 +87,7 @@ export default async function MapPage() {
           totalCount={artisans.length}
         />
       </main>
-      <FloatingNav role={user.role} />
+      <FloatingNav role={user.role || ""} />
     </div>
   );
 }
