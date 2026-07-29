@@ -112,7 +112,7 @@ export default function FloatingNav({ role }: { role: string }) {
                   boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
                   transition: "all 0.2s",
                   transform: isOpen ? "translateX(0)" : "translateX(-20px)",
-                  transitionDelay: \`\${isOpen ? (links.length - index) * 0.05 : 0}s\`,
+                  transitionDelay: `${isOpen ? (links.length - index) * 0.05 : 0}s`,
                 }}
               >
                 <span style={{ fontSize: "1.2rem", display: "flex" }}>
