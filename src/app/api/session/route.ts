@@ -7,7 +7,9 @@ export async function GET() {
     return NextResponse.json({ user: null });
   }
   return NextResponse.json({
+    userId: session.userId,
     user: {
+      id: session.userId,
       name: session.name,
       role: session.role,
     },

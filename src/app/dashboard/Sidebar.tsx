@@ -2,21 +2,55 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
 
 export default function Sidebar({ role, name }: { role: string; name: string }) {
   const pathname = usePathname();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // جلب عدد الرسائل غير المقروءة
+  const fetchUnread = async () => {
+    try {
+      const res = await fetch("/api/messages/unread");
+      const data = await res.json();
+      setUnreadCount(data.count || 0);
+    } catch {}
+  };
+
+  useEffect(() => {
+    fetchUnread();
+    // Polling كل 10 ثوانٍ
+    pollingRef.current = setInterval(fetchUnread, 10000);
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current);
+    };
+  }, []);
+
+  // إعادة تعيين العداد عند فتح صفحة الرسائل
+  useEffect(() => {
+    if (pathname === "/dashboard/messages") {
+      setUnreadCount(0);
+    }
+  }, [pathname]);
 
   const links = [
     { name: "الرئيسية", href: "/dashboard", icon: "🏠" },
     { name: "الخريطة", href: "/dashboard/map", icon: "📍" },
-    { name: "الرسائل", href: "/dashboard/messages", icon: "💬" },
-    ...(role === "ARTISAN" ? [
-      { name: "إحصائيات", href: "/dashboard/stats", icon: "📈" },
-    ] : []),
-    { name: "الإعدادات", href: "/dashboard/settings", icon: "⚙️" },
+    {
+      name: "الرسائل",
+      href: "/dashboard/messages",
+      icon: "💬",
+      badge: unreadCount > 0 ? unreadCount : null,
+    },
+    ...(role === "ARTISAN"
+      ? [{ name: "إحصائيات", href: "/dashboard/stats", icon: "📈", badge: null }]
+      : []),
+    { name: "الإعدادات", href: "/dashboard/settings", icon: "⚙️", badge: null },
   ];
 
-  const isActive = (href: string) => pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+  const isActive = (href: string) =>
+    pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
 
   return (
     <>
@@ -35,37 +69,53 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
           flexShrink: 0,
         }}
       >
-        {/* User Info */}
-        <div style={{
-          padding: "0.85rem 1rem 1.25rem",
-          marginBottom: "0.5rem",
-          borderBottom: "1px solid rgba(200,149,108,0.12)",
-        }}>
-          <div style={{
-            width: "44px", height: "44px", borderRadius: "50%",
-            background: "linear-gradient(135deg, var(--terracotta), #d45e1a)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            color: "#fff", fontWeight: 900, fontSize: "1.1rem",
-            marginBottom: "0.6rem",
-            boxShadow: "0 4px 12px rgba(181,83,26,0.25)",
-          }}>
+        {/* معلومات المستخدم */}
+        <div
+          style={{
+            padding: "0.85rem 1rem 1.25rem",
+            marginBottom: "0.5rem",
+            borderBottom: "1px solid rgba(200,149,108,0.12)",
+          }}
+        >
+          <div
+            style={{
+              width: "44px",
+              height: "44px",
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, var(--terracotta), #d45e1a)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#fff",
+              fontWeight: 900,
+              fontSize: "1.1rem",
+              marginBottom: "0.6rem",
+              boxShadow: "0 4px 12px rgba(181,83,26,0.25)",
+            }}
+          >
             {name.charAt(0)}
           </div>
           <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "var(--dark)" }}>
             {name.split(" ")[0]}
           </div>
-          <div style={{
-            fontSize: "0.75rem", fontWeight: 700,
-            background: role === "ARTISAN" ? "rgba(181,83,26,0.1)" : "rgba(3,105,161,0.1)",
-            color: role === "ARTISAN" ? "var(--terracotta)" : "#0369a1",
-            padding: "0.2rem 0.6rem", borderRadius: "10px",
-            display: "inline-block", marginTop: "0.25rem",
-          }}>
-            {role === "ARTISAN" ? "حرفي" : "مواطن"}
+          <div
+            style={{
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              background:
+                role === "ARTISAN" ? "rgba(181,83,26,0.1)" : "rgba(3,105,161,0.1)",
+              color: role === "ARTISAN" ? "var(--terracotta)" : "#0369a1",
+              padding: "0.2rem 0.6rem",
+              borderRadius: "10px",
+              display: "inline-block",
+              marginTop: "0.25rem",
+            }}
+          >
+            {role === "ARTISAN" ? "⚒️ حرفي" : "👤 مواطن"}
           </div>
         </div>
 
-        {/* Nav Links */}
+        {/* روابط التنقل */}
         <nav style={{ display: "flex", flexDirection: "column", gap: "0.35rem", flex: 1 }}>
           {links.map((link) => {
             const active = isActive(link.href);
@@ -74,7 +124,9 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
                 key={link.name}
                 href={link.href}
                 style={{
-                  display: "flex", alignItems: "center", gap: "0.75rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem",
                   padding: "0.8rem 1rem",
                   borderRadius: "12px",
                   textDecoration: "none",
@@ -83,30 +135,71 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
                   background: active
                     ? "linear-gradient(135deg, rgba(181,83,26,0.12), rgba(181,83,26,0.06))"
                     : "transparent",
-                  borderRight: active ? "3px solid var(--terracotta)" : "3px solid transparent",
+                  borderRight: active
+                    ? "3px solid var(--terracotta)"
+                    : "3px solid transparent",
                   transition: "all 0.2s",
                   fontSize: "0.92rem",
+                  position: "relative",
                 }}
               >
-                <span style={{ fontSize: "1.15rem", width: "22px", textAlign: "center" }}>{link.icon}</span>
-                {link.name}
+                <span style={{ fontSize: "1.15rem", width: "22px", textAlign: "center" }}>
+                  {link.icon}
+                </span>
+                <span style={{ flex: 1 }}>{link.name}</span>
+                {/* Badge رسائل غير مقروءة */}
+                {link.badge && (
+                  <span
+                    style={{
+                      background: "var(--terracotta)",
+                      color: "#fff",
+                      borderRadius: "999px",
+                      fontSize: "0.65rem",
+                      fontWeight: 900,
+                      padding: "0.15rem 0.5rem",
+                      minWidth: "20px",
+                      textAlign: "center",
+                      animation: "pulse 2s infinite",
+                    }}
+                  >
+                    {link.badge > 99 ? "99+" : link.badge}
+                  </span>
+                )}
               </Link>
             );
           })}
         </nav>
 
-        {/* Logout */}
+        {/* تسجيل الخروج */}
         <div style={{ paddingTop: "1rem", borderTop: "1px solid rgba(200,149,108,0.12)" }}>
           <form action="/api/logout" method="POST">
             <button
               type="submit"
               style={{
-                width: "100%", padding: "0.75rem 1rem",
-                borderRadius: "12px", border: "1.5px solid rgba(200,149,108,0.25)",
-                background: "transparent", fontFamily: "'Cairo', sans-serif",
-                fontWeight: 700, fontSize: "0.88rem", cursor: "pointer",
-                color: "var(--muted)", display: "flex", alignItems: "center", gap: "0.6rem",
+                width: "100%",
+                padding: "0.75rem 1rem",
+                borderRadius: "12px",
+                border: "1.5px solid rgba(200,149,108,0.25)",
+                background: "transparent",
+                fontFamily: "'Cairo', sans-serif",
+                fontWeight: 700,
+                fontSize: "0.88rem",
+                cursor: "pointer",
+                color: "var(--muted)",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.6rem",
                 transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "rgba(220,38,38,0.06)";
+                (e.currentTarget as HTMLElement).style.color = "#dc2626";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(220,38,38,0.2)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "transparent";
+                (e.currentTarget as HTMLElement).style.color = "var(--muted)";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(200,149,108,0.25)";
               }}
             >
               <span>🚪</span> تسجيل خروج
@@ -116,22 +209,32 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="mobile-bottom-nav" style={{
-        display: "none",
-        position: "fixed",
-        bottom: 0, left: 0, right: 0,
-        background: "rgba(255,255,255,0.97)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        borderTop: "1px solid rgba(200,149,108,0.2)",
-        boxShadow: "0 -4px 24px rgba(26,18,8,0.08)",
-        zIndex: 500,
-        padding: "0.5rem 0 env(safe-area-inset-bottom, 0.5rem)",
-      }}>
-        <div style={{
-          display: "flex", justifyContent: "space-around", alignItems: "center",
-          maxWidth: "500px", margin: "0 auto",
-        }}>
+      <nav
+        className="mobile-bottom-nav"
+        style={{
+          display: "none",
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: "rgba(255,255,255,0.97)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderTop: "1px solid rgba(200,149,108,0.2)",
+          boxShadow: "0 -4px 24px rgba(26,18,8,0.08)",
+          zIndex: 500,
+          padding: "0.5rem 0 env(safe-area-inset-bottom, 0.5rem)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            maxWidth: "500px",
+            margin: "0 auto",
+          }}
+        >
           {links.slice(0, 5).map((link) => {
             const active = isActive(link.href);
             return (
@@ -139,19 +242,53 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
                 key={link.name}
                 href={link.href}
                 style={{
-                  display: "flex", flexDirection: "column", alignItems: "center",
-                  gap: "0.2rem", padding: "0.4rem 0.75rem",
-                  textDecoration: "none", borderRadius: "12px",
-                  transition: "all 0.2s", minWidth: "52px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "0.2rem",
+                  padding: "0.4rem 0.75rem",
+                  textDecoration: "none",
+                  borderRadius: "12px",
+                  transition: "all 0.2s",
+                  minWidth: "52px",
                   color: active ? "var(--terracotta)" : "var(--muted)",
+                  position: "relative",
                 }}
               >
-                <span style={{
-                  fontSize: "1.4rem",
-                  background: active ? "rgba(181,83,26,0.1)" : "transparent",
-                  borderRadius: "10px", padding: "0.25rem 0.5rem",
-                  display: "block", transition: "all 0.2s",
-                }}>{link.icon}</span>
+                <span
+                  style={{
+                    fontSize: "1.4rem",
+                    background: active ? "rgba(181,83,26,0.1)" : "transparent",
+                    borderRadius: "10px",
+                    padding: "0.25rem 0.5rem",
+                    display: "block",
+                    transition: "all 0.2s",
+                    position: "relative",
+                  }}
+                >
+                  {link.icon}
+                  {/* Badge على الهاتف */}
+                  {link.badge && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: "-2px",
+                        left: "-2px",
+                        background: "#dc2626",
+                        color: "#fff",
+                        borderRadius: "999px",
+                        fontSize: "0.6rem",
+                        fontWeight: 900,
+                        padding: "0.1rem 0.35rem",
+                        minWidth: "16px",
+                        textAlign: "center",
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {link.badge > 99 ? "99+" : link.badge}
+                    </span>
+                  )}
+                </span>
                 <span style={{ fontSize: "0.65rem", fontWeight: active ? 800 : 600 }}>
                   {link.name}
                 </span>
@@ -165,6 +302,10 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
         @media (max-width: 768px) {
           .dashboard-sidebar { display: none !important; }
           .mobile-bottom-nav { display: block !important; }
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.85; transform: scale(1.08); }
         }
       `}</style>
     </>
