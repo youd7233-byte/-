@@ -3,6 +3,7 @@ import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import Sidebar from "./Sidebar";
 import Navbar from "@/components/Navbar";
+import FloatingNav from "@/components/FloatingNav";
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: "لوحة التحكم | حِرَفي" };
@@ -34,6 +35,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </div>
         </main>
       </div>
+      <FloatingNav role={user.role} />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import Navbar from "@/components/Navbar";
 import PublicMapClient from "./PublicMapClient";
+import FloatingNav from "@/components/FloatingNav";
 
 const WILAYA_COORDS: Record<string, [number, number]> = {
   "الجزائر": [36.7538, 3.0588], "وهران": [35.6987, -0.6308],
@@ -86,6 +87,7 @@ export default async function MapPage() {
           totalCount={artisans.length}
         />
       </main>
+      <FloatingNav role={user.role} />
     </div>
   );
 }
