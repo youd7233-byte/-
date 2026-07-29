@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import NotificationsBell from "./NotificationsBell";
 
 interface NavSession {
   name: string;
@@ -77,6 +78,7 @@ export default function Navbar() {
         {session ? (
           // Logged-in state
           <>
+            <NotificationsBell />
             <Link
               href="/dashboard"
               style={{
@@ -233,6 +235,9 @@ export default function Navbar() {
         }} className="mobile-menu">
           {session ? (
             <>
+              <div style={{ alignSelf: "flex-end" }}>
+                <NotificationsBell />
+              </div>
               <Link href="/dashboard" onClick={() => setMenuOpen(false)} style={{ fontWeight: 700, color: "var(--dark)", padding: "0.75rem 1rem", borderRadius: "10px", background: "var(--sand)" }}>
                 👷 لوحة التحكم
               </Link>

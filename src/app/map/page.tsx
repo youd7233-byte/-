@@ -57,20 +57,28 @@ export default async function MapPage() {
     const avgRating = a.reviews.length > 0
       ? a.reviews.reduce((s, r) => s + r.rating, 0) / a.reviews.length
       : null;
-    return {
-      id: a.id,
-      lat: lat!,
-      lng: lng!,
-      profession: a.profession,
-      name: a.user.name,
-      userId: a.user.id,
-      wilaya: a.wilaya,
-      city: a.city ?? undefined,
-      isPremium: a.isPremium,
-      isVerified: a.isVerified,
-      avgRating,
-    };
-  });
+      let score = 0;
+      if (a.isPremium) score += 100;
+      if (a.isVerified) score += 30;
+      score += (avgRating || 0) * 10;
+      score += Math.min(a.reviews.length, 20); // 1 point per review up to 20
+
+      return {
+        id: a.id,
+        lat: lat!,
+        lng: lng!,
+        profession: a.profession,
+        name: a.user.name,
+        userId: a.user.id,
+        wilaya: a.wilaya,
+        city: a.city ?? undefined,
+        isPremium: a.isPremium,
+        isVerified: a.isVerified,
+        avgRating,
+        score,
+      };
+    })
+    .sort((a, b) => b.score - a.score);
 
   const professions = Array.from(new Set(artisans.map((a) => a.profession)));
   const wilayas = Array.from(new Set(artisans.map((a) => a.wilaya).filter(Boolean))) as string[];
