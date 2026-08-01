@@ -1,6 +1,8 @@
 "use client";
 
+import { Suspense } from "react";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface SessionUser {
   id: string;
@@ -33,7 +35,7 @@ interface Message {
   createdAt: string;
 }
 
-export default function MessagesPage() {
+function MessagesContent() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -45,6 +47,8 @@ export default function MessagesPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const activeConvRef = useRef<Conversation | null>(null);
+  const searchParams = useSearchParams();
+  const initialConvId = searchParams.get("conversationId");
 
   // مزامنة activeConversation مع ref لاستخدامها في الـ polling
   useEffect(() => {
@@ -89,6 +93,16 @@ export default function MessagesPage() {
   useEffect(() => {
     fetchConversations();
   }, [fetchConversations]);
+
+  // التحديد التلقائي للمحادثة من الرابط
+  useEffect(() => {
+    if (initialConvId && conversations.length > 0 && !activeConversation) {
+      const targetConv = conversations.find((c) => c.id === initialConvId);
+      if (targetConv) {
+        loadConversation(targetConv);
+      }
+    }
+  }, [conversations, initialConvId, activeConversation]);
 
   // Polling — تحديث الرسائل كل 8 ثوانٍ
   useEffect(() => {
@@ -620,5 +634,17 @@ export default function MessagesPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ textAlign: "center", padding: "4rem", color: "var(--muted)" }}>
+        <p style={{ fontWeight: 700 }}>جاري تحميل الصفحة...</p>
+      </div>
+    }>
+      <MessagesContent />
+    </Suspense>
   );
 }

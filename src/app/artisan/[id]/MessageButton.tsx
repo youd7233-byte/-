@@ -16,8 +16,8 @@ export default function MessageButton({ artisanId }: { artisanId: string }) {
         body: JSON.stringify({ artisanId }),
       });
       const data = await res.json();
-      if (data.success) {
-        router.push("/dashboard/messages");
+      if (data.success && data.conversation) {
+        router.push(`/dashboard/messages?conversationId=${data.conversation.id}`);
       } else {
         alert(data.error || "فشل بدء المحادثة");
       }
