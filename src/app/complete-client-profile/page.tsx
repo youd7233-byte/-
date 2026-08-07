@@ -4,14 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 
-const WILAYAS = [
-  "أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار","البليدة","البويرة",
-  "تمنراست","تبسة","تلمسان","تيارت","تيزي وزو","الجزائر","الجلفة","جيجل","سطيف","سعيدة",
-  "سكيكدة","سيدي بلعباس","عنابة","قالمة","قسنطينة","المدية","مستغانم","المسيلة","معسكر","ورقلة",
-  "وهران","البيض","إليزي","برج بوعريريج","بومرداس","الطارف","تندوف","تيسمسيلت","الوادي","خنشلة",
-  "سوق أهراس","تيبازة","ميلة","عين الدفلى","النعامة","عين تموشنت","غرداية","غليزان","تيميمون",
-  "برج باجي مختار","أولاد جلال","بني عباس","إن صالح","إن قزام","توقرت","جانت","المغير","المنيعة",
-];
+import { ALGERIA_WILAYAS } from "@/lib/constants";
 
 export default function CompleteClientProfilePage() {
   const router = useRouter();
@@ -127,7 +120,7 @@ export default function CompleteClientProfilePage() {
                 }}
               >
                 <option value="">اختر ولايتك...</option>
-                {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
+                {ALGERIA_WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
               </select>
             </div>
 

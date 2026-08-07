@@ -17,17 +17,7 @@ const MapPicker = dynamic(() => import("@/components/MapPicker"), {
   ),
 });
 
-const WILAYAS = [
-  "أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار",
-  "البليدة","البويرة","تمنراست","تبسة","تلمسان","تيارت","تيزي وزو",
-  "الجزائر العاصمة","الجلفة","جيجل","سطيف","سعيدة","سكيكدة","سيدي بلعباس",
-  "عنابة","قالمة","قسنطينة","المدية","مستغانم","المسيلة","معسكر","ورقلة","وهران",
-];
-
-const PROFESSIONS = [
-  "نجارة","كهرباء","سباكة","بناء وتشطيب","دهان","تبليط","لحام وحدادة",
-  "خياطة","تصليح سيارات","تبريد وتكييف","أخرى",
-];
+import { ALGERIA_WILAYAS, PROFESSIONS } from "@/lib/constants";
 
 const STEPS = [
   { label: "البيانات الشخصية" },
@@ -62,6 +52,7 @@ export default function ArtisanRegisterForm() {
   const [plan, setPlan] = useState<"free" | "pro">("free");
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [fields, setFields] = useState<FormFields>(INITIAL_FIELDS);
+  const [customProfession, setCustomProfession] = useState("");
   const [stepError, setStepError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -105,8 +96,8 @@ export default function ArtisanRegisterForm() {
       }
     }
     if (step === 2) {
-      if (!fields.profession) {
-        setStepError("يرجى اختيار الحِرفة");
+      if (!fields.profession || (fields.profession === "أخرى" && !customProfession.trim())) {
+        setStepError("يرجى اختيار أو كتابة الحِرفة");
         return false;
       }
       if (!location) {
@@ -225,7 +216,7 @@ export default function ArtisanRegisterForm() {
             <input type="hidden" name="password" value={fields.password} />
             <input type="hidden" name="wilaya" value={fields.wilaya} />
             <input type="hidden" name="city" value={fields.city} />
-            <input type="hidden" name="profession" value={fields.profession} />
+            <input type="hidden" name="profession" value={fields.profession === "أخرى" ? customProfession.trim() : fields.profession} />
             <input type="hidden" name="specialty" value={fields.specialty} />
             <input type="hidden" name="bio" value={fields.bio} />
             <input type="hidden" name="plan" value={plan} />
@@ -294,6 +285,20 @@ export default function ArtisanRegisterForm() {
                     {PROFESSIONS.map((p) => <option key={p} value={p}>{p}</option>)}
                   </select>
                 </div>
+
+                {fields.profession === "أخرى" && (
+                  <div className={styles.field}>
+                    <label htmlFor="field-custom-profession">أدخل حرفتك <span>*</span></label>
+                    <input
+                      id="field-custom-profession"
+                      type="text"
+                      className={styles.input}
+                      placeholder="مثال: إصلاح هواتف..."
+                      value={customProfession}
+                      onChange={(e) => setCustomProfession(e.target.value)}
+                    />
+                  </div>
+                )}
 
                 <div className={styles.field}>
                   <label htmlFor="field-specialty">التخصص الدقيق</label>

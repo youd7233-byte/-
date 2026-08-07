@@ -297,6 +297,7 @@ export default function SettingsPage() {
               <input
                 type="tel"
                 dir="ltr"
+                maxLength={10}
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 style={{ ...inputStyle, textAlign: "right" }}
@@ -455,6 +456,7 @@ export default function SettingsPage() {
                   <input
                     type="tel"
                     dir="ltr"
+                    maxLength={10}
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
                     style={{ ...inputStyle, textAlign: "right" }}

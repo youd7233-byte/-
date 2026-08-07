@@ -4,17 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 
-const WILAYAS = [
-  "أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار","البليدة","البويرة",
-  "تمنراست","تبسة","تلمسان","تيارت","تيزي وزو","الجزائر","الجلفة","جيجل","سطيف","سعيدة",
-  "سكيكدة","سيدي بلعباس","عنابة","قالمة","قسنطينة","المدية","مستغانم","المسيلة","معسكر","ورقلة",
-  "وهران","البيض","إليزي","برج بوعريريج","بومرداس","الطارف","تندوف","تيسمسيلت","الوادي","خنشلة",
-  "سوق أهراس","تيبازة","ميلة","عين الدفلى","النعامة","عين تموشنت","غرداية","غليزان",
-];
-
-const PROFESSIONS = [
-  "نجارة","كهرباء","سباكة","بناء","دهان","تبريد","إلكترونيات","أبواب","حدادة","خياطة","طباخة",
-];
+import { ALGERIA_WILAYAS, PROFESSIONS } from "@/lib/constants";
 
 interface Artisan {
   id: string; userId: string; userName: string; userImage: string | null;
@@ -96,7 +86,7 @@ export default function SearchPage() {
           </select>
           <select value={wilaya} onChange={(e) => setWilaya(e.target.value)} style={inputStyle}>
             <option value="">كل الولايات</option>
-            {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
+            {ALGERIA_WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
           </select>
           <button onClick={fetchArtisans} style={{
             padding: "0.85rem 1.5rem", borderRadius: "14px",

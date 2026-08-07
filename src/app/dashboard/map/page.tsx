@@ -5,14 +5,7 @@ import DashboardMapClient from "./DashboardMapClient";
 
 export const dynamic = "force-dynamic";
 
-const WILAYAS = [
-  "الجزائر","وهران","قسنطينة","عنابة","باتنة","سطيف","تلمسان","البليدة",
-  "سيدي بلعباس","بجاية","تيارت","تبسة","الشلف","الجلفة","ورقلة","بشار",
-  "غرداية","تيزي وزو","المدية","معسكر","سعيدة","عين الدفلى","البويرة",
-  "بومرداس","تيبازة","المسيلة","خنشلة","سكيكدة","جيجل","برج بوعريريج",
-  "الوادي","الطارف","قالمة","سوق أهراس","أم البواقي","قسنطينة","خنشلة",
-  "تندوف","النعامة","بسكرة","الأغواط","الوادي","إليزي","تمنراست","أدرار",
-];
+import { ALGERIA_WILAYAS } from "@/lib/constants";
 
 const WILAYA_COORDS: Record<string, [number, number]> = {
   "الجزائر": [36.7538, 3.0588], "وهران": [35.6987, -0.6308],
@@ -125,7 +118,7 @@ export default async function DashboardMapPage() {
         totalReviews,
       }}
       topArtisans={topArtisans}
-      wilayas={WILAYAS}
+      wilayas={ALGERIA_WILAYAS}
       professions={professions}
     />
   );

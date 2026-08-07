@@ -16,17 +16,7 @@ const MapPicker = dynamic(() => import("@/components/MapPicker"), {
   ),
 });
 
-const WILAYAS = [
-  "أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار",
-  "البليدة","البويرة","تمنراست","تبسة","تلمسان","تيارت","تيزي وزو",
-  "الجزائر العاصمة","الجلفة","جيجل","سطيف","سعيدة","سكيكدة","سيدي بلعباس",
-  "عنابة","قالمة","قسنطينة","المدية","مستغانم","المسيلة","معسكر","ورقلة","وهران",
-];
-
-const PROFESSIONS = [
-  "نجارة","كهرباء","سباكة","بناء وتشطيب","دهان","تبليط","لحام وحدادة",
-  "خياطة","تصليح سيارات","تبريد وتكييف","أخرى",
-];
+import { ALGERIA_WILAYAS, PROFESSIONS } from "@/lib/constants";
 
 const STEPS = [
   { label: "الاتصال والمكان" },
@@ -58,6 +48,7 @@ export default function CompleteProfileForm() {
   const [plan, setPlan] = useState<"free" | "pro">("free");
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [fields, setFields] = useState<FormFields>(INITIAL_FIELDS);
+  const [customProfession, setCustomProfession] = useState("");
   const [stepError, setStepError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -88,8 +79,8 @@ export default function CompleteProfileForm() {
       }
     }
     if (step === 2) {
-      if (!fields.profession) {
-        setStepError("يرجى اختيار الحِرفة");
+      if (!fields.profession || (fields.profession === "أخرى" && !customProfession.trim())) {
+        setStepError("يرجى اختيار أو كتابة الحِرفة");
         return false;
       }
       if (!location) {
@@ -199,7 +190,7 @@ export default function CompleteProfileForm() {
             <input type="hidden" name="phone" value={fields.phone} />
             <input type="hidden" name="wilaya" value={fields.wilaya} />
             <input type="hidden" name="city" value={fields.city} />
-            <input type="hidden" name="profession" value={fields.profession} />
+            <input type="hidden" name="profession" value={fields.profession === "أخرى" ? customProfession.trim() : fields.profession} />
             <input type="hidden" name="specialty" value={fields.specialty} />
             <input type="hidden" name="bio" value={fields.bio} />
             <input type="hidden" name="plan" value={plan} />
@@ -224,6 +215,7 @@ export default function CompleteProfileForm() {
                     className={styles.input}
                     placeholder="0555 000 000"
                     dir="ltr"
+                    maxLength={10}
                     value={fields.phone}
                     onChange={(e) => updateField("phone", e.target.value)}
                     autoComplete="tel"
@@ -241,7 +233,7 @@ export default function CompleteProfileForm() {
                       onChange={(e) => updateField("wilaya", e.target.value)}
                     >
                       <option value="">اختر الولاية...</option>
-                      {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
+                      {ALGERIA_WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
                     </select>
                   </div>
                   <div className={styles.field}>
@@ -284,6 +276,20 @@ export default function CompleteProfileForm() {
                     {PROFESSIONS.map((p) => <option key={p} value={p}>{p}</option>)}
                   </select>
                 </div>
+
+                {fields.profession === "أخرى" && (
+                  <div className={styles.field}>
+                    <label htmlFor="field-custom-profession">أدخل حرفتك <span>*</span></label>
+                    <input
+                      id="field-custom-profession"
+                      type="text"
+                      className={styles.input}
+                      placeholder="مثال: إصلاح هواتف..."
+                      value={customProfession}
+                      onChange={(e) => setCustomProfession(e.target.value)}
+                    />
+                  </div>
+                )}
 
                 <div className={styles.field}>
                   <label htmlFor="field-specialty">التخصص الدقيق</label>

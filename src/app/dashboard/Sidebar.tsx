@@ -9,7 +9,6 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
   const [unreadCount, setUnreadCount] = useState(0);
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // جلب عدد الرسائل غير المقروءة
   const fetchUnread = async () => {
     try {
       const res = await fetch("/api/messages/unread");
@@ -20,29 +19,18 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
 
   useEffect(() => {
     fetchUnread();
-    // Polling كل 10 ثوانٍ
     pollingRef.current = setInterval(fetchUnread, 10000);
-    return () => {
-      if (pollingRef.current) clearInterval(pollingRef.current);
-    };
+    return () => { if (pollingRef.current) clearInterval(pollingRef.current); };
   }, []);
 
-  // إعادة تعيين العداد عند فتح صفحة الرسائل
   useEffect(() => {
-    if (pathname === "/dashboard/messages") {
-      setUnreadCount(0);
-    }
+    if (pathname === "/dashboard/messages") setUnreadCount(0);
   }, [pathname]);
 
   const links = [
     { name: "الرئيسية", href: "/dashboard", icon: "🏠" },
     { name: "الخريطة", href: "/dashboard/map", icon: "📍" },
-    {
-      name: "الرسائل",
-      href: "/dashboard/messages",
-      icon: "💬",
-      badge: unreadCount > 0 ? unreadCount : null,
-    },
+    { name: "الرسائل", href: "/dashboard/messages", icon: "💬", badge: unreadCount > 0 ? unreadCount : null },
     ...(role === "ARTISAN"
       ? [{ name: "إحصائيات", href: "/dashboard/stats", icon: "📈", badge: null }]
       : []),
@@ -59,64 +47,63 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
         className="dashboard-sidebar"
         style={{
           width: "240px",
-          background: "rgba(255,255,255,0.75)",
+          background: "#0F0A06",
           backdropFilter: "blur(20px)",
-          borderLeft: "1px solid rgba(200,149,108,0.15)",
+          borderLeft: "1px solid rgba(201,168,76,0.12)",
           display: "flex",
           flexDirection: "column",
           padding: "1.5rem 0.85rem",
           gap: "0.35rem",
           flexShrink: 0,
+          position: "relative",
         }}
       >
+        {/* Subtle gold gradient line top */}
+        <div style={{
+          position: "absolute",
+          top: 0, left: 0, right: 0,
+          height: "2px",
+          background: "linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent)",
+        }} />
+
         {/* معلومات المستخدم */}
-        <div
-          style={{
-            padding: "0.85rem 1rem 1.25rem",
-            marginBottom: "0.5rem",
-            borderBottom: "1px solid rgba(200,149,108,0.12)",
-          }}
-        >
-          <div
-            style={{
-              width: "44px",
-              height: "44px",
-              borderRadius: "50%",
-              background: "linear-gradient(135deg, var(--terracotta), #d45e1a)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#fff",
-              fontWeight: 900,
-              fontSize: "1.1rem",
-              marginBottom: "0.6rem",
-              boxShadow: "0 4px 12px rgba(181,83,26,0.25)",
-            }}
-          >
+        <div style={{ padding: "0.85rem 1rem 1.25rem", marginBottom: "0.5rem", borderBottom: "1px solid rgba(201,168,76,0.1)" }}>
+          <div style={{
+            width: "46px",
+            height: "46px",
+            borderRadius: "50%",
+            background: "linear-gradient(135deg, #C9A84C 0%, #6B4E1A 100%)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#0A0806",
+            fontWeight: 900,
+            fontSize: "1.1rem",
+            marginBottom: "0.6rem",
+            boxShadow: "0 4px 16px rgba(201,168,76,0.3)",
+          }}>
             {name.charAt(0)}
           </div>
-          <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "var(--dark)" }}>
+          <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#F0E6C8" }}>
             {name.split(" ")[0]}
           </div>
-          <div
-            style={{
-              fontSize: "0.75rem",
-              fontWeight: 700,
-              background:
-                role === "ARTISAN" ? "rgba(181,83,26,0.1)" : "rgba(3,105,161,0.1)",
-              color: role === "ARTISAN" ? "var(--terracotta)" : "#0369a1",
-              padding: "0.2rem 0.6rem",
-              borderRadius: "10px",
-              display: "inline-block",
-              marginTop: "0.25rem",
-            }}
-          >
+          <div style={{
+            fontSize: "0.72rem",
+            fontWeight: 700,
+            background: role === "ARTISAN" ? "rgba(201,168,76,0.12)" : "rgba(3,105,161,0.12)",
+            color: role === "ARTISAN" ? "#C9A84C" : "#38bdf8",
+            padding: "0.2rem 0.65rem",
+            borderRadius: "10px",
+            display: "inline-block",
+            marginTop: "0.3rem",
+            border: role === "ARTISAN" ? "1px solid rgba(201,168,76,0.2)" : "1px solid rgba(56,189,248,0.2)",
+          }}>
             {role === "ARTISAN" ? "⚒️ حرفي" : "👤 مواطن"}
           </div>
         </div>
 
         {/* روابط التنقل */}
-        <nav style={{ display: "flex", flexDirection: "column", gap: "0.35rem", flex: 1 }}>
+        <nav style={{ display: "flex", flexDirection: "column", gap: "0.25rem", flex: 1 }}>
           {links.map((link) => {
             const active = isActive(link.href);
             return (
@@ -127,41 +114,50 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
                   display: "flex",
                   alignItems: "center",
                   gap: "0.75rem",
-                  padding: "0.8rem 1rem",
+                  padding: "0.78rem 1rem",
                   borderRadius: "12px",
                   textDecoration: "none",
                   fontWeight: active ? 800 : 600,
-                  color: active ? "var(--terracotta)" : "var(--dark)",
+                  color: active ? "#C9A84C" : "#8A7055",
                   background: active
-                    ? "linear-gradient(135deg, rgba(181,83,26,0.12), rgba(181,83,26,0.06))"
+                    ? "linear-gradient(135deg, rgba(201,168,76,0.14), rgba(201,168,76,0.06))"
                     : "transparent",
                   borderRight: active
-                    ? "3px solid var(--terracotta)"
+                    ? "3px solid #C9A84C"
                     : "3px solid transparent",
                   transition: "all 0.2s",
-                  fontSize: "0.92rem",
+                  fontSize: "0.9rem",
                   position: "relative",
                 }}
+                onMouseEnter={(e) => {
+                  if (!active) {
+                    (e.currentTarget as HTMLElement).style.background = "rgba(201,168,76,0.07)";
+                    (e.currentTarget as HTMLElement).style.color = "#C9A84C";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!active) {
+                    (e.currentTarget as HTMLElement).style.background = "transparent";
+                    (e.currentTarget as HTMLElement).style.color = "#8A7055";
+                  }
+                }}
               >
-                <span style={{ fontSize: "1.15rem", width: "22px", textAlign: "center" }}>
+                <span style={{ fontSize: "1.1rem", width: "22px", textAlign: "center" }}>
                   {link.icon}
                 </span>
                 <span style={{ flex: 1 }}>{link.name}</span>
-                {/* Badge رسائل غير مقروءة */}
                 {link.badge && (
-                  <span
-                    style={{
-                      background: "var(--terracotta)",
-                      color: "#fff",
-                      borderRadius: "999px",
-                      fontSize: "0.65rem",
-                      fontWeight: 900,
-                      padding: "0.15rem 0.5rem",
-                      minWidth: "20px",
-                      textAlign: "center",
-                      animation: "pulse 2s infinite",
-                    }}
-                  >
+                  <span style={{
+                    background: "linear-gradient(135deg, #C9A84C, #8B6B2A)",
+                    color: "#0A0806",
+                    borderRadius: "999px",
+                    fontSize: "0.62rem",
+                    fontWeight: 900,
+                    padding: "0.15rem 0.5rem",
+                    minWidth: "20px",
+                    textAlign: "center",
+                    animation: "pulse 2s infinite",
+                  }}>
                     {link.badge > 99 ? "99+" : link.badge}
                   </span>
                 )}
@@ -171,7 +167,7 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
         </nav>
 
         {/* تسجيل الخروج */}
-        <div style={{ paddingTop: "1rem", borderTop: "1px solid rgba(200,149,108,0.12)" }}>
+        <div style={{ paddingTop: "1rem", borderTop: "1px solid rgba(201,168,76,0.1)" }}>
           <form action="/api/logout" method="POST">
             <button
               type="submit"
@@ -179,27 +175,27 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
                 width: "100%",
                 padding: "0.75rem 1rem",
                 borderRadius: "12px",
-                border: "1.5px solid rgba(200,149,108,0.25)",
+                border: "1px solid rgba(201,168,76,0.15)",
                 background: "transparent",
                 fontFamily: "'Cairo', sans-serif",
                 fontWeight: 700,
                 fontSize: "0.88rem",
                 cursor: "pointer",
-                color: "var(--muted)",
+                color: "#6A5538",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.6rem",
                 transition: "all 0.2s",
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = "rgba(220,38,38,0.06)";
-                (e.currentTarget as HTMLElement).style.color = "#dc2626";
+                (e.currentTarget as HTMLElement).style.background = "rgba(220,38,38,0.08)";
+                (e.currentTarget as HTMLElement).style.color = "#f87171";
                 (e.currentTarget as HTMLElement).style.borderColor = "rgba(220,38,38,0.2)";
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.background = "transparent";
-                (e.currentTarget as HTMLElement).style.color = "var(--muted)";
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(200,149,108,0.25)";
+                (e.currentTarget as HTMLElement).style.color = "#6A5538";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(201,168,76,0.15)";
               }}
             >
               <span>🚪</span> تسجيل خروج

@@ -10,20 +10,7 @@ const Map = dynamic(() => import("@/components/Map"), {
   loading: () => <div style={{ height: "400px", background: "#e5e7eb", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center" }}>جاري تحميل الخريطة...</div>
 });
 
-const WILAYAS = [
-  "أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار","البليدة","البويرة",
-  "تمنراست","تبسة","تلمسان","تيارت","تيزي وزو","الجزائر","الجلفة","جيجل","سطيف","سعيدة",
-  "سكيكدة","سيدي بلعباس","عنابة","قالمة","قسنطينة","المدية","مستغانم","المسيلة","معسكر","ورقلة",
-  "وهران","البيض","إليزي","برج بوعريريج","بومرداس","الطارف","تندوف","تيسمسيلت","الوادي","خنشلة",
-  "سوق أهراس","تيبازة","ميلة","عين الدفلى","النعامة","عين تموشنت","غرداية","غليزان","تيميمون",
-  "برج باجي مختار","أولاد جلال","بني عباس","إن صالح","إن قزام","توقرت","جانت","المغير","المنيعة",
-];
-
-const PROFESSIONS = [
-  "نجار","كهربائي","سبّاك","دهّان","بنّاء","ميكانيكي","حداد","مبلّط",
-  "مكيفات","لحام","فني صحة","طيّار دهان","نقاش","رصّاف","عامل تنظيف","مصلح إلكترونيات",
-  "أخرى",
-];
+import { ALGERIA_WILAYAS, PROFESSIONS } from "@/lib/constants";
 
 interface FormData {
   profession: string;
@@ -41,6 +28,7 @@ export default function CompleteProfilePage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [customProfession, setCustomProfession] = useState("");
   const [form, setForm] = useState<FormData>({
     profession: "", wilaya: "", city: "", bio: "", phone: "", lat: null, lng: null, age: null
   });
@@ -70,17 +58,18 @@ export default function CompleteProfilePage() {
   };
 
   const handleSubmit = async () => {
-    if (!form.profession || !form.wilaya || !form.phone) {
+    if (!form.profession || !form.wilaya || !form.phone || (form.profession === "أخرى" && !customProfession.trim())) {
       setError("الرجاء ملء جميع الحقول الإلزامية");
       return;
     }
     setLoading(true);
     setError("");
     try {
+      const payload = { ...form, profession: form.profession === "أخرى" ? customProfession.trim() : form.profession };
       const res = await fetch("/api/artisan/create-profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) {
         const d = await res.json();
@@ -196,13 +185,26 @@ export default function CompleteProfilePage() {
                   {PROFESSIONS.map((p) => <option key={p} value={p}>{p}</option>)}
                 </select>
               </div>
+              
+              {form.profession === "أخرى" && (
+                <div style={{ marginBottom: "1.25rem" }}>
+                  <label style={labelStyle}>أدخل حرفتك <span style={{ color: "var(--terracotta)" }}>*</span></label>
+                  <input
+                    type="text"
+                    placeholder="مثال: صيانة هواتف"
+                    value={customProfession}
+                    onChange={(e) => setCustomProfession(e.target.value)}
+                    style={inputStyle}
+                  />
+                </div>
+              )}
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.25rem" }}>
                 <div>
                   <label style={labelStyle}>الولاية <span style={{ color: "var(--terracotta)" }}>*</span></label>
                   <select value={form.wilaya} onChange={(e) => update("wilaya", e.target.value)} style={inputStyle}>
                     <option value="">اختر الولاية...</option>
-                    {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
+                    {ALGERIA_WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
                   </select>
                 </div>
                 <div>
@@ -216,7 +218,7 @@ export default function CompleteProfilePage() {
               </div>
 
               <button style={nextBtnStyle} onClick={() => {
-                if (!form.profession || !form.wilaya) { setError("اختر الحرفة والولاية"); return; }
+                if (!form.profession || !form.wilaya || (form.profession === "أخرى" && !customProfession.trim())) { setError("اختر الحرفة والولاية"); return; }
                 setError(""); setStep(2);
               }}>
                 التالي ←
@@ -241,6 +243,7 @@ export default function CompleteProfilePage() {
                     type="tel"
                     dir="ltr"
                     placeholder="0555 55 55 55"
+                    maxLength={10}
                     value={form.phone}
                     onChange={(e) => update("phone", e.target.value)}
                     style={{ ...inputStyle, textAlign: "right" }}
