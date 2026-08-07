@@ -68,35 +68,35 @@ export default function DashboardMapClient({
       
       {/* Header */}
       <div style={{
-        background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px)",
+        background: "#120D08",
         borderRadius: "20px", padding: "1.5rem 2rem",
-        boxShadow: "0 4px 24px rgba(26,18,8,0.07)",
-        border: "1px solid rgba(200,149,108,0.15)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+        border: "1px solid rgba(201,168,76,0.15)",
         display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <span style={{ fontSize: "2rem" }}>🗺️</span>
           <div>
-            <h1 style={{ fontSize: "1.5rem", fontWeight: 900, color: "var(--dark)", marginBottom: "0.2rem" }}>
+            <h1 style={{ fontSize: "1.5rem", fontWeight: 900, color: "#F0E6C8", marginBottom: "0.2rem" }}>
               خريطة الحرفيين
             </h1>
-            <p style={{ color: "var(--muted)", fontWeight: 600, fontSize: "0.88rem" }}>
+            <p style={{ color: "#B8A070", fontWeight: 600, fontSize: "0.88rem" }}>
               استكشف الحرفيين المتاحين في منطقتك
             </p>
           </div>
         </div>
         <div style={{
-          background: "linear-gradient(135deg, #B5531A, #d45e1a)",
+          background: "linear-gradient(135deg, #C9A84C, #8B6B2A)",
           borderRadius: "14px", padding: "0.75rem 1.5rem",
           display: "flex", alignItems: "center", gap: "0.75rem",
-          boxShadow: "0 4px 16px rgba(181,83,26,0.3)",
+          boxShadow: "0 4px 16px rgba(201,168,76,0.2)",
         }}>
           <span style={{ fontSize: "1.4rem" }}>👷</span>
           <div>
-            <div style={{ color: "#fff", fontWeight: 900, fontSize: "1.6rem", lineHeight: 1 }}>
+            <div style={{ color: "#0A0806", fontWeight: 900, fontSize: "1.6rem", lineHeight: 1 }}>
               {stats.totalArtisans}
             </div>
-            <div style={{ color: "rgba(255,255,255,0.85)", fontSize: "0.78rem", fontWeight: 700 }}>
+            <div style={{ color: "rgba(10,8,6,0.75)", fontSize: "0.78rem", fontWeight: 700 }}>
               حرفي نشط الآن
             </div>
           </div>
@@ -109,10 +109,10 @@ export default function DashboardMapClient({
       }}>
         {statCards.map((card) => (
           <div key={card.label} style={{
-            background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)",
+            background: "#120D08",
             borderRadius: "16px", padding: "1.25rem 1rem",
-            boxShadow: "0 4px 20px rgba(26,18,8,0.06)",
-            border: "1px solid rgba(200,149,108,0.12)",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+            border: "1px solid rgba(201,168,76,0.12)",
             display: "flex", alignItems: "center", gap: "0.75rem",
           }}>
             <div style={{
@@ -125,8 +125,8 @@ export default function DashboardMapClient({
               <div style={{ fontSize: "1.5rem", fontWeight: 900, color: card.color, lineHeight: 1.1 }}>
                 {card.value}
               </div>
-              <div style={{ fontSize: "0.75rem", color: "var(--muted)", fontWeight: 700 }}>{card.label}</div>
-              {card.sub && <div style={{ fontSize: "0.7rem", color: "#16a34a", fontWeight: 700, marginTop: "2px" }}>{card.sub}</div>}
+              <div style={{ fontSize: "0.75rem", color: "#B8A070", fontWeight: 700 }}>{card.label}</div>
+              {card.sub && <div style={{ fontSize: "0.7rem", color: "#4ade80", fontWeight: 700, marginTop: "2px" }}>{card.sub}</div>}
             </div>
           </div>
         ))}
@@ -138,10 +138,10 @@ export default function DashboardMapClient({
       }}>
         {/* Map */}
         <div style={{
-          background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)",
+          background: "#120D08",
           borderRadius: "20px", overflow: "hidden",
-          boxShadow: "0 4px 24px rgba(26,18,8,0.07)",
-          border: "1px solid rgba(200,149,108,0.15)",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+          border: "1px solid rgba(201,168,76,0.15)",
           height: "500px",
         }}>
           <DynamicClusterMap
@@ -155,15 +155,15 @@ export default function DashboardMapClient({
 
         {/* Filter Panel */}
         <div style={{
-          background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px)",
+          background: "#120D08",
           borderRadius: "20px", padding: "1.5rem",
-          boxShadow: "0 4px 24px rgba(26,18,8,0.07)",
-          border: "1px solid rgba(200,149,108,0.15)",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+          border: "1px solid rgba(201,168,76,0.15)",
           display: "flex", flexDirection: "column", gap: "1.25rem",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <span style={{ fontSize: "1.2rem" }}>🔍</span>
-            <h2 style={{ fontSize: "1.05rem", fontWeight: 900, color: "var(--dark)" }}>تصفية البحث</h2>
+            <h2 style={{ fontSize: "1.05rem", fontWeight: 900, color: "#F0E6C8" }}>تصفية البحث</h2>
           </div>
 
           {/* Search */}
@@ -175,20 +175,20 @@ export default function DashboardMapClient({
               onChange={(e) => setSearchText(e.target.value)}
               style={{
                 width: "100%", padding: "0.8rem 1rem 0.8rem 2.5rem",
-                border: "2px solid rgba(200,149,108,0.2)", borderRadius: "12px",
+                border: "1px solid rgba(201,168,76,0.2)", borderRadius: "12px",
                 fontFamily: "'Cairo', sans-serif", fontSize: "0.9rem",
-                background: "rgba(255,255,255,0.7)", outline: "none",
+                background: "rgba(201,168,76,0.05)", color: "#F0E6C8", outline: "none",
                 transition: "border-color 0.2s",
               }}
-              onFocus={(e) => (e.target.style.borderColor = "var(--terracotta)")}
-              onBlur={(e) => (e.target.style.borderColor = "rgba(200,149,108,0.2)")}
+              onFocus={(e) => (e.target.style.borderColor = "#C9A84C")}
+              onBlur={(e) => (e.target.style.borderColor = "rgba(201,168,76,0.2)")}
             />
             <span style={{ position: "absolute", left: "0.75rem", top: "50%", transform: "translateY(-50%)", fontSize: "1rem" }}>🔍</span>
           </div>
 
           {/* Wilaya */}
           <div>
-            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--dark)", marginBottom: "0.5rem" }}>
+            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "#F0E6C8", marginBottom: "0.5rem" }}>
               اختر الولاية
             </label>
             <select
@@ -196,9 +196,9 @@ export default function DashboardMapClient({
               onChange={(e) => setFilterWilaya(e.target.value)}
               style={{
                 width: "100%", padding: "0.8rem 1rem",
-                border: "2px solid rgba(200,149,108,0.2)", borderRadius: "12px",
+                border: "1px solid rgba(201,168,76,0.2)", borderRadius: "12px",
                 fontFamily: "'Cairo', sans-serif", fontSize: "0.9rem",
-                background: "rgba(255,255,255,0.7)", outline: "none", cursor: "pointer",
+                background: "rgba(201,168,76,0.05)", color: "#F0E6C8", outline: "none", cursor: "pointer",
               }}
             >
               <option value="">كل الولايات</option>
@@ -210,7 +210,7 @@ export default function DashboardMapClient({
 
           {/* Profession */}
           <div>
-            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--dark)", marginBottom: "0.5rem" }}>
+            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "#F0E6C8", marginBottom: "0.5rem" }}>
               نوع الخدمة
             </label>
             <select
@@ -236,10 +236,10 @@ export default function DashboardMapClient({
               onClick={() => { setFilterWilaya(""); setFilterProfession(""); setSearchText(""); }}
               style={{
                 flex: 1, padding: "0.75rem", borderRadius: "10px",
-                border: "2px solid rgba(200,149,108,0.3)",
+                border: "1px solid rgba(201,168,76,0.3)",
                 background: "transparent", fontFamily: "'Cairo', sans-serif",
                 fontWeight: 700, fontSize: "0.88rem", cursor: "pointer",
-                color: "var(--mid)",
+                color: "#C9A84C",
               }}
             >
               إعادة ضبط
@@ -247,34 +247,33 @@ export default function DashboardMapClient({
             <button
               style={{
                 flex: 2, padding: "0.75rem", borderRadius: "10px",
-                background: "linear-gradient(135deg, var(--terracotta), #d45e1a)",
+                background: "linear-gradient(135deg, #C9A84C, #8B6B2A)",
                 border: "none", fontFamily: "'Cairo', sans-serif",
                 fontWeight: 800, fontSize: "0.9rem", cursor: "pointer",
-                color: "#fff", boxShadow: "0 4px 14px rgba(181,83,26,0.3)",
+                color: "#0A0806", boxShadow: "0 4px 14px rgba(201,168,76,0.2)",
               }}
             >
               🔍 تطبيق الفلاتر ({filtered.length})
             </button>
           </div>
 
-          {/* Artisan count per wilaya */}
           {filterWilaya && (
             <div style={{
-              background: "rgba(181,83,26,0.06)", borderRadius: "12px", padding: "0.75rem 1rem",
-              border: "1px solid rgba(181,83,26,0.12)",
+              background: "rgba(201,168,76,0.06)", borderRadius: "12px", padding: "0.75rem 1rem",
+              border: "1px solid rgba(201,168,76,0.15)",
             }}>
-              <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "var(--terracotta)" }}>
+              <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#C9A84C" }}>
                 📍 {filterWilaya}
               </div>
-              <div style={{ fontWeight: 900, fontSize: "1.4rem", color: "var(--dark)" }}>
+              <div style={{ fontWeight: 900, fontSize: "1.4rem", color: "#F0E6C8" }}>
                 {filtered.length} حرفي
               </div>
             </div>
           )}
 
           {/* Density legend */}
-          <div style={{ fontSize: "0.78rem", color: "var(--muted)", borderTop: "1px solid rgba(200,149,108,0.15)", paddingTop: "1rem" }}>
-            <div style={{ fontWeight: 800, marginBottom: "0.5rem", color: "var(--dark)" }}>دليل الألوان:</div>
+          <div style={{ fontSize: "0.78rem", color: "#B8A070", borderTop: "1px solid rgba(201,168,76,0.15)", paddingTop: "1rem" }}>
+            <div style={{ fontWeight: 800, marginBottom: "0.5rem", color: "#F0E6C8" }}>دليل الألوان:</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
               {[
                 { color: "#B5531A", label: "عالي الكثافة (10+)" },
@@ -293,24 +292,24 @@ export default function DashboardMapClient({
 
       {/* Top Artisans */}
       <div style={{
-        background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)",
+        background: "#120D08",
         borderRadius: "20px", padding: "1.75rem",
-        boxShadow: "0 4px 24px rgba(26,18,8,0.07)",
-        border: "1px solid rgba(200,149,108,0.15)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+        border: "1px solid rgba(201,168,76,0.12)",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
           <div>
-            <h2 style={{ fontSize: "1.15rem", fontWeight: 900, color: "var(--dark)" }}>
+            <h2 style={{ fontSize: "1.15rem", fontWeight: 900, color: "#F0E6C8" }}>
               🏆 اكتشف أفضل الحرفيين
             </h2>
-            <p style={{ fontSize: "0.85rem", color: "var(--muted)", fontWeight: 600 }}>
+            <p style={{ fontSize: "0.85rem", color: "#B8A070", fontWeight: 600 }}>
               تقييمات عالية من عملاء سابقين
             </p>
           </div>
           <Link href="/search" style={{
-            fontSize: "0.85rem", fontWeight: 700, color: "var(--terracotta)",
+            fontSize: "0.85rem", fontWeight: 700, color: "#C9A84C",
             padding: "0.5rem 1rem", borderRadius: "10px",
-            border: "1px solid rgba(181,83,26,0.25)",
+            border: "1px solid rgba(201,168,76,0.25)",
           }}>
             عرض الكل ←
           </Link>
@@ -326,8 +325,8 @@ export default function DashboardMapClient({
               style={{
                 display: "flex", alignItems: "center", gap: "0.75rem",
                 padding: "1rem", borderRadius: "14px",
-                background: i === 0 ? "rgba(212,168,67,0.08)" : "rgba(181,83,26,0.04)",
-                border: `1px solid ${i === 0 ? "rgba(212,168,67,0.25)" : "rgba(200,149,108,0.12)"}`,
+                background: i === 0 ? "rgba(201,168,76,0.1)" : "rgba(201,168,76,0.04)",
+                border: `1px solid ${i === 0 ? "rgba(201,168,76,0.3)" : "rgba(201,168,76,0.1)"}`,
                 textDecoration: "none", transition: "all 0.2s",
               }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
@@ -335,9 +334,9 @@ export default function DashboardMapClient({
             >
               <div style={{
                 width: "48px", height: "48px", borderRadius: "50%",
-                background: "linear-gradient(135deg, var(--terracotta), #d45e1a)",
+                background: "linear-gradient(135deg, #C9A84C, #6B4E1A)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#fff", fontWeight: 900, fontSize: "1.1rem", flexShrink: 0,
+                color: "#0A0806", fontWeight: 900, fontSize: "1.1rem", flexShrink: 0,
                 position: "relative",
               }}>
                 {artisan.name.charAt(0)}
@@ -350,20 +349,20 @@ export default function DashboardMapClient({
                 )}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "var(--dark)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#F0E6C8", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {artisan.name}
                 </div>
-                <div style={{ fontSize: "0.78rem", color: "var(--terracotta)", fontWeight: 700 }}>
+                <div style={{ fontSize: "0.78rem", color: "#C9A84C", fontWeight: 700 }}>
                   {artisan.profession}
                 </div>
-                <div style={{ fontSize: "0.75rem", color: "#D4A843", fontWeight: 700 }}>
+                <div style={{ fontSize: "0.75rem", color: "#E2BE6E", fontWeight: 700 }}>
                   {"★".repeat(Math.round(artisan.avgRating || 0))} {artisan.avgRating?.toFixed(1)}
                 </div>
               </div>
             </Link>
           ))}
           {topArtisans.length === 0 && (
-            <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "2rem", color: "var(--muted)" }}>
+            <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "2rem", color: "#6A5538" }}>
               لا يوجد حرفيون بتقييمات بعد
             </div>
           )}

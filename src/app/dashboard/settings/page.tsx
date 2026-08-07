@@ -178,14 +178,14 @@ export default function SettingsPage() {
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "0.85rem 1.2rem",
-    border: "2px solid rgba(200,149,108,0.2)",
-    borderRadius: "12px",
-    fontSize: "1rem",
-    fontFamily: "'Cairo', sans-serif",
-    outline: "none",
-    background: "rgba(255,255,255,0.7)",
-    transition: "border-color 0.2s",
-    color: "var(--dark)",
+                border: "2px solid rgba(201,168,76,0.2)",
+                borderRadius: "12px",
+                fontSize: "1rem",
+                fontFamily: "'Cairo', sans-serif",
+                outline: "none",
+                background: "#0A0806",
+                transition: "border-color 0.2s",
+                color: "var(--dark)",
   };
 
   if (loading) {
@@ -201,12 +201,11 @@ export default function SettingsPage() {
     <div
       className="settings-container"
       style={{
-        background: "rgba(255,255,255,0.9)",
-        backdropFilter: "blur(16px)",
+        background: "#120D08",
         borderRadius: "24px",
         padding: "2rem",
-        boxShadow: "0 8px 40px rgba(26,18,8,0.08)",
-        border: "1px solid rgba(200,149,108,0.15)",
+        boxShadow: "0 8px 40px rgba(0,0,0,0.4)",
+        border: "1px solid rgba(201,168,76,0.15)",
         maxWidth: "860px",
         margin: "0 auto",
       }}
@@ -279,7 +278,7 @@ export default function SettingsPage() {
                 style={inputStyle}
                 placeholder="اسمك الكامل"
                 onFocus={(e) => (e.target.style.borderColor = "var(--terracotta)")}
-                onBlur={(e) => (e.target.style.borderColor = "rgba(200,149,108,0.2)")}
+                onBlur={(e) => (e.target.style.borderColor = "rgba(201,168,76,0.2)")}
               />
             </div>
             <div>
@@ -303,15 +302,15 @@ export default function SettingsPage() {
                 style={{ ...inputStyle, textAlign: "right" }}
                 placeholder="0555 55 55 55"
                 onFocus={(e) => (e.target.style.borderColor = "var(--terracotta)")}
-                onBlur={(e) => (e.target.style.borderColor = "rgba(200,149,108,0.2)")}
+                onBlur={(e) => (e.target.style.borderColor = "rgba(201,168,76,0.2)")}
               />
             </div>
           </div>
 
           <div
             style={{
-              background: "rgba(3,105,161,0.05)",
-              border: "1px solid rgba(3,105,161,0.15)",
+              background: "rgba(201,168,76,0.06)",
+              border: "1px solid rgba(201,168,76,0.15)",
               borderRadius: "16px",
               padding: "1.25rem",
             }}
@@ -390,11 +389,11 @@ export default function SettingsPage() {
                   fontWeight: 800,
                   fontSize: "0.9rem",
                   cursor: "pointer",
-                  background:
-                    activeArtisanTab === tab.id
-                      ? "linear-gradient(135deg, var(--terracotta), #d45e1a)"
-                      : "transparent",
-                  color: activeArtisanTab === tab.id ? "#fff" : "var(--muted)",
+                      background:
+                        activeArtisanTab === tab.id
+                          ? "linear-gradient(135deg, var(--terracotta), #8B6B2A)"
+                          : "transparent",
+                      color: activeArtisanTab === tab.id ? "#0A0806" : "var(--muted)",
                   transition: "all 0.2s",
                   display: "flex",
                   alignItems: "center",
@@ -437,7 +436,7 @@ export default function SettingsPage() {
                     placeholder="اسمك الكامل"
                     onFocus={(e) => (e.target.style.borderColor = "var(--terracotta)")}
                     onBlur={(e) =>
-                      (e.target.style.borderColor = "rgba(200,149,108,0.2)")
+                      (e.target.style.borderColor = "rgba(201,168,76,0.2)")
                     }
                   />
                 </div>
@@ -463,7 +462,7 @@ export default function SettingsPage() {
                     placeholder="0555 55 55 55"
                     onFocus={(e) => (e.target.style.borderColor = "var(--terracotta)")}
                     onBlur={(e) =>
-                      (e.target.style.borderColor = "rgba(200,149,108,0.2)")
+                      (e.target.style.borderColor = "rgba(201,168,76,0.2)")
                     }
                   />
                 </div>
