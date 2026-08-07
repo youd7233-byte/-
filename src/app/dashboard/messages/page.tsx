@@ -229,7 +229,6 @@ function MessagesContent() {
       style={{
         display: "flex",
         height: "calc(100vh - 130px)",
-        background: "rgba(255,255,255,0.85)",
         background: "#120D08",
         borderRadius: "24px",
         overflow: "hidden",
