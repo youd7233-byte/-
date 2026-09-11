@@ -59,7 +59,7 @@ export default function Map({ artisans = [], interactive = false, onLocationSele
   if (!mounted) return <div style={{ height: "400px", background: "#e5e7eb", borderRadius: "16px", display: "flex", alignItems: "center", justifyContent: "center" }}>جاري تحميل الخريطة...</div>;
 
   return (
-    <div style={{ height: "100%", width: "100%", borderRadius: "16px", overflow: "hidden", border: "2px solid rgba(200,149,108,0.3)" }}>
+    <div style={{ height: "100%", width: "100%", borderRadius: "16px", overflow: "hidden", border: "2px solid rgba(217,162,100,0.3)" }}>
       <MapContainer 
         center={defaultCenter} 
         zoom={6} 

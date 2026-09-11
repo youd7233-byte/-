@@ -44,7 +44,7 @@ export default function SearchPage() {
   }, [fetchArtisans]);
 
   const inputStyle: React.CSSProperties = {
-    padding: "0.85rem 1.2rem", border: "2px solid rgba(200,149,108,0.22)",
+    padding: "0.85rem 1.2rem", border: "2px solid rgba(217,162,100,0.22)",
     borderRadius: "14px", fontSize: "0.95rem", fontFamily: "'Cairo',sans-serif",
     color: "var(--text)", background: "rgba(255,255,255,0.85)",
     outline: "none", transition: "all 0.2s", width: "100%", boxSizing: "border-box",
@@ -54,7 +54,7 @@ export default function SearchPage() {
     <div dir="rtl" style={{ minHeight: "100vh", background: "var(--cream)" }}>
       <Navbar />
       <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
-        background: "radial-gradient(ellipse 70% 40% at 5% 10%, rgba(181,83,26,0.06) 0%, transparent 55%)" }} />
+        background: "radial-gradient(ellipse 70% 40% at 5% 10%, rgba(217,162,100,0.06) 0%, transparent 55%)" }} />
 
       <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem 1.5rem", position: "relative", zIndex: 1 }}>
 
@@ -73,7 +73,7 @@ export default function SearchPage() {
           background: "rgba(255,255,255,0.85)", backdropFilter: "blur(16px)",
           borderRadius: "20px", padding: "1.5rem",
           boxShadow: "0 4px 20px rgba(26,18,8,0.07)",
-          border: "1px solid rgba(200,149,108,0.15)",
+          border: "1px solid rgba(217,162,100,0.15)",
         }} className="filters-grid">
           <input
             type="text" placeholder="🔍 ابحث باسم الحرفي أو الخدمة..."
@@ -93,7 +93,7 @@ export default function SearchPage() {
             background: "linear-gradient(135deg, var(--terracotta), #d45e1a)",
             color: "#fff", fontFamily: "'Cairo',sans-serif", fontWeight: 800,
             border: "none", cursor: "pointer", fontSize: "0.95rem",
-            boxShadow: "0 4px 16px rgba(181,83,26,0.28)", whiteSpace: "nowrap",
+            boxShadow: "0 4px 16px rgba(217,162,100,0.28)", whiteSpace: "nowrap",
           }}>بحث</button>
         </div>
 
@@ -102,7 +102,7 @@ export default function SearchPage() {
           {loading ? (
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--muted)" }}>
               <div style={{
-                width: "16px", height: "16px", border: "2px solid rgba(181,83,26,0.3)",
+                width: "16px", height: "16px", border: "2px solid rgba(217,162,100,0.3)",
                 borderTopColor: "var(--terracotta)", borderRadius: "50%",
                 animation: "spin 0.7s linear infinite",
               }} />
@@ -120,7 +120,7 @@ export default function SearchPage() {
           <div style={{
             textAlign: "center", padding: "5rem 2rem",
             background: "rgba(255,255,255,0.7)", borderRadius: "24px",
-            border: "2px dashed rgba(200,149,108,0.25)",
+            border: "2px dashed rgba(217,162,100,0.25)",
           }}>
             <div style={{ fontSize: "4rem", marginBottom: "1rem" }}>🔍</div>
             <h2 style={{ fontWeight: 900, color: "var(--dark)", marginBottom: "0.5rem" }}>لا يوجد نتائج</h2>
@@ -138,7 +138,7 @@ export default function SearchPage() {
                   background: "rgba(255,255,255,0.9)", backdropFilter: "blur(12px)",
                   borderRadius: "20px", padding: "1.5rem",
                   boxShadow: "0 4px 20px rgba(26,18,8,0.07)",
-                  border: artisan.isPremium ? "2px solid rgba(212,168,67,0.4)" : "1px solid rgba(200,149,108,0.14)",
+                  border: artisan.isPremium ? "2px solid rgba(212,168,67,0.4)" : "1px solid rgba(217,162,100,0.14)",
                   transition: "all 0.25s", cursor: "pointer",
                   position: "relative", overflow: "hidden",
                 }}
@@ -164,7 +164,7 @@ export default function SearchPage() {
                     <div style={{
                       width: "60px", height: "60px", borderRadius: "50%", flexShrink: 0,
                       background: artisan.userImage ? `url(${artisan.userImage}) center/cover` : "linear-gradient(135deg, var(--terracotta), #d45e1a)",
-                      boxShadow: "0 4px 14px rgba(181,83,26,0.2)",
+                      boxShadow: "0 4px 14px rgba(217,162,100,0.2)",
                       display: "flex", alignItems: "center", justifyContent: "center",
                       fontSize: "1.5rem", color: "#fff",
                     }}>
@@ -209,7 +209,7 @@ export default function SearchPage() {
                     </div>
                     <div style={{
                       padding: "0.4rem 1rem", borderRadius: "10px",
-                      background: "rgba(181,83,26,0.08)", color: "var(--terracotta)",
+                      background: "rgba(217,162,100,0.08)", color: "var(--terracotta)",
                       fontSize: "0.82rem", fontWeight: 700,
                     }}>عرض الملف ←</div>
                   </div>
@@ -222,7 +222,7 @@ export default function SearchPage() {
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
-        select:focus, input:focus { border-color: var(--terracotta) !important; box-shadow: 0 0 0 4px rgba(181,83,26,0.1) !important; }
+        select:focus, input:focus { border-color: var(--terracotta) !important; box-shadow: 0 0 0 4px rgba(217,162,100,0.1) !important; }
         @media (max-width: 900px) {
           .filters-grid { grid-template-columns: 1fr 1fr !important; }
         }

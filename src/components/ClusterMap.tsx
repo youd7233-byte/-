@@ -86,7 +86,7 @@ export default function ClusterMap({
             font-weight: 900;
             font-size: ${fontSize};
             font-family: 'Cairo', sans-serif;
-            box-shadow: 0 4px 16px rgba(181,83,26,0.45), 0 0 0 4px rgba(181,83,26,0.18);
+            box-shadow: 0 4px 16px rgba(217,162,100,0.45), 0 0 0 4px rgba(217,162,100,0.18);
             border: 3px solid #fff;
             cursor: pointer;
             transition: transform 0.2s;
@@ -115,7 +115,7 @@ export default function ClusterMap({
             justify-content: center;
             color: white;
             font-size: 1rem;
-            box-shadow: 0 4px 12px rgba(181,83,26,0.35), 0 0 0 3px rgba(255,255,255,0.9);
+            box-shadow: 0 4px 12px rgba(217,162,100,0.35), 0 0 0 3px rgba(255,255,255,0.9);
             border: 2.5px solid #fff;
             cursor: pointer;
           ">

@@ -35,7 +35,7 @@ export default function ChooseRolePage() {
 
       <div style={{
         position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
-        background: "radial-gradient(ellipse 80% 60% at 20% 10%, rgba(181,83,26,0.08) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 80% 90%, rgba(212,168,67,0.06) 0%, transparent 60%)",
+        background: "radial-gradient(ellipse 80% 60% at 20% 10%, rgba(217,162,100,0.08) 0%, transparent 60%), radial-gradient(ellipse 70% 50% at 80% 90%, rgba(212,168,67,0.06) 0%, transparent 60%)",
       }} />
 
       <main style={{
@@ -49,7 +49,7 @@ export default function ChooseRolePage() {
         }}>
           <div style={{
             fontSize: "3.5rem", marginBottom: "1rem",
-            filter: "drop-shadow(0 4px 12px rgba(181,83,26,0.2))",
+            filter: "drop-shadow(0 4px 12px rgba(217,162,100,0.2))",
           }}>🏠</div>
           <h1 style={{
             fontSize: "2.2rem", fontWeight: 900, color: "var(--dark)",
@@ -73,13 +73,13 @@ export default function ChooseRolePage() {
             style={{
               padding: "2.5rem 1.5rem",
               borderRadius: "24px",
-              border: `3px solid ${selected === "CLIENT" ? "var(--terracotta)" : "rgba(200,149,108,0.2)"}`,
-              background: selected === "CLIENT" ? "rgba(181,83,26,0.06)" : "rgba(255,255,255,0.8)",
+              border: `3px solid ${selected === "CLIENT" ? "var(--terracotta)" : "rgba(217,162,100,0.2)"}`,
+              background: selected === "CLIENT" ? "rgba(217,162,100,0.06)" : "rgba(255,255,255,0.8)",
               backdropFilter: "blur(10px)",
               cursor: "pointer",
               transition: "all 0.25s",
               boxShadow: selected === "CLIENT"
-                ? "0 12px 40px rgba(181,83,26,0.2)"
+                ? "0 12px 40px rgba(217,162,100,0.2)"
                 : "0 4px 20px rgba(0,0,0,0.06)",
               textAlign: "center",
               transform: selected === "CLIENT" ? "translateY(-4px)" : "translateY(0)",
@@ -111,13 +111,13 @@ export default function ChooseRolePage() {
             style={{
               padding: "2.5rem 1.5rem",
               borderRadius: "24px",
-              border: `3px solid ${selected === "ARTISAN" ? "var(--terracotta)" : "rgba(200,149,108,0.2)"}`,
-              background: selected === "ARTISAN" ? "rgba(181,83,26,0.06)" : "rgba(255,255,255,0.8)",
+              border: `3px solid ${selected === "ARTISAN" ? "var(--terracotta)" : "rgba(217,162,100,0.2)"}`,
+              background: selected === "ARTISAN" ? "rgba(217,162,100,0.06)" : "rgba(255,255,255,0.8)",
               backdropFilter: "blur(10px)",
               cursor: "pointer",
               transition: "all 0.25s",
               boxShadow: selected === "ARTISAN"
-                ? "0 12px 40px rgba(181,83,26,0.2)"
+                ? "0 12px 40px rgba(217,162,100,0.2)"
                 : "0 4px 20px rgba(0,0,0,0.06)",
               textAlign: "center",
               transform: selected === "ARTISAN" ? "translateY(-4px)" : "translateY(0)",
@@ -162,7 +162,7 @@ export default function ChooseRolePage() {
                 fontSize: "1.15rem",
                 border: "none",
                 cursor: loading ? "not-allowed" : "pointer",
-                boxShadow: "0 10px 32px rgba(181,83,26,0.3)",
+                boxShadow: "0 10px 32px rgba(217,162,100,0.3)",
                 transition: "all 0.25s",
                 display: "flex", alignItems: "center", gap: "0.75rem",
               }}

@@ -41,52 +41,80 @@ export default function PublicMapClient({ artisans, center, wilayas, professions
   }, [filterWilaya, filtered, center]);
 
   return (
-    <div dir="rtl" style={{ position: "relative" }}>
-      {/* Page Title */}
-      <div style={{
-        padding: "1.5rem 2rem 1rem",
-        display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <span style={{ fontSize: "1.8rem" }}>🗺️</span>
+    <div dir="rtl" style={{ position: "relative", minHeight: "calc(100vh - 80px)", background: "#0D0F14", paddingBottom: "1.5rem" }}>
+      {/* Top Banner Header */}
+      <div
+        style={{
+          padding: "1.25rem 2rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "1rem",
+          background: "#131820",
+          borderBottom: "1px solid rgba(217,162,100,0.15)",
+          marginBottom: "1rem",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
+          <span style={{ fontSize: "2rem" }}>🗺️</span>
           <div>
-            <h1 style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--dark)" }}>خريطة الحرفيين</h1>
-            <p style={{ color: "var(--muted)", fontWeight: 600, fontSize: "0.9rem" }}>
-              اكتشف الحرفيين المتاحين في منطقتك
+            <h1 style={{ fontSize: "1.4rem", fontWeight: 900, color: "#F0F4F8" }}>خريطة الحرفيين المباشرة</h1>
+            <p style={{ color: "#A7B8C4", fontWeight: 600, fontSize: "0.85rem" }}>
+              اكتشف وتواصل مع أمهر الحرفيين في ولايتك بسهولة
             </p>
           </div>
         </div>
-        <div style={{
-          background: "linear-gradient(135deg,#B5531A,#d45e1a)",
-          borderRadius: "14px", padding: "0.65rem 1.25rem",
-          display: "flex", alignItems: "center", gap: "0.5rem",
-          boxShadow: "0 4px 16px rgba(181,83,26,0.3)",
-        }}>
-          <span style={{ fontSize: "1.2rem" }}>👷</span>
-          <div>
-            <div style={{ color: "#fff", fontWeight: 900, fontSize: "1.3rem", lineHeight: 1 }}>{totalCount}</div>
-            <div style={{ color: "rgba(255,255,255,0.85)", fontSize: "0.72rem", fontWeight: 700 }}>حرفي نشط</div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <div
+            style={{
+              background: "linear-gradient(135deg, #D9A264, #A97B3C)",
+              borderRadius: "16px",
+              padding: "0.6rem 1.25rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.65rem",
+              boxShadow: "0 4px 20px rgba(217,162,100,0.25)",
+            }}
+          >
+            <span style={{ fontSize: "1.3rem" }}>👷</span>
+            <div>
+              <div style={{ color: "#0D0F14", fontWeight: 900, fontSize: "1.4rem", lineHeight: 1 }}>
+                {filtered.length}
+              </div>
+              <div style={{ color: "rgba(13,15,20,0.8)", fontSize: "0.72rem", fontWeight: 800 }}>
+                حرفي متاح الآن
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Main Layout */}
-      <div className="public-map-layout" style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 300px",
-        gap: "1.25rem",
-        padding: "0 1.5rem 1.5rem",
-        alignItems: "start",
-      }}>
-        {/* Map */}
-        <div style={{
-          borderRadius: "20px", overflow: "hidden",
-          boxShadow: "0 4px 24px rgba(26,18,8,0.1)",
-          border: "1px solid rgba(200,149,108,0.2)",
-          height: "calc(100vh - 210px)",
-          minHeight: "400px",
-          background: "#e5e7eb",
-        }}>
+      {/* Main Layout Grid */}
+      <div
+        className="public-map-layout"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 320px",
+          gap: "1.25rem",
+          padding: "0 1.5rem",
+          alignItems: "stretch",
+        }}
+      >
+        {/* BIG MAP CONTAINER */}
+        <div
+          style={{
+            borderRadius: "24px",
+            overflow: "hidden",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+            border: "1px solid rgba(217,162,100,0.18)",
+            height: "calc(100vh - 210px)",
+            minHeight: "520px",
+            background: "#131820",
+            position: "relative",
+          }}
+        >
           <DynamicClusterMap
             artisans={filtered}
             center={mapCenter}
@@ -95,166 +123,260 @@ export default function PublicMapClient({ artisans, center, wilayas, professions
           />
         </div>
 
-        {/* Filter Sidebar */}
-        <div style={{
-          background: "rgba(255,255,255,0.92)", backdropFilter: "blur(16px)",
-          borderRadius: "20px", padding: "1.5rem",
-          boxShadow: "0 4px 24px rgba(26,18,8,0.07)",
-          border: "1px solid rgba(200,149,108,0.15)",
-          display: "flex", flexDirection: "column", gap: "1.1rem",
-        }}>
+        {/* Filters Panel Desktop */}
+        <div
+          style={{
+            background: "#131820",
+            borderRadius: "24px",
+            padding: "1.5rem",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+            border: "1px solid rgba(217,162,100,0.18)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.2rem",
+          }}
+        >
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <span style={{ fontSize: "1.1rem" }}>🔍</span>
-            <h2 style={{ fontSize: "1rem", fontWeight: 900, color: "var(--dark)" }}>ابحث عن حرفي</h2>
+            <span style={{ fontSize: "1.2rem" }}>🔍</span>
+            <h2 style={{ fontSize: "1.05rem", fontWeight: 900, color: "#F0F4F8" }}>فلترة الحرفيين</h2>
           </div>
 
-          {/* Search input */}
-          <input
-            type="text"
-            placeholder="ابحث عن خدمة أو حرفي..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{
-              width: "100%", padding: "0.75rem 1rem",
-              border: "2px solid rgba(200,149,108,0.2)", borderRadius: "12px",
-              fontFamily: "'Cairo', sans-serif", fontSize: "0.9rem",
-              background: "rgba(255,255,255,0.7)", outline: "none",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "var(--terracotta)")}
-            onBlur={(e) => (e.target.style.borderColor = "rgba(200,149,108,0.2)")}
-          />
-
-          {/* Wilaya */}
+          {/* Search Input */}
           <div>
-            <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "var(--dark)", marginBottom: "0.4rem" }}>
-              اختر الولاية
+            <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#A7B8C4", marginBottom: "0.4rem" }}>
+              بحث بالاسم أو الخدمة
+            </label>
+            <input
+              type="text"
+              placeholder="مثال: كهربائي، حداد..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "0.75rem 1rem",
+                border: "1px solid rgba(217,162,100,0.2)",
+                borderRadius: "14px",
+                fontFamily: "'Cairo', sans-serif",
+                fontSize: "0.9rem",
+                background: "#0D0F14",
+                color: "#F0F4F8",
+                outline: "none",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#D9A264")}
+              onBlur={(e) => (e.target.style.borderColor = "rgba(217,162,100,0.2)")}
+            />
+          </div>
+
+          {/* Select Wilaya */}
+          <div>
+            <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#A7B8C4", marginBottom: "0.4rem" }}>
+              الولاية
             </label>
             <select
               value={filterWilaya}
               onChange={(e) => setFilterWilaya(e.target.value)}
               style={{
-                width: "100%", padding: "0.75rem 1rem",
-                border: "2px solid rgba(200,149,108,0.2)", borderRadius: "12px",
-                fontFamily: "'Cairo', sans-serif", fontSize: "0.9rem",
-                background: "rgba(255,255,255,0.7)", outline: "none", cursor: "pointer",
+                width: "100%",
+                padding: "0.75rem 1rem",
+                border: "1px solid rgba(217,162,100,0.2)",
+                borderRadius: "14px",
+                fontFamily: "'Cairo', sans-serif",
+                fontSize: "0.9rem",
+                background: "#0D0F14",
+                color: "#F0F4F8",
+                outline: "none",
+                cursor: "pointer",
               }}
             >
-              <option value="">كل الولايات</option>
-              {wilayas.map((w) => <option key={w} value={w}>{w}</option>)}
+              <option value="">جميع الولايات ({wilayas.length})</option>
+              {wilayas.map((w) => (
+                <option key={w} value={w}>{w}</option>
+              ))}
             </select>
           </div>
 
-          {/* Profession */}
+          {/* Select Profession */}
           <div>
-            <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "var(--dark)", marginBottom: "0.4rem" }}>
-              نوع الخدمة
+            <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#A7B8C4", marginBottom: "0.4rem" }}>
+              نوع المهنة
             </label>
             <select
               value={filterProfession}
               onChange={(e) => setFilterProfession(e.target.value)}
               style={{
-                width: "100%", padding: "0.75rem 1rem",
-                border: "2px solid rgba(200,149,108,0.2)", borderRadius: "12px",
-                fontFamily: "'Cairo', sans-serif", fontSize: "0.9rem",
-                background: "rgba(255,255,255,0.7)", outline: "none", cursor: "pointer",
+                width: "100%",
+                padding: "0.75rem 1rem",
+                border: "1px solid rgba(217,162,100,0.2)",
+                borderRadius: "14px",
+                fontFamily: "'Cairo', sans-serif",
+                fontSize: "0.9rem",
+                background: "#0D0F14",
+                color: "#F0F4F8",
+                outline: "none",
+                cursor: "pointer",
               }}
             >
-              <option value="">كل الخدمات</option>
-              {professions.map((p) => <option key={p} value={p}>{p}</option>)}
+              <option value="">جميع المهن ({professions.length})</option>
+              {professions.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
             </select>
           </div>
 
-          {/* Search button */}
-          <button
-            onClick={() => {}}
-            style={{
-              width: "100%", padding: "0.85rem",
-              background: "linear-gradient(135deg, var(--terracotta), #d45e1a)",
-              color: "#fff", border: "none", borderRadius: "12px",
-              fontFamily: "'Cairo', sans-serif", fontWeight: 800, fontSize: "0.95rem",
-              cursor: "pointer", boxShadow: "0 4px 14px rgba(181,83,26,0.3)",
-              display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem",
-            }}
-          >
-            🔍 بحث ({filtered.length} حرفي)
-          </button>
-
-          {/* Reset */}
+          {/* Clear button */}
           {(filterWilaya || filterProfession || searchText) && (
             <button
-              onClick={() => { setFilterWilaya(""); setFilterProfession(""); setSearchText(""); }}
+              onClick={() => {
+                setFilterWilaya("");
+                setFilterProfession("");
+                setSearchText("");
+              }}
               style={{
-                width: "100%", padding: "0.6rem",
-                border: "1.5px solid rgba(200,149,108,0.3)",
-                background: "transparent", borderRadius: "10px",
-                fontFamily: "'Cairo', sans-serif", fontWeight: 700,
-                fontSize: "0.85rem", cursor: "pointer", color: "var(--mid)",
+                width: "100%",
+                padding: "0.65rem",
+                border: "1px solid rgba(217,162,100,0.3)",
+                background: "transparent",
+                borderRadius: "12px",
+                fontFamily: "'Cairo', sans-serif",
+                fontWeight: 800,
+                fontSize: "0.85rem",
+                cursor: "pointer",
+                color: "#D9A264",
+                transition: "all 0.2s",
               }}
             >
-              إزالة الفلاتر
+              إلغاء الفلاتر
             </button>
           )}
 
-          {/* Stats */}
-          <div style={{ borderTop: "1px solid rgba(200,149,108,0.15)", paddingTop: "1rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <div style={{ fontSize: "0.78rem", color: "var(--muted)", fontWeight: 700 }}>حرفيون نشطون الآن</div>
-                <div style={{ fontSize: "1.8rem", fontWeight: 900, color: "var(--terracotta)", lineHeight: 1.1 }}>
-                  {filtered.length}
-                </div>
-                <div style={{ fontSize: "0.72rem", color: "var(--muted)" }}>
-                  حرفي متاح حالياً
-                </div>
+          {/* Summary Box */}
+          <div style={{ borderTop: "1px solid rgba(217,162,100,0.12)", paddingTop: "1rem", marginTop: "auto" }}>
+            <div style={{ background: "rgba(217,162,100,0.06)", padding: "1rem", borderRadius: "16px", border: "1px solid rgba(217,162,100,0.15)" }}>
+              <div style={{ fontSize: "0.78rem", color: "#A7B8C4", fontWeight: 700 }}>نتائج التصفية</div>
+              <div style={{ fontSize: "1.8rem", fontWeight: 900, color: "#D9A264", lineHeight: 1.1 }}>
+                {filtered.length} <span style={{ fontSize: "0.9rem", color: "#F0F4F8", fontWeight: 700 }}>حرفي</span>
               </div>
-              <span style={{ fontSize: "2.5rem" }}>👷</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile Filter Button */}
-      <div className="mobile-filter-btn" style={{
-        display: "none", position: "fixed", bottom: "80px", left: "50%",
-        transform: "translateX(-50%)", zIndex: 999,
-      }}>
+      {/* Floating Mobile Filter Trigger Button */}
+      <div
+        className="mobile-filter-btn"
+        style={{
+          display: "none",
+          position: "fixed",
+          bottom: "85px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 999,
+        }}
+      >
         <button
-          onClick={() => setShowMobileFilter(!showMobileFilter)}
+          onClick={() => setShowMobileFilter(true)}
           style={{
-            padding: "0.75rem 2rem", background: "var(--terracotta)",
-            color: "#fff", border: "none", borderRadius: "25px",
-            fontFamily: "'Cairo', sans-serif", fontWeight: 800, fontSize: "0.9rem",
-            boxShadow: "0 4px 20px rgba(181,83,26,0.4)", cursor: "pointer",
-            display: "flex", alignItems: "center", gap: "0.5rem",
+            padding: "0.85rem 2rem",
+            background: "linear-gradient(135deg, #D9A264, #A97B3C)",
+            color: "#0D0F14",
+            border: "none",
+            borderRadius: "30px",
+            fontFamily: "'Cairo', sans-serif",
+            fontWeight: 900,
+            fontSize: "0.95rem",
+            boxShadow: "0 6px 24px rgba(217,162,100,0.4)",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
           }}
         >
-          🔍 تصفية البحث
+          🔍 تصفية النتائج ({filtered.length})
         </button>
       </div>
 
-      {/* Mobile Filter Sheet */}
+      {/* Mobile Bottom Sheet Modal */}
       {showMobileFilter && (
-        <div className="mobile-filter-sheet" style={{
-          display: "none", position: "fixed", bottom: 0, left: 0, right: 0,
-          background: "rgba(255,255,255,0.97)", backdropFilter: "blur(20px)",
-          borderRadius: "24px 24px 0 0", padding: "1.5rem",
-          boxShadow: "0 -8px 32px rgba(0,0,0,0.15)",
-          zIndex: 1000, animation: "slideUp 0.3s ease",
-        }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}>
-            <h3 style={{ fontWeight: 900 }}>تصفية البحث</h3>
-            <button onClick={() => setShowMobileFilter(false)} style={{ background: "none", border: "none", fontSize: "1.5rem", cursor: "pointer" }}>✕</button>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.7)",
+            backdropFilter: "blur(8px)",
+            zIndex: 1000,
+            display: "flex",
+            alignItems: "flex-end",
+          }}
+          onClick={() => setShowMobileFilter(false)}
+        >
+          <div
+            style={{
+              width: "100%",
+              background: "#131820",
+              borderRadius: "28px 28px 0 0",
+              padding: "1.75rem 1.5rem",
+              boxShadow: "0 -8px 40px rgba(0,0,0,0.6)",
+              border: "1px solid rgba(217,162,100,0.2)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h3 style={{ fontWeight: 900, color: "#F0F4F8", fontSize: "1.1rem" }}>🔍 تصفية الحرفيين</h3>
+              <button
+                onClick={() => setShowMobileFilter(false)}
+                style={{ background: "rgba(255,255,255,0.08)", border: "none", color: "#F0F4F8", width: "32px", height: "32px", borderRadius: "50%", cursor: "pointer", fontWeight: 900 }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <input
+              type="text"
+              placeholder="بحث بالاسم..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              style={{ width: "100%", padding: "0.8rem", borderRadius: "14px", border: "1px solid rgba(217,162,100,0.2)", background: "#0D0F14", color: "#F0F4F8" }}
+            />
+
+            <select
+              value={filterWilaya}
+              onChange={(e) => setFilterWilaya(e.target.value)}
+              style={{ width: "100%", padding: "0.8rem", borderRadius: "14px", border: "1px solid rgba(217,162,100,0.2)", background: "#0D0F14", color: "#F0F4F8" }}
+            >
+              <option value="">جميع الولايات</option>
+              {wilayas.map((w) => <option key={w} value={w}>{w}</option>)}
+            </select>
+
+            <select
+              value={filterProfession}
+              onChange={(e) => setFilterProfession(e.target.value)}
+              style={{ width: "100%", padding: "0.8rem", borderRadius: "14px", border: "1px solid rgba(217,162,100,0.2)", background: "#0D0F14", color: "#F0F4F8" }}
+            >
+              <option value="">جميع المهن</option>
+              {professions.map((p) => <option key={p} value={p}>{p}</option>)}
+            </select>
+
+            <button
+              onClick={() => setShowMobileFilter(false)}
+              style={{
+                width: "100%",
+                padding: "0.9rem",
+                borderRadius: "14px",
+                background: "linear-gradient(135deg, #D9A264, #A97B3C)",
+                color: "#0D0F14",
+                border: "none",
+                fontWeight: 900,
+                fontSize: "1rem",
+                cursor: "pointer",
+                marginTop: "0.5rem",
+              }}
+            >
+              عرض النتائج ({filtered.length})
+            </button>
           </div>
-          <select value={filterWilaya} onChange={(e) => { setFilterWilaya(e.target.value); setShowMobileFilter(false); }}
-            style={{ width: "100%", padding: "0.75rem", border: "2px solid rgba(200,149,108,0.2)", borderRadius: "12px", fontFamily: "'Cairo',sans-serif", marginBottom: "1rem" }}>
-            <option value="">كل الولايات</option>
-            {wilayas.map((w) => <option key={w} value={w}>{w}</option>)}
-          </select>
-          <select value={filterProfession} onChange={(e) => { setFilterProfession(e.target.value); setShowMobileFilter(false); }}
-            style={{ width: "100%", padding: "0.75rem", border: "2px solid rgba(200,149,108,0.2)", borderRadius: "12px", fontFamily: "'Cairo',sans-serif", marginBottom: "1rem" }}>
-            <option value="">كل الخدمات</option>
-            {professions.map((p) => <option key={p} value={p}>{p}</option>)}
-          </select>
         </div>
       )}
 
@@ -262,17 +384,12 @@ export default function PublicMapClient({ artisans, center, wilayas, professions
         @media (max-width: 900px) {
           .public-map-layout {
             grid-template-columns: 1fr !important;
-            padding: 0 1rem 1rem !important;
+            padding: 0 1rem !important;
           }
           .public-map-layout > div:last-child {
-            display: none;
+            display: none !important;
           }
           .mobile-filter-btn { display: flex !important; }
-          .mobile-filter-sheet { display: block !important; }
-        }
-        @keyframes slideUp {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0); }
         }
       `}</style>
     </div>

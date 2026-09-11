@@ -47,7 +47,7 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
         className="dashboard-sidebar"
         style={{
           width: "240px",
-          background: "#0F0A06",
+          background: "#0B0D12",
           backdropFilter: "blur(20px)",
           borderLeft: "1px solid rgba(217,162,100,0.12)",
           display: "flex",

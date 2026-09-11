@@ -344,7 +344,7 @@ export default function SettingsPage() {
               fontWeight: 900,
               fontSize: "1rem",
               cursor: saving ? "not-allowed" : "pointer",
-              boxShadow: saving ? "none" : "0 4px 16px rgba(181,83,26,0.3)",
+              boxShadow: saving ? "none" : "0 4px 16px rgba(217,162,100,0.3)",
               alignSelf: "flex-start",
             }}
           >
@@ -365,7 +365,7 @@ export default function SettingsPage() {
               display: "flex",
               gap: "0.5rem",
               marginBottom: "2rem",
-              background: "rgba(181,83,26,0.06)",
+              background: "rgba(217,162,100,0.06)",
               borderRadius: "14px",
               padding: "0.4rem",
             }}
@@ -488,7 +488,7 @@ export default function SettingsPage() {
                   placeholder="مثل: كهربائي، سباك، نجار..."
                   onFocus={(e) => (e.target.style.borderColor = "var(--terracotta)")}
                   onBlur={(e) =>
-                    (e.target.style.borderColor = "rgba(200,149,108,0.2)")
+                    (e.target.style.borderColor = "rgba(217,162,100,0.2)")
                   }
                 />
               </div>
@@ -513,7 +513,7 @@ export default function SettingsPage() {
                   placeholder="اكتب نبذة عنك وعن خدماتك..."
                   onFocus={(e) => (e.target.style.borderColor = "var(--terracotta)")}
                   onBlur={(e) =>
-                    (e.target.style.borderColor = "rgba(200,149,108,0.2)")
+                    (e.target.style.borderColor = "rgba(217,162,100,0.2)")
                   }
                 />
               </div>
@@ -532,7 +532,7 @@ export default function SettingsPage() {
                   fontWeight: 900,
                   fontSize: "1rem",
                   cursor: saving ? "not-allowed" : "pointer",
-                  boxShadow: saving ? "none" : "0 4px 16px rgba(181,83,26,0.3)",
+                  boxShadow: saving ? "none" : "0 4px 16px rgba(217,162,100,0.3)",
                   alignSelf: "flex-start",
                 }}
               >
@@ -547,10 +547,10 @@ export default function SettingsPage() {
               {/* إضافة صورة */}
               <div
                 style={{
-                  background: "rgba(181,83,26,0.04)",
+                  background: "rgba(217,162,100,0.04)",
                   borderRadius: "16px",
                   padding: "1.5rem",
-                  border: "1.5px dashed rgba(181,83,26,0.3)",
+                  border: "1.5px dashed rgba(217,162,100,0.3)",
                 }}
               >
                 <h3
@@ -587,7 +587,7 @@ export default function SettingsPage() {
                         (e.target.style.borderColor = "var(--terracotta)")
                       }
                       onBlur={(e) =>
-                        (e.target.style.borderColor = "rgba(200,149,108,0.2)")
+                        (e.target.style.borderColor = "rgba(217,162,100,0.2)")
                       }
                     />
                   </div>
@@ -613,7 +613,7 @@ export default function SettingsPage() {
                         (e.target.style.borderColor = "var(--terracotta)")
                       }
                       onBlur={(e) =>
-                        (e.target.style.borderColor = "rgba(200,149,108,0.2)")
+                        (e.target.style.borderColor = "rgba(217,162,100,0.2)")
                       }
                     />
                   </div>
@@ -624,7 +624,7 @@ export default function SettingsPage() {
                         height: "180px",
                         borderRadius: "12px",
                         overflow: "hidden",
-                        border: "2px solid rgba(200,149,108,0.2)",
+                        border: "2px solid rgba(217,162,100,0.2)",
                       }}
                     >
                       <img
@@ -678,9 +678,9 @@ export default function SettingsPage() {
                       textAlign: "center",
                       padding: "2.5rem",
                       color: "var(--muted)",
-                      background: "rgba(181,83,26,0.03)",
+                      background: "rgba(217,162,100,0.03)",
                       borderRadius: "16px",
-                      border: "1px dashed rgba(200,149,108,0.2)",
+                      border: "1px dashed rgba(217,162,100,0.2)",
                     }}
                   >
                     <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>📷</div>
@@ -799,7 +799,7 @@ export default function SettingsPage() {
                     cursor: "pointer",
                     fontSize: "0.88rem",
                     fontWeight: 700,
-                    boxShadow: "0 4px 12px rgba(181,83,26,0.25)",
+                    boxShadow: "0 4px 12px rgba(217,162,100,0.25)",
                   }}
                 >
                   📡 تحديد تلقائي
@@ -811,7 +811,7 @@ export default function SettingsPage() {
                   height: "380px",
                   borderRadius: "16px",
                   overflow: "hidden",
-                  border: "2px solid rgba(200,149,108,0.2)",
+                  border: "2px solid rgba(217,162,100,0.2)",
                 }}
               >
                 <Map
@@ -844,7 +844,7 @@ export default function SettingsPage() {
                   boxShadow:
                     saving || (!form.lat && !form.lng)
                       ? "none"
-                      : "0 4px 16px rgba(181,83,26,0.3)",
+                      : "0 4px 16px rgba(217,162,100,0.3)",
                 }}
               >
                 {saving ? "جاري الحفظ..." : "💾 حفظ الموقع"}

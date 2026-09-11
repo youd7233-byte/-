@@ -8,7 +8,7 @@ export default function MapWrapper({ artisans }: { artisans: ArtisanMarker[] }) 
     <div style={{
       height: "500px", borderRadius: "20px", overflow: "hidden",
       boxShadow: "0 4px 24px rgba(26,18,8,0.07)",
-      border: "1px solid rgba(200,149,108,0.15)",
+      border: "1px solid rgba(217,162,100,0.15)",
     }}>
       <DynamicClusterMap
         artisans={artisans}

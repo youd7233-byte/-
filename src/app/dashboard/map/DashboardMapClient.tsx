@@ -32,7 +32,6 @@ export default function DashboardMapClient({
   const [filterWilaya, setFilterWilaya] = useState("");
   const [filterProfession, setFilterProfession] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
   const [selectedArtisan, setSelectedArtisan] = useState<ArtisanMarker | null>(null);
 
   const filtered = useMemo(() => {
@@ -57,148 +56,151 @@ export default function DashboardMapClient({
   }, [filterWilaya, filtered, center]);
 
   const statCards = [
-    { icon: "👷", label: "الحرفيون النشطون", value: stats.totalArtisans.toLocaleString("ar-DZ"), color: "#B5531A", sub: "+٢٣٪ من الشهر الماضي" },
-    { icon: "📍", label: "المناطق المغطاة", value: `${stats.activeWilayas}`, color: "#0369a1", sub: "ولاية" },
-    { icon: "⭐", label: "التقييمات", value: `${stats.overallRating}`, color: "#D4A843", sub: "من 5" },
-    { icon: "📋", label: "إجمالي التقييمات", value: stats.totalReviews.toLocaleString("ar-DZ"), color: "#7c3aed", sub: "+١٨٪ من الشهر الماضي" },
+    { icon: "👷", label: "الحرفيون النشطون", value: stats.totalArtisans.toLocaleString("ar-DZ"), color: "#D9A264", sub: "موزعون على الولايات" },
+    { icon: "📍", label: "المناطق المغطاة", value: `${stats.activeWilayas}`, color: "#38bdf8", sub: "ولاية عبر الوطن" },
+    { icon: "⭐", label: "التقييمات", value: `${stats.overallRating}`, color: "#facc15", sub: "من 5 نقاط" },
+    { icon: "📋", label: "إجمالي التقييمات", value: stats.totalReviews.toLocaleString("ar-DZ"), color: "#a855f7", sub: "مراجعة معتمدة" },
   ];
 
   return (
     <div className="map-dashboard-wrapper" style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
       
-      {/* Header */}
+      {/* Header Banner */}
       <div style={{
         background: "#131820",
-        borderRadius: "20px", padding: "1.5rem 2rem",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-        border: "1px solid rgba(217,162,100,0.15)",
+        borderRadius: "24px", padding: "1.5rem 2rem",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+        border: "1px solid rgba(217,162,100,0.18)",
         display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <span style={{ fontSize: "2rem" }}>🗺️</span>
           <div>
             <h1 style={{ fontSize: "1.5rem", fontWeight: 900, color: "#F0F4F8", marginBottom: "0.2rem" }}>
-              خريطة الحرفيين
+              خريطة الحرفيين التفصيلية
             </h1>
             <p style={{ color: "#A7B8C4", fontWeight: 600, fontSize: "0.88rem" }}>
-              استكشف الحرفيين المتاحين في منطقتك
+              استكشف أماكن الحرفيين المتاحين وتواصل معهم مباشرة
             </p>
           </div>
         </div>
+
         <div style={{
           background: "linear-gradient(135deg, #D9A264, #A97B3C)",
-          borderRadius: "14px", padding: "0.75rem 1.5rem",
+          borderRadius: "16px", padding: "0.75rem 1.5rem",
           display: "flex", alignItems: "center", gap: "0.75rem",
-          boxShadow: "0 4px 16px rgba(217,162,100,0.2)",
+          boxShadow: "0 4px 20px rgba(217,162,100,0.25)",
         }}>
           <span style={{ fontSize: "1.4rem" }}>👷</span>
           <div>
             <div style={{ color: "#0D0F14", fontWeight: 900, fontSize: "1.6rem", lineHeight: 1 }}>
-              {stats.totalArtisans}
+              {filtered.length}
             </div>
-            <div style={{ color: "rgba(10,8,6,0.75)", fontSize: "0.78rem", fontWeight: 700 }}>
-              حرفي نشط الآن
+            <div style={{ color: "rgba(13,15,20,0.8)", fontSize: "0.78rem", fontWeight: 800 }}>
+              حرفي نشط بالخريطة
             </div>
           </div>
         </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Cards Grid */}
       <div className="map-stats-grid" style={{
         display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "1rem",
       }}>
         {statCards.map((card) => (
           <div key={card.label} style={{
             background: "#131820",
-            borderRadius: "16px", padding: "1.25rem 1rem",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-            border: "1px solid rgba(217,162,100,0.12)",
-            display: "flex", alignItems: "center", gap: "0.75rem",
+            borderRadius: "20px", padding: "1.25rem 1.1rem",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
+            border: "1px solid rgba(217,162,100,0.14)",
+            display: "flex", alignItems: "center", gap: "0.85rem",
           }}>
             <div style={{
-              width: "44px", height: "44px", borderRadius: "12px",
-              background: `${card.color}18`,
+              width: "48px", height: "48px", borderRadius: "14px",
+              background: `${card.color}15`,
+              border: `1px solid ${card.color}30`,
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "1.3rem", flexShrink: 0,
+              fontSize: "1.4rem", flexShrink: 0,
             }}>{card.icon}</div>
             <div>
               <div style={{ fontSize: "1.5rem", fontWeight: 900, color: card.color, lineHeight: 1.1 }}>
                 {card.value}
               </div>
-              <div style={{ fontSize: "0.75rem", color: "#A7B8C4", fontWeight: 700 }}>{card.label}</div>
-              {card.sub && <div style={{ fontSize: "0.7rem", color: "#4ade80", fontWeight: 700, marginTop: "2px" }}>{card.sub}</div>}
+              <div style={{ fontSize: "0.78rem", color: "#F0F4F8", fontWeight: 800 }}>{card.label}</div>
+              {card.sub && <div style={{ fontSize: "0.7rem", color: "#A7B8C4", fontWeight: 600, marginTop: "2px" }}>{card.sub}</div>}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Map + Filter layout */}
+      {/* Map + Side Filters */}
       <div className="map-main-layout" style={{
-        display: "grid", gridTemplateColumns: "1fr 320px", gap: "1.25rem", alignItems: "start",
+        display: "grid", gridTemplateColumns: "1fr 320px", gap: "1.25rem", alignItems: "stretch",
       }}>
-        {/* Map */}
+        {/* BIG MAP */}
         <div style={{
           background: "#131820",
-          borderRadius: "20px", overflow: "hidden",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-          border: "1px solid rgba(217,162,100,0.15)",
-          height: "500px",
+          borderRadius: "24px", overflow: "hidden",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+          border: "1px solid rgba(217,162,100,0.18)",
+          height: "560px",
         }}>
           <DynamicClusterMap
             artisans={filtered}
             center={mapCenter}
             zoom={filterWilaya ? 9 : 6}
-            height="500px"
+            height="560px"
             onArtisanClick={setSelectedArtisan}
           />
         </div>
 
-        {/* Filter Panel */}
+        {/* Filter Box */}
         <div style={{
           background: "#131820",
-          borderRadius: "20px", padding: "1.5rem",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-          border: "1px solid rgba(217,162,100,0.15)",
+          borderRadius: "24px", padding: "1.5rem",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+          border: "1px solid rgba(217,162,100,0.18)",
           display: "flex", flexDirection: "column", gap: "1.25rem",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <span style={{ fontSize: "1.2rem" }}>🔍</span>
-            <h2 style={{ fontSize: "1.05rem", fontWeight: 900, color: "#F0F4F8" }}>تصفية البحث</h2>
+            <h2 style={{ fontSize: "1.05rem", fontWeight: 900, color: "#F0F4F8" }}>تصفية الخريطة</h2>
           </div>
 
           {/* Search */}
-          <div style={{ position: "relative" }}>
+          <div>
+            <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#A7B8C4", marginBottom: "0.4rem" }}>
+              اسم الحرفي أو الخدمة
+            </label>
             <input
               type="text"
-              placeholder="ابحث عن حرفي..."
+              placeholder="مثال: محمد، سباك..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               style={{
-                width: "100%", padding: "0.8rem 1rem 0.8rem 2.5rem",
-                border: "1px solid rgba(217,162,100,0.2)", borderRadius: "12px",
+                width: "100%", padding: "0.8rem 1rem",
+                border: "1px solid rgba(217,162,100,0.2)", borderRadius: "14px",
                 fontFamily: "'Cairo', sans-serif", fontSize: "0.9rem",
-                background: "rgba(217,162,100,0.05)", color: "#F0F4F8", outline: "none",
-                transition: "border-color 0.2s",
+                background: "#0D0F14", color: "#F0F4F8", outline: "none",
               }}
               onFocus={(e) => (e.target.style.borderColor = "#D9A264")}
               onBlur={(e) => (e.target.style.borderColor = "rgba(217,162,100,0.2)")}
             />
-            <span style={{ position: "absolute", left: "0.75rem", top: "50%", transform: "translateY(-50%)", fontSize: "1rem" }}>🔍</span>
           </div>
 
           {/* Wilaya */}
           <div>
-            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "#F0F4F8", marginBottom: "0.5rem" }}>
-              اختر الولاية
+            <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#A7B8C4", marginBottom: "0.4rem" }}>
+              الولاية
             </label>
             <select
               value={filterWilaya}
               onChange={(e) => setFilterWilaya(e.target.value)}
               style={{
                 width: "100%", padding: "0.8rem 1rem",
-                border: "1px solid rgba(217,162,100,0.2)", borderRadius: "12px",
+                border: "1px solid rgba(217,162,100,0.2)", borderRadius: "14px",
                 fontFamily: "'Cairo', sans-serif", fontSize: "0.9rem",
-                background: "rgba(217,162,100,0.05)", color: "#F0F4F8", outline: "none", cursor: "pointer",
+                background: "#0D0F14", color: "#F0F4F8", outline: "none", cursor: "pointer",
               }}
             >
               <option value="">كل الولايات</option>
@@ -210,78 +212,53 @@ export default function DashboardMapClient({
 
           {/* Profession */}
           <div>
-            <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "#F0F4F8", marginBottom: "0.5rem" }}>
-              نوع الخدمة
+            <label style={{ display: "block", fontSize: "0.82rem", fontWeight: 700, color: "#A7B8C4", marginBottom: "0.4rem" }}>
+              المهنة
             </label>
             <select
               value={filterProfession}
               onChange={(e) => setFilterProfession(e.target.value)}
               style={{
                 width: "100%", padding: "0.8rem 1rem",
-                border: "2px solid rgba(200,149,108,0.2)", borderRadius: "12px",
+                border: "1px solid rgba(217,162,100,0.2)", borderRadius: "14px",
                 fontFamily: "'Cairo', sans-serif", fontSize: "0.9rem",
-                background: "rgba(255,255,255,0.7)", outline: "none", cursor: "pointer",
+                background: "#0D0F14", color: "#F0F4F8", outline: "none", cursor: "pointer",
               }}
             >
-              <option value="">كل الخدمات</option>
+              <option value="">كل المهن</option>
               {professions.map((p) => (
                 <option key={p} value={p}>{p}</option>
               ))}
             </select>
           </div>
 
-          {/* Apply / Reset */}
-          <div style={{ display: "flex", gap: "0.75rem" }}>
+          {/* Action buttons */}
+          {(filterWilaya || filterProfession || searchText) && (
             <button
               onClick={() => { setFilterWilaya(""); setFilterProfession(""); setSearchText(""); }}
               style={{
-                flex: 1, padding: "0.75rem", borderRadius: "10px",
+                width: "100%", padding: "0.75rem", borderRadius: "12px",
                 border: "1px solid rgba(217,162,100,0.3)",
                 background: "transparent", fontFamily: "'Cairo', sans-serif",
-                fontWeight: 700, fontSize: "0.88rem", cursor: "pointer",
-                color: "#D9A264",
+                fontWeight: 800, fontSize: "0.88rem", cursor: "pointer",
+                color: "#D9A264", transition: "all 0.2s",
               }}
             >
-              إعادة ضبط
+              إعادة ضبط الفلاتر
             </button>
-            <button
-              style={{
-                flex: 2, padding: "0.75rem", borderRadius: "10px",
-                background: "linear-gradient(135deg, #D9A264, #A97B3C)",
-                border: "none", fontFamily: "'Cairo', sans-serif",
-                fontWeight: 800, fontSize: "0.9rem", cursor: "pointer",
-                color: "#0D0F14", boxShadow: "0 4px 14px rgba(217,162,100,0.2)",
-              }}
-            >
-              🔍 تطبيق الفلاتر ({filtered.length})
-            </button>
-          </div>
-
-          {filterWilaya && (
-            <div style={{
-              background: "rgba(217,162,100,0.06)", borderRadius: "12px", padding: "0.75rem 1rem",
-              border: "1px solid rgba(217,162,100,0.15)",
-            }}>
-              <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#D9A264" }}>
-                📍 {filterWilaya}
-              </div>
-              <div style={{ fontWeight: 900, fontSize: "1.4rem", color: "#F0F4F8" }}>
-                {filtered.length} حرفي
-              </div>
-            </div>
           )}
 
-          {/* Density legend */}
-          <div style={{ fontSize: "0.78rem", color: "#A7B8C4", borderTop: "1px solid rgba(217,162,100,0.15)", paddingTop: "1rem" }}>
-            <div style={{ fontWeight: 800, marginBottom: "0.5rem", color: "#F0F4F8" }}>دليل الألوان:</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          {/* Legend */}
+          <div style={{ fontSize: "0.8rem", color: "#A7B8C4", borderTop: "1px solid rgba(217,162,100,0.12)", paddingTop: "1rem", marginTop: "auto" }}>
+            <div style={{ fontWeight: 800, marginBottom: "0.5rem", color: "#F0F4F8" }}>دليل توزيع الحرفيين:</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
               {[
-                { color: "#B5531A", label: "عالي الكثافة (10+)" },
-                { color: "#D4A843", label: "متوسط (5-9)" },
-                { color: "#22c55e", label: "منخفض (1-4)" },
+                { color: "#D9A264", label: "كثافة عالية (10+ حرفي)" },
+                { color: "#38bdf8", label: "كثافة متوسطة (5-9 حرفيين)" },
+                { color: "#22c55e", label: "متاح (1-4 حرفيين)" },
               ].map((item) => (
                 <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <div style={{ width: "14px", height: "14px", borderRadius: "50%", background: item.color, flexShrink: 0 }} />
+                  <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: item.color, flexShrink: 0 }} />
                   <span>{item.label}</span>
                 </div>
               ))}
@@ -290,28 +267,29 @@ export default function DashboardMapClient({
         </div>
       </div>
 
-      {/* Top Artisans */}
+      {/* Top Artisans Section */}
       <div style={{
         background: "#131820",
-        borderRadius: "20px", padding: "1.75rem",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-        border: "1px solid rgba(217,162,100,0.12)",
+        borderRadius: "24px", padding: "1.75rem",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+        border: "1px solid rgba(217,162,100,0.18)",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
           <div>
-            <h2 style={{ fontSize: "1.15rem", fontWeight: 900, color: "#F0F4F8" }}>
-              🏆 اكتشف أفضل الحرفيين
+            <h2 style={{ fontSize: "1.2rem", fontWeight: 900, color: "#F0F4F8" }}>
+              🏆 أفضل الحرفيين المعتمدين
             </h2>
             <p style={{ fontSize: "0.85rem", color: "#A7B8C4", fontWeight: 600 }}>
-              تقييمات عالية من عملاء سابقين
+              الحرفيون الأعلى تقييماً من طرف العملاء
             </p>
           </div>
           <Link href="/search" style={{
-            fontSize: "0.85rem", fontWeight: 700, color: "#D9A264",
-            padding: "0.5rem 1rem", borderRadius: "10px",
+            fontSize: "0.85rem", fontWeight: 800, color: "#D9A264",
+            padding: "0.5rem 1rem", borderRadius: "12px",
             border: "1px solid rgba(217,162,100,0.25)",
+            background: "rgba(217,162,100,0.06)",
           }}>
-            عرض الكل ←
+            تصفح جميع الحرفيين ←
           </Link>
         </div>
 
@@ -323,39 +301,39 @@ export default function DashboardMapClient({
               key={artisan.id}
               href={`/artisan/${artisan.userId}`}
               style={{
-                display: "flex", alignItems: "center", gap: "0.75rem",
-                padding: "1rem", borderRadius: "14px",
-                background: i === 0 ? "rgba(217,162,100,0.1)" : "rgba(217,162,100,0.04)",
-                border: `1px solid ${i === 0 ? "rgba(217,162,100,0.3)" : "rgba(217,162,100,0.1)"}`,
+                display: "flex", alignItems: "center", gap: "0.85rem",
+                padding: "1rem 1.1rem", borderRadius: "18px",
+                background: i === 0 ? "linear-gradient(135deg, rgba(217,162,100,0.15), rgba(217,162,100,0.05))" : "#0D0F14",
+                border: `1px solid ${i === 0 ? "rgba(217,162,100,0.35)" : "rgba(217,162,100,0.12)"}`,
                 textDecoration: "none", transition: "all 0.2s",
               }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
             >
               <div style={{
                 width: "48px", height: "48px", borderRadius: "50%",
                 background: "linear-gradient(135deg, #D9A264, #8B5E2A)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#0D0F14", fontWeight: 900, fontSize: "1.1rem", flexShrink: 0,
+                color: "#0D0F14", fontWeight: 900, fontSize: "1.15rem", flexShrink: 0,
                 position: "relative",
               }}>
                 {artisan.name.charAt(0)}
                 {i === 0 && (
                   <span style={{
                     position: "absolute", top: "-4px", right: "-4px",
-                    fontSize: "0.7rem", background: "#D4A843", borderRadius: "50%",
-                    width: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: "0.75rem", background: "#facc15", borderRadius: "50%",
+                    width: "20px", height: "20px", display: "flex", alignItems: "center", justifyContent: "center",
                   }}>🥇</span>
                 )}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#F0F4F8", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#F0F4F8", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {artisan.name}
                 </div>
-                <div style={{ fontSize: "0.78rem", color: "#D9A264", fontWeight: 700 }}>
-                  {artisan.profession}
+                <div style={{ fontSize: "0.8rem", color: "#D9A264", fontWeight: 700 }}>
+                  {artisan.profession} • {artisan.wilaya}
                 </div>
-                <div style={{ fontSize: "0.75rem", color: "#E2BE6E", fontWeight: 700 }}>
+                <div style={{ fontSize: "0.78rem", color: "#facc15", fontWeight: 800, marginTop: "2px" }}>
                   {"★".repeat(Math.round(artisan.avgRating || 0))} {artisan.avgRating?.toFixed(1)}
                 </div>
               </div>
@@ -369,24 +347,11 @@ export default function DashboardMapClient({
         </div>
       </div>
 
-      {/* Mobile bottom spacing */}
-      <div className="mobile-bottom-spacer" style={{ height: "70px", display: "none" }} />
-
       <style>{`
         @media (max-width: 900px) {
           .map-stats-grid { grid-template-columns: repeat(2,1fr) !important; }
           .map-main-layout { grid-template-columns: 1fr !important; }
-          .top-artisans-grid { grid-template-columns: repeat(2,1fr) !important; }
-        }
-        @media (max-width: 600px) {
-          .map-stats-grid { grid-template-columns: 1fr 1fr !important; }
-          .top-artisans-grid { grid-template-columns: 1fr 1fr !important; }
-          .map-dashboard-wrapper { gap: 0.85rem !important; }
-        }
-        @media (max-width: 480px) {
-          .map-stats-grid { grid-template-columns: 1fr 1fr !important; }
           .top-artisans-grid { grid-template-columns: 1fr !important; }
-          .mobile-bottom-spacer { display: block !important; }
         }
       `}</style>
     </div>

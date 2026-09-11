@@ -25,7 +25,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <Navbar />
       <div className="dashboard-container" style={{ flex: 1, display: "flex" }}>
         <Sidebar role={user.role} name={user.name} />
-        <main className="dashboard-main" style={{ flex: 1, padding: "2rem", overflowY: "auto", position: "relative", background: "#0D0905" }}>
+        <main className="dashboard-main" style={{ flex: 1, padding: "1.5rem", overflowY: "auto", position: "relative", background: "#0D0F14" }}>
           <div style={{
             position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0,
             background: "radial-gradient(ellipse 70% 40% at 100% 0%, rgba(217,162,100,0.05) 0%, transparent 60%)",

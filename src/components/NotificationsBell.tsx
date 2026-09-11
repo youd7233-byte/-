@@ -74,7 +74,7 @@ export default function NotificationsBell() {
       <button
         onClick={handleOpen}
         style={{
-          background: "rgba(200,149,108,0.1)",
+          background: "rgba(217,162,100,0.1)",
           border: "none",
           width: "40px",
           height: "40px",
@@ -87,8 +87,8 @@ export default function NotificationsBell() {
           position: "relative",
           transition: "all 0.2s",
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(200,149,108,0.2)")}
-        onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(200,149,108,0.1)")}
+        onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(217,162,100,0.2)")}
+        onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(217,162,100,0.1)")}
       >
         🔔
         {unreadCount > 0 && (
@@ -121,7 +121,7 @@ export default function NotificationsBell() {
             background: "#fff",
             borderRadius: "16px",
             boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
-            border: "1px solid rgba(200,149,108,0.15)",
+            border: "1px solid rgba(217,162,100,0.15)",
             overflow: "hidden",
             zIndex: 1000,
             animation: "fadeIn 0.2s ease",
@@ -130,7 +130,7 @@ export default function NotificationsBell() {
           <div
             style={{
               padding: "1rem",
-              borderBottom: "1px solid rgba(200,149,108,0.1)",
+              borderBottom: "1px solid rgba(217,162,100,0.1)",
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
@@ -151,8 +151,8 @@ export default function NotificationsBell() {
                   key={notif.id}
                   style={{
                     padding: "1rem",
-                    borderBottom: "1px solid rgba(200,149,108,0.08)",
-                    background: notif.isRead ? "#fff" : "rgba(181,83,26,0.03)",
+                    borderBottom: "1px solid rgba(217,162,100,0.08)",
+                    background: notif.isRead ? "#fff" : "rgba(217,162,100,0.03)",
                     display: "flex",
                     flexDirection: "column",
                     gap: "0.25rem",

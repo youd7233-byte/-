@@ -27,7 +27,7 @@ export default async function StatsPage() {
       background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px)",
       borderRadius: "24px", padding: "2rem",
       boxShadow: "0 8px 40px rgba(26,18,8,0.08)",
-      border: "1px solid rgba(200,149,108,0.15)",
+      border: "1px solid rgba(217,162,100,0.15)",
     }}>
       <h1 style={{ fontSize: "1.5rem", fontWeight: 900, color: "var(--dark)", marginBottom: "1.5rem" }}>
         📈 الإحصائيات
@@ -40,7 +40,7 @@ export default async function StatsPage() {
           <div style={{ color: "var(--muted)" }}>متوسط التقييم</div>
         </div>
         
-        <div style={{ padding: "1.5rem", background: "rgba(181,83,26,0.1)", borderRadius: "16px", border: "1px solid rgba(181,83,26,0.2)" }}>
+        <div style={{ padding: "1.5rem", background: "rgba(217,162,100,0.1)", borderRadius: "16px", border: "1px solid rgba(217,162,100,0.2)" }}>
           <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>💬</div>
           <div style={{ fontSize: "1.5rem", fontWeight: 900 }}>{profile.reviews.length}</div>
           <div style={{ color: "var(--muted)" }}>إجمالي التعليقات</div>

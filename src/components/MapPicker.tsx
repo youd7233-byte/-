@@ -38,7 +38,7 @@ export default function MapPicker({ onLocationSelect, initialPos = [36.7538, 3.0
   }
 
   return (
-    <div style={{ height: "300px", width: "100%", borderRadius: "12px", overflow: "hidden", border: "1.5px solid rgba(200,149,108,0.3)" }}>
+    <div style={{ height: "300px", width: "100%", borderRadius: "12px", overflow: "hidden", border: "1.5px solid rgba(217,162,100,0.3)" }}>
       <MapContainer center={position} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'

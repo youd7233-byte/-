@@ -57,7 +57,7 @@ export default function CompleteClientProfilePage() {
       <Navbar />
       <div style={{
         position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
-        background: "radial-gradient(ellipse 70% 50% at 10% 20%, rgba(181,83,26,0.07) 0%, transparent 60%)",
+        background: "radial-gradient(ellipse 70% 50% at 10% 20%, rgba(217,162,100,0.07) 0%, transparent 60%)",
       }} />
       <main style={{
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
@@ -66,7 +66,7 @@ export default function CompleteClientProfilePage() {
         <div style={{
           background: "rgba(255,255,255,0.85)", backdropFilter: "blur(20px)",
           borderRadius: "28px", padding: "3rem 2.5rem",
-          boxShadow: "0 20px 70px rgba(26,18,8,0.1)", border: "1px solid rgba(200,149,108,0.18)",
+          boxShadow: "0 20px 70px rgba(26,18,8,0.1)", border: "1px solid rgba(217,162,100,0.18)",
           width: "100%", maxWidth: "500px", animation: "fadeUp 0.5s ease both",
         }}>
           <div style={{ textAlign: "center", marginBottom: "2rem" }}>
@@ -98,7 +98,7 @@ export default function CompleteClientProfilePage() {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 style={{
                   width: "100%", padding: "0.95rem 1.2rem",
-                  border: "2px solid rgba(200,149,108,0.22)", borderRadius: "14px",
+                  border: "2px solid rgba(217,162,100,0.22)", borderRadius: "14px",
                   fontSize: "1rem", fontFamily: "'Cairo', sans-serif", color: "var(--text)",
                   background: "rgba(255,255,255,0.7)", outline: "none", transition: "all 0.2s",
                 }}
@@ -114,7 +114,7 @@ export default function CompleteClientProfilePage() {
                 onChange={(e) => setForm({ ...form, wilaya: e.target.value })}
                 style={{
                   width: "100%", padding: "0.95rem 1.2rem",
-                  border: "2px solid rgba(200,149,108,0.22)", borderRadius: "14px",
+                  border: "2px solid rgba(217,162,100,0.22)", borderRadius: "14px",
                   fontSize: "1rem", fontFamily: "'Cairo', sans-serif", color: "var(--text)",
                   background: "rgba(255,255,255,0.7)", outline: "none", transition: "all 0.2s",
                 }}
@@ -133,7 +133,7 @@ export default function CompleteClientProfilePage() {
                 color: "#fff", fontFamily: "'Cairo', sans-serif",
                 fontWeight: 900, fontSize: "1.05rem", border: "none",
                 cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.7 : 1,
-                boxShadow: "0 8px 28px rgba(181,83,26,0.28)", marginTop: "1rem", transition: "all 0.2s",
+                boxShadow: "0 8px 28px rgba(217,162,100,0.28)", marginTop: "1rem", transition: "all 0.2s",
               }}
             >
               {loading ? "جاري الحفظ..." : "البحث عن الحرفيين 🚀"}
@@ -146,7 +146,7 @@ export default function CompleteClientProfilePage() {
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         select:focus, input:focus {
           border-color: var(--terracotta) !important;
-          box-shadow: 0 0 0 4px rgba(181,83,26,0.1) !important;
+          box-shadow: 0 0 0 4px rgba(217,162,100,0.1) !important;
         }
       `}</style>
     </div>

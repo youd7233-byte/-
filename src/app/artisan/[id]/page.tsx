@@ -65,7 +65,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
       {/* Background gradient */}
       <div style={{
         position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
-        background: "radial-gradient(ellipse 70% 40% at 5% 10%, rgba(181,83,26,0.07) 0%, transparent 55%)",
+        background: "radial-gradient(ellipse 70% 40% at 5% 10%, rgba(217,162,100,0.07) 0%, transparent 55%)",
       }} />
 
       <main style={{ maxWidth: "980px", margin: "0 auto", padding: "0 1.25rem 3rem", position: "relative", zIndex: 1 }}>
@@ -75,7 +75,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
           background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px)",
           borderRadius: "24px", overflow: "hidden",
           boxShadow: "0 8px 40px rgba(26,18,8,0.1)",
-          border: "1px solid rgba(200,149,108,0.15)",
+          border: "1px solid rgba(217,162,100,0.15)",
           marginBottom: "1.25rem",
         }}>
           {/* Cover Banner */}
@@ -116,7 +116,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
               backgroundImage: user.image ? `url(${user.image})` : undefined,
               backgroundSize: "cover", backgroundPosition: "center",
               border: "4px solid #fff",
-              boxShadow: "0 4px 20px rgba(181,83,26,0.3)",
+              boxShadow: "0 4px 20px rgba(217,162,100,0.3)",
               display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: "2.5rem", marginTop: "-48px", marginBottom: "1rem",
             }}>
@@ -157,7 +157,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
                     background: "linear-gradient(135deg, var(--terracotta), #d45e1a)",
                     color: "#fff", borderRadius: "12px", fontWeight: 800,
                     fontSize: "0.92rem", textDecoration: "none",
-                    boxShadow: "0 4px 16px rgba(181,83,26,0.35)",
+                    boxShadow: "0 4px 16px rgba(217,162,100,0.35)",
                   }}
                 >
                   📞 تواصل مع الحرفي
@@ -169,7 +169,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
             <div className="artisan-mini-stats" style={{
               display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem",
               marginTop: "1.25rem", paddingTop: "1.25rem",
-              borderTop: "1px solid rgba(200,149,108,0.15)",
+              borderTop: "1px solid rgba(217,162,100,0.15)",
             }}>
               {[
                 { icon: "💬", label: "تقييم", value: String(profile.reviews.length) },
@@ -195,7 +195,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
               background: "rgba(255,255,255,0.85)", backdropFilter: "blur(16px)",
               borderRadius: "20px", padding: "1.75rem",
               boxShadow: "0 4px 24px rgba(26,18,8,0.06)",
-              border: "1px solid rgba(200,149,108,0.15)",
+              border: "1px solid rgba(217,162,100,0.15)",
             }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 900, color: "var(--dark)", marginBottom: "1rem" }}>
                 📝 نبذة عني
@@ -211,7 +211,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
               background: "rgba(255,255,255,0.85)", backdropFilter: "blur(16px)",
               borderRadius: "20px", padding: "1.75rem",
               boxShadow: "0 4px 24px rgba(26,18,8,0.06)",
-              border: "1px solid rgba(200,149,108,0.15)",
+              border: "1px solid rgba(217,162,100,0.15)",
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
                 <h2 style={{ fontSize: "1.1rem", fontWeight: 900, color: "var(--dark)" }}>🖼️ معرض الأعمال</h2>
@@ -257,7 +257,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
             background: "rgba(255,255,255,0.85)", backdropFilter: "blur(16px)",
             borderRadius: "20px", padding: "1.75rem",
             boxShadow: "0 4px 24px rgba(26,18,8,0.06)",
-            border: "1px solid rgba(200,149,108,0.15)",
+            border: "1px solid rgba(217,162,100,0.15)",
           }}>
             <h2 style={{ fontSize: "1.1rem", fontWeight: 900, color: "var(--dark)", marginBottom: "1.25rem" }}>
               💬 تقييمات العملاء {profile.reviews.length > 0 && `(${profile.reviews.length})`}
@@ -271,7 +271,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
               <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 {profile.reviews.map((r) => (
                   <div key={r.id} style={{
-                    padding: "1.25rem", background: "rgba(181,83,26,0.04)",
+                    padding: "1.25rem", background: "rgba(217,162,100,0.04)",
                     borderRadius: "14px", borderRight: "4px solid var(--terracotta)",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.6rem" }}>
@@ -314,7 +314,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
               background: "rgba(255,255,255,0.85)", backdropFilter: "blur(16px)",
               borderRadius: "20px", padding: "1.75rem",
               boxShadow: "0 4px 24px rgba(26,18,8,0.06)",
-              border: "1px solid rgba(200,149,108,0.15)",
+              border: "1px solid rgba(217,162,100,0.15)",
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
                 <h2 style={{ fontSize: "1.1rem", fontWeight: 900, color: "var(--dark)" }}>
@@ -323,7 +323,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
                 <Link href="/dashboard/map" style={{
                   fontSize: "0.85rem", fontWeight: 700, color: "var(--terracotta)",
                   padding: "0.4rem 0.85rem", borderRadius: "8px",
-                  border: "1px solid rgba(181,83,26,0.2)",
+                  border: "1px solid rgba(217,162,100,0.2)",
                 }}>عرض الكل ←</Link>
               </div>
               <div className="top-artisans-profile-grid" style={{
@@ -333,8 +333,8 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
                   <Link key={artisan.userId} href={`/artisan/${artisan.userId}`} style={{
                     display: "flex", flexDirection: "column", alignItems: "center",
                     gap: "0.5rem", padding: "1rem 0.75rem",
-                    background: i === 0 ? "rgba(212,168,67,0.08)" : "rgba(181,83,26,0.04)",
-                    border: `1px solid ${i === 0 ? "rgba(212,168,67,0.25)" : "rgba(200,149,108,0.12)"}`,
+                    background: i === 0 ? "rgba(212,168,67,0.08)" : "rgba(217,162,100,0.04)",
+                    border: `1px solid ${i === 0 ? "rgba(212,168,67,0.25)" : "rgba(217,162,100,0.12)"}`,
                     borderRadius: "16px", textDecoration: "none",
                     transition: "all 0.2s",
                   }}>
@@ -343,7 +343,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
                       background: artisan.image ? `url(${artisan.image}) center/cover` : "linear-gradient(135deg, var(--terracotta), #d45e1a)",
                       display: "flex", alignItems: "center", justifyContent: "center",
                       color: "#fff", fontWeight: 900, fontSize: "1.1rem",
-                      boxShadow: "0 2px 10px rgba(181,83,26,0.2)",
+                      boxShadow: "0 2px 10px rgba(217,162,100,0.2)",
                     }}>
                       {!artisan.image && artisan.name.charAt(0)}
                     </div>

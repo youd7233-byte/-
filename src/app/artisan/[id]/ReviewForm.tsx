@@ -44,8 +44,8 @@ export default function ReviewForm({ artisanProfileId }: { artisanProfileId: str
 
   return (
     <form onSubmit={handleSubmit} style={{
-      background: "rgba(181,83,26,0.04)", borderRadius: "16px", padding: "1.5rem",
-      border: "1px solid rgba(200,149,108,0.15)", marginTop: "1.5rem",
+      background: "rgba(217,162,100,0.04)", borderRadius: "16px", padding: "1.5rem",
+      border: "1px solid rgba(217,162,100,0.15)", marginTop: "1.5rem",
     }}>
       <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--dark)", marginBottom: "1rem" }}>
         أضف تقييمك للحرفي
@@ -77,7 +77,7 @@ export default function ReviewForm({ artisanProfileId }: { artisanProfileId: str
         rows={3}
         style={{
           width: "100%", padding: "0.85rem",
-          border: "2px solid rgba(200,149,108,0.2)", borderRadius: "12px",
+          border: "2px solid rgba(217,162,100,0.2)", borderRadius: "12px",
           fontFamily: "'Cairo', sans-serif", fontSize: "0.9rem",
           background: "rgba(255,255,255,0.7)", outline: "none",
           marginBottom: "1rem", resize: "vertical",
