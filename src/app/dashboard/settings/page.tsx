@@ -23,17 +23,14 @@ const Map = dynamic(() => import("@/components/Map"), {
   ),
 });
 
-type Role = "ARTISAN" | "CLIENT" | null;
+type Role = "ARTISAN" | "CLIENT" | "ADMIN" | null;
 type ArtisanTab = "profile" | "portfolio" | "location";
-type ClientTab = "profile";
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState({ text: "", type: "" });
   const [role, setRole] = useState<Role>(null);
-
-  // Artisan-only tabs
   const [activeArtisanTab, setActiveArtisanTab] = useState<ArtisanTab>("profile");
 
   const [form, setForm] = useState({
@@ -250,7 +247,7 @@ export default function SettingsPage() {
       {/* ══════════════════════════════════════════
           للمواطن — نموذج بسيط فقط (الاسم والهاتف)
       ══════════════════════════════════════════ */}
-      {role === "CLIENT" && (
+      {(role === "CLIENT" || role === "ADMIN") && (
         <form
           onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}

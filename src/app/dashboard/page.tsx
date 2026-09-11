@@ -23,6 +23,10 @@ export default async function DashboardPage() {
 
   if (!user) redirect("/login");
 
+  if (user.role === "ADMIN") {
+    redirect("/dashboard/admin");
+  }
+
   const isClient = user.role === "CLIENT";
 
   if (isClient) {
