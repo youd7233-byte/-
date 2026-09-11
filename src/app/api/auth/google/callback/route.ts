@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { createSession } from "@/lib/session";
 
@@ -6,6 +7,7 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
   const error = url.searchParams.get("error");
+  const state = url.searchParams.get("state");
 
   if (error) {
     return NextResponse.redirect(new URL("/login?error=google_auth_failed", req.url));
@@ -13,6 +15,15 @@ export async function GET(req: NextRequest) {
   
   if (!code) {
     return NextResponse.redirect(new URL("/login?error=no_code", req.url));
+  }
+
+  // 🔒 CSRF Protection: Verify OAuth state
+  const cookieStore = await cookies();
+  const storedState = cookieStore.get("google_oauth_state")?.value;
+  cookieStore.delete("google_oauth_state");
+
+  if (!state || !storedState || state !== storedState) {
+    return NextResponse.redirect(new URL("/login?error=invalid_csrf_state", req.url));
   }
 
   try {
@@ -91,21 +102,17 @@ export async function GET(req: NextRequest) {
       });
     }
 
-
     // 4. Create Session
     await createSession(user.id, user.role ?? "PENDING", user.name);
 
     // 5. Redirect based on role
     if (!user.role) {
-      // New user - choose their role
       return NextResponse.redirect(new URL("/choose-role", req.url));
     }
     if (user.role === "ARTISAN" && !user.artisanProfile) {
-      // Artisan who hasn't completed profile
       return NextResponse.redirect(new URL("/complete-profile", req.url));
     }
     if (user.role === "CLIENT" && !user.clientProfile) {
-      // Client who hasn't chosen wilaya
       return NextResponse.redirect(new URL("/complete-client-profile", req.url));
     }
     if (user.role === "ARTISAN") {
@@ -116,7 +123,6 @@ export async function GET(req: NextRequest) {
     }
     
     return NextResponse.redirect(new URL("/", req.url));
-
 
   } catch (error: any) {
     console.error("Google Callback Error:", error);

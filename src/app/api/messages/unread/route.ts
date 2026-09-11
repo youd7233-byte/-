@@ -43,6 +43,18 @@ export async function PUT(req: Request) {
     const { conversationId } = await req.json();
     if (!conversationId) return NextResponse.json({ error: "conversationId مطلوب" }, { status: 400 });
 
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: { clientId: true, artisanId: true },
+    });
+
+    if (!conversation) return NextResponse.json({ error: "المحادثة غير موجودة" }, { status: 404 });
+
+    // 🔒 Security Check: Ensure user is part of the conversation
+    if (conversation.clientId !== session.userId && conversation.artisanId !== session.userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
     await prisma.message.updateMany({
       where: {
         conversationId,

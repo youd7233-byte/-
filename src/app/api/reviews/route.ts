@@ -12,8 +12,14 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { artisanProfileId, rating, comment } = body;
 
-    if (!artisanProfileId || !rating) {
+    if (!artisanProfileId || rating === undefined || rating === null) {
       return NextResponse.json({ error: "بيانات التقييم غير مكتملة" }, { status: 400 });
+    }
+
+    // Validate rating is a number between 1 and 5
+    const numericRating = Math.round(Number(rating));
+    if (isNaN(numericRating) || numericRating < 1 || numericRating > 5) {
+      return NextResponse.json({ error: "قيمة التقييم يجب أن تكون من 1 إلى 5" }, { status: 400 });
     }
 
     const user = await prisma.user.findUnique({
@@ -30,13 +36,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "لا يمكنك تقييم نفسك" }, { status: 400 });
     }
 
+    // Clean comment if present
+    const cleanComment = typeof comment === "string" ? comment.trim().slice(0, 1000) : null;
+
     // Save review
     const review = await prisma.review.create({
       data: {
         clientId: user.id,
         artisanProfileId,
-        rating,
-        comment: comment || null,
+        rating: numericRating,
+        comment: cleanComment || null,
       },
     });
 

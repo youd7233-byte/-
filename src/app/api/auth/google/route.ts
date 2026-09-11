@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
   // ── Helper: Find env var even if user accidentally added a space in Vercel ──
@@ -12,9 +13,20 @@ export async function GET(req: NextRequest) {
   if (!clientId) {
     return NextResponse.json({ error: "Missing GOOGLE_CLIENT_ID environment variable" }, { status: 500 });
   }
+
+  // 🔒 CSRF Protection: Generate secure state token and store in cookie
+  const state = crypto.randomUUID();
+  const cookieStore = await cookies();
+  cookieStore.set("google_oauth_state", state, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 600, // 10 minutes
+  });
   
   const scope = encodeURIComponent("openid email profile");
-  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=online&prompt=select_account`;
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}&access_type=online&prompt=select_account`;
 
   return NextResponse.redirect(authUrl);
 }

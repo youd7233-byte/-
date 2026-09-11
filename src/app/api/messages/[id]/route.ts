@@ -18,6 +18,15 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       }
     });
 
+    if (!conversation) {
+      return NextResponse.json({ error: "المحادثة غير موجودة" }, { status: 404 });
+    }
+
+    // 🔒 IDOR Security Check: Ensure requester is a participant of this conversation
+    if (conversation.clientId !== session.userId && conversation.artisanId !== session.userId && session.role !== "ADMIN") {
+      return NextResponse.json({ error: "غير مصرح لك بقراءة هذه المحادثة" }, { status: 403 });
+    }
+
     const messages = await prisma.message.findMany({
       where: { conversationId: id },
       orderBy: { createdAt: "asc" }
@@ -37,14 +46,28 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const { id } = await params;
   const { content } = await req.json();
 
-  if (!content) return NextResponse.json({ error: "محتوى الرسالة مطلوب" }, { status: 400 });
+  if (!content || !content.trim()) return NextResponse.json({ error: "محتوى الرسالة مطلوب" }, { status: 400 });
 
   try {
+    const conversation = await prisma.conversation.findUnique({
+      where: { id },
+      select: { clientId: true, artisanId: true }
+    });
+
+    if (!conversation) {
+      return NextResponse.json({ error: "المحادثة غير موجودة" }, { status: 404 });
+    }
+
+    // 🔒 IDOR Security Check: Ensure requester is a participant of this conversation
+    if (conversation.clientId !== session.userId && conversation.artisanId !== session.userId && session.role !== "ADMIN") {
+      return NextResponse.json({ error: "غير مصرح لك بالإرسال في هذه المحادثة" }, { status: 403 });
+    }
+
     const message = await prisma.message.create({
       data: {
         conversationId: id,
         senderId: session.userId,
-        content
+        content: content.trim()
       }
     });
 
