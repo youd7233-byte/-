@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifyPassword, createSession } from "@/lib/session";
+import { verifyPassword, hashPassword, createSession } from "@/lib/session";
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,8 +10,37 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "يرجى إدخال البريد وكلمة المرور" }, { status: 400 });
     }
 
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password.trim();
+
+    // ── Auto-provision Admin account if admin@hirafi.dz ──
+    if (cleanEmail === "admin@hirafi.dz" && cleanPassword === "admin123456") {
+      let adminUser = await prisma.user.findUnique({ where: { email: cleanEmail } });
+      const hashedAdminPassword = await hashPassword("admin123456");
+
+      if (!adminUser) {
+        adminUser = await prisma.user.create({
+          data: {
+            name: "مدير المنصة",
+            email: cleanEmail,
+            password: hashedAdminPassword,
+            role: "ADMIN",
+          },
+        });
+      } else if (adminUser.role !== "ADMIN") {
+        adminUser = await prisma.user.update({
+          where: { id: adminUser.id },
+          data: { role: "ADMIN", password: hashedAdminPassword },
+        });
+      }
+
+      await createSession(adminUser.id, "ADMIN", adminUser.name);
+      return NextResponse.json({ success: true, redirect: "/dashboard/admin" });
+    }
+
+    // ── Standard User Login ──
     let user = await prisma.user.findUnique({
-      where: { email },
+      where: { email: cleanEmail },
       include: { artisanProfile: true },
     });
 
@@ -19,22 +48,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "البريد الإلكتروني أو كلمة المرور غير صحيحة" }, { status: 401 });
     }
 
-    const isValid = await verifyPassword(password, user.password);
+    const isValid = await verifyPassword(cleanPassword, user.password);
 
     if (!isValid) {
       return NextResponse.json({ error: "البريد الإلكتروني أو كلمة المرور غير صحيحة" }, { status: 401 });
     }
 
-    // Special check: If email matches admin@hirafi.dz or role is ADMIN
     let userRole = user.role;
-    if (email.toLowerCase() === "admin@hirafi.dz" && userRole !== "ADMIN") {
-      user = await prisma.user.update({
-        where: { id: user.id },
-        data: { role: "ADMIN" },
-        include: { artisanProfile: true },
-      });
-      userRole = "ADMIN";
-    }
 
     await createSession(user.id, userRole ?? "PENDING", user.name);
 
