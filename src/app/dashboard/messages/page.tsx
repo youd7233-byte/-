@@ -97,13 +97,31 @@ function MessagesContent() {
 
   // Deep Link Conversation
   useEffect(() => {
-    if (initialConvId && conversations.length > 0 && !activeConversation) {
+    if (initialConvId) {
       const targetConv = conversations.find((c) => c.id === initialConvId);
       if (targetConv) {
-        loadConversation(targetConv);
+        if (activeConversation?.id !== targetConv.id) {
+          loadConversation(targetConv);
+        }
+      } else if (!loading) {
+        fetch(`/api/messages/${initialConvId}`)
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.success && data.conversation) {
+              const conv = data.conversation as Conversation;
+              setActiveConversation(conv);
+              setMessages(data.messages || []);
+              setMobileView("chat");
+              setConversations((prev) => {
+                if (prev.some((c) => c.id === conv.id)) return prev;
+                return [conv, ...prev];
+              });
+            }
+          })
+          .catch(() => {});
       }
     }
-  }, [conversations, initialConvId, activeConversation]);
+  }, [conversations, initialConvId, loading]);
 
   // Polling every 6 seconds for real-time update feel
   useEffect(() => {

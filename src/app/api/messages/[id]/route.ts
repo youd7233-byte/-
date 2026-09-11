@@ -9,12 +9,21 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   const { id } = await params;
 
   try {
+    const conversation = await prisma.conversation.findUnique({
+      where: { id },
+      include: {
+        client: { select: { id: true, name: true, image: true } },
+        artisan: { select: { id: true, name: true, image: true } },
+        messages: { orderBy: { createdAt: "desc" }, take: 1 }
+      }
+    });
+
     const messages = await prisma.message.findMany({
       where: { conversationId: id },
       orderBy: { createdAt: "asc" }
     });
 
-    return NextResponse.json({ success: true, messages });
+    return NextResponse.json({ success: true, conversation, messages });
   } catch (error: any) {
     console.error("Fetch messages error:", error);
     return NextResponse.json({ error: "فشل تحميل الرسائل" }, { status: 500 });
@@ -39,7 +48,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       }
     });
 
-    // Update conversation updatedAt
     await prisma.conversation.update({
       where: { id },
       data: { updatedAt: new Date() }
