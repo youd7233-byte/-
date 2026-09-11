@@ -44,8 +44,8 @@ export default function Navbar() {
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
         borderBottom: scrolled
-          ? "1px solid rgba(201,168,76,0.22)"
-          : "1px solid rgba(201,168,76,0.08)",
+          ? "1px solid rgba(217,162,100,0.22)"
+          : "1px solid rgba(217,162,100,0.08)",
         transition: "all 0.3s ease",
         boxShadow: scrolled ? "0 4px 32px rgba(0,0,0,0.6)" : "none",
       }}
@@ -58,12 +58,12 @@ export default function Navbar() {
           fontFamily: "'Tajawal', sans-serif",
           fontSize: "1.75rem",
           fontWeight: 900,
-          color: "#C9A84C",
+          color: "#D9A264",
           letterSpacing: "-0.03em",
           display: "flex",
           alignItems: "center",
           gap: "2px",
-          textShadow: "0 0 20px rgba(201,168,76,0.3)",
+          textShadow: "0 0 20px rgba(217,162,100,0.3)",
         }}
       >
         حِرَفي
@@ -80,18 +80,18 @@ export default function Navbar() {
               style={{
                 fontSize: "0.88rem",
                 fontWeight: 700,
-                color: "#B8A070",
+                color: "#A7B8C4",
                 padding: "0.45rem 1rem",
                 borderRadius: "8px",
                 transition: "all 0.2s",
               }}
               onMouseEnter={(e) => {
-                (e.target as HTMLElement).style.background = "rgba(201,168,76,0.1)";
-                (e.target as HTMLElement).style.color = "#C9A84C";
+                (e.target as HTMLElement).style.background = "rgba(217,162,100,0.1)";
+                (e.target as HTMLElement).style.color = "#D9A264";
               }}
               onMouseLeave={(e) => {
                 (e.target as HTMLElement).style.background = "transparent";
-                (e.target as HTMLElement).style.color = "#B8A070";
+                (e.target as HTMLElement).style.color = "#A7B8C4";
               }}
             >
               👷 {session.name.split(" ")[0]}
@@ -102,9 +102,9 @@ export default function Navbar() {
                 style={{
                   fontSize: "0.88rem",
                   fontWeight: 800,
-                  color: "#B8A070",
+                  color: "#A7B8C4",
                   background: "transparent",
-                  border: "1.5px solid rgba(201,168,76,0.25)",
+                  border: "1.5px solid rgba(217,162,100,0.25)",
                   padding: "0.5rem 1.2rem",
                   borderRadius: "10px",
                   cursor: "pointer",
@@ -112,13 +112,13 @@ export default function Navbar() {
                   transition: "all 0.2s",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "#C9A84C";
-                  (e.currentTarget as HTMLElement).style.color = "#C9A84C";
-                  (e.currentTarget as HTMLElement).style.background = "rgba(201,168,76,0.08)";
+                  (e.currentTarget as HTMLElement).style.borderColor = "#D9A264";
+                  (e.currentTarget as HTMLElement).style.color = "#D9A264";
+                  (e.currentTarget as HTMLElement).style.background = "rgba(217,162,100,0.08)";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(201,168,76,0.25)";
-                  (e.currentTarget as HTMLElement).style.color = "#B8A070";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(217,162,100,0.25)";
+                  (e.currentTarget as HTMLElement).style.color = "#A7B8C4";
                   (e.currentTarget as HTMLElement).style.background = "transparent";
                 }}
               >
@@ -133,18 +133,18 @@ export default function Navbar() {
               style={{
                 fontSize: "0.88rem",
                 fontWeight: 700,
-                color: "#B8A070",
+                color: "#A7B8C4",
                 padding: "0.45rem 1rem",
                 borderRadius: "8px",
                 transition: "all 0.2s",
               }}
               onMouseEnter={(e) => {
-                (e.target as HTMLElement).style.background = "rgba(201,168,76,0.1)";
-                (e.target as HTMLElement).style.color = "#C9A84C";
+                (e.target as HTMLElement).style.background = "rgba(217,162,100,0.1)";
+                (e.target as HTMLElement).style.color = "#D9A264";
               }}
               onMouseLeave={(e) => {
                 (e.target as HTMLElement).style.background = "transparent";
-                (e.target as HTMLElement).style.color = "#B8A070";
+                (e.target as HTMLElement).style.color = "#A7B8C4";
               }}
             >
               سجّل حرفتك
@@ -154,19 +154,19 @@ export default function Navbar() {
               style={{
                 fontSize: "0.88rem",
                 fontWeight: 800,
-                color: "#0A0806",
-                background: "linear-gradient(135deg, #C9A84C 0%, #8B6B2A 100%)",
+                color: "#0D0F14",
+                background: "linear-gradient(135deg, #D9A264 0%, #A97B3C 100%)",
                 padding: "0.5rem 1.4rem",
                 borderRadius: "10px",
                 transition: "all 0.2s",
-                boxShadow: "0 4px 14px rgba(201,168,76,0.25)",
+                boxShadow: "0 4px 14px rgba(217,162,100,0.25)",
               }}
               onMouseEnter={(e) => {
-                (e.target as HTMLElement).style.boxShadow = "0 6px 22px rgba(201,168,76,0.4)";
+                (e.target as HTMLElement).style.boxShadow = "0 6px 22px rgba(217,162,100,0.4)";
                 (e.target as HTMLElement).style.transform = "translateY(-1px)";
               }}
               onMouseLeave={(e) => {
-                (e.target as HTMLElement).style.boxShadow = "0 4px 14px rgba(201,168,76,0.25)";
+                (e.target as HTMLElement).style.boxShadow = "0 4px 14px rgba(217,162,100,0.25)";
                 (e.target as HTMLElement).style.transform = "translateY(0)";
               }}
             >
@@ -199,7 +199,7 @@ export default function Navbar() {
               display: "block",
               width: "22px",
               height: "2px",
-              background: "#C9A84C",
+              background: "#D9A264",
               borderRadius: "2px",
               transition: "all 0.3s",
               transformOrigin: "center",
@@ -222,7 +222,7 @@ export default function Navbar() {
           right: 0,
           background: "rgba(10,8,6,0.98)",
           backdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(201,168,76,0.18)",
+          borderBottom: "1px solid rgba(217,162,100,0.18)",
           padding: "1.5rem",
           display: "flex",
           flexDirection: "column",
@@ -235,21 +235,21 @@ export default function Navbar() {
               <div style={{ alignSelf: "flex-end" }}>
                 <NotificationsBell />
               </div>
-              <Link href="/dashboard" onClick={() => setMenuOpen(false)} style={{ fontWeight: 700, color: "#F0E6C8", padding: "0.75rem 1rem", borderRadius: "10px", background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.18)" }}>
+              <Link href="/dashboard" onClick={() => setMenuOpen(false)} style={{ fontWeight: 700, color: "#F0F4F8", padding: "0.75rem 1rem", borderRadius: "10px", background: "rgba(217,162,100,0.1)", border: "1px solid rgba(217,162,100,0.18)" }}>
                 👷 لوحة التحكم
               </Link>
               <form action="/api/logout" method="POST">
-                <button type="submit" style={{ width: "100%", padding: "0.75rem", borderRadius: "10px", border: "1.5px solid rgba(201,168,76,0.25)", background: "transparent", fontFamily: "'Cairo', sans-serif", fontWeight: 700, color: "#B8A070", cursor: "pointer" }}>
+                <button type="submit" style={{ width: "100%", padding: "0.75rem", borderRadius: "10px", border: "1.5px solid rgba(217,162,100,0.25)", background: "transparent", fontFamily: "'Cairo', sans-serif", fontWeight: 700, color: "#A7B8C4", cursor: "pointer" }}>
                   تسجيل الخروج
                 </button>
               </form>
             </>
           ) : (
             <>
-              <Link href="/register-artisan" onClick={() => setMenuOpen(false)} style={{ fontWeight: 700, color: "#F0E6C8", padding: "0.75rem 1rem", borderRadius: "10px", background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.18)" }}>
+              <Link href="/register-artisan" onClick={() => setMenuOpen(false)} style={{ fontWeight: 700, color: "#F0F4F8", padding: "0.75rem 1rem", borderRadius: "10px", background: "rgba(217,162,100,0.1)", border: "1px solid rgba(217,162,100,0.18)" }}>
                 سجّل حرفتك
               </Link>
-              <Link href="/login" onClick={() => setMenuOpen(false)} style={{ fontWeight: 800, color: "#0A0806", background: "linear-gradient(135deg, #C9A84C 0%, #8B6B2A 100%)", padding: "0.75rem 1rem", borderRadius: "10px", textAlign: "center" }}>
+              <Link href="/login" onClick={() => setMenuOpen(false)} style={{ fontWeight: 800, color: "#0D0F14", background: "linear-gradient(135deg, #D9A264 0%, #A97B3C 100%)", padding: "0.75rem 1rem", borderRadius: "10px", textAlign: "center" }}>
                 تسجيل الدخول
               </Link>
             </>

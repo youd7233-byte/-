@@ -49,7 +49,7 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
           width: "240px",
           background: "#0F0A06",
           backdropFilter: "blur(20px)",
-          borderLeft: "1px solid rgba(201,168,76,0.12)",
+          borderLeft: "1px solid rgba(217,162,100,0.12)",
           display: "flex",
           flexDirection: "column",
           padding: "1.5rem 0.85rem",
@@ -63,40 +63,40 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
           position: "absolute",
           top: 0, left: 0, right: 0,
           height: "2px",
-          background: "linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent)",
+          background: "linear-gradient(90deg, transparent, rgba(217,162,100,0.5), transparent)",
         }} />
 
         {/* معلومات المستخدم */}
-        <div style={{ padding: "0.85rem 1rem 1.25rem", marginBottom: "0.5rem", borderBottom: "1px solid rgba(201,168,76,0.1)" }}>
+        <div style={{ padding: "0.85rem 1rem 1.25rem", marginBottom: "0.5rem", borderBottom: "1px solid rgba(217,162,100,0.1)" }}>
           <div style={{
             width: "46px",
             height: "46px",
             borderRadius: "50%",
-            background: "linear-gradient(135deg, #C9A84C 0%, #6B4E1A 100%)",
+            background: "linear-gradient(135deg, #D9A264 0%, #8B5E2A 100%)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#0A0806",
+            color: "#0D0F14",
             fontWeight: 900,
             fontSize: "1.1rem",
             marginBottom: "0.6rem",
-            boxShadow: "0 4px 16px rgba(201,168,76,0.3)",
+            boxShadow: "0 4px 16px rgba(217,162,100,0.3)",
           }}>
             {name.charAt(0)}
           </div>
-          <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#F0E6C8" }}>
+          <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#F0F4F8" }}>
             {name.split(" ")[0]}
           </div>
           <div style={{
             fontSize: "0.72rem",
             fontWeight: 700,
-            background: role === "ARTISAN" ? "rgba(201,168,76,0.12)" : "rgba(3,105,161,0.12)",
-            color: role === "ARTISAN" ? "#C9A84C" : "#38bdf8",
+            background: role === "ARTISAN" ? "rgba(217,162,100,0.12)" : "rgba(3,105,161,0.12)",
+            color: role === "ARTISAN" ? "#D9A264" : "#38bdf8",
             padding: "0.2rem 0.65rem",
             borderRadius: "10px",
             display: "inline-block",
             marginTop: "0.3rem",
-            border: role === "ARTISAN" ? "1px solid rgba(201,168,76,0.2)" : "1px solid rgba(56,189,248,0.2)",
+            border: role === "ARTISAN" ? "1px solid rgba(217,162,100,0.2)" : "1px solid rgba(56,189,248,0.2)",
           }}>
             {role === "ARTISAN" ? "⚒️ حرفي" : "👤 مواطن"}
           </div>
@@ -118,12 +118,12 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
                   borderRadius: "12px",
                   textDecoration: "none",
                   fontWeight: active ? 800 : 600,
-                  color: active ? "#C9A84C" : "#8A7055",
+                  color: active ? "#D9A264" : "#6A7A8A",
                   background: active
-                    ? "linear-gradient(135deg, rgba(201,168,76,0.14), rgba(201,168,76,0.06))"
+                    ? "linear-gradient(135deg, rgba(217,162,100,0.14), rgba(217,162,100,0.06))"
                     : "transparent",
                   borderRight: active
-                    ? "3px solid #C9A84C"
+                    ? "3px solid #D9A264"
                     : "3px solid transparent",
                   transition: "all 0.2s",
                   fontSize: "0.9rem",
@@ -131,14 +131,14 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
                 }}
                 onMouseEnter={(e) => {
                   if (!active) {
-                    (e.currentTarget as HTMLElement).style.background = "rgba(201,168,76,0.07)";
-                    (e.currentTarget as HTMLElement).style.color = "#C9A84C";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(217,162,100,0.07)";
+                    (e.currentTarget as HTMLElement).style.color = "#D9A264";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!active) {
                     (e.currentTarget as HTMLElement).style.background = "transparent";
-                    (e.currentTarget as HTMLElement).style.color = "#8A7055";
+                    (e.currentTarget as HTMLElement).style.color = "#6A7A8A";
                   }
                 }}
               >
@@ -148,8 +148,8 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
                 <span style={{ flex: 1 }}>{link.name}</span>
                 {link.badge && (
                   <span style={{
-                    background: "linear-gradient(135deg, #C9A84C, #8B6B2A)",
-                    color: "#0A0806",
+                    background: "linear-gradient(135deg, #D9A264, #A97B3C)",
+                    color: "#0D0F14",
                     borderRadius: "999px",
                     fontSize: "0.62rem",
                     fontWeight: 900,
@@ -167,7 +167,7 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
         </nav>
 
         {/* تسجيل الخروج */}
-        <div style={{ paddingTop: "1rem", borderTop: "1px solid rgba(201,168,76,0.1)" }}>
+        <div style={{ paddingTop: "1rem", borderTop: "1px solid rgba(217,162,100,0.1)" }}>
           <form action="/api/logout" method="POST">
             <button
               type="submit"
@@ -175,13 +175,13 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
                 width: "100%",
                 padding: "0.75rem 1rem",
                 borderRadius: "12px",
-                border: "1px solid rgba(201,168,76,0.15)",
+                border: "1px solid rgba(217,162,100,0.15)",
                 background: "transparent",
                 fontFamily: "'Cairo', sans-serif",
                 fontWeight: 700,
                 fontSize: "0.88rem",
                 cursor: "pointer",
-                color: "#6A5538",
+                color: "#6A7A8A",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.6rem",
@@ -194,8 +194,8 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.background = "transparent";
-                (e.currentTarget as HTMLElement).style.color = "#6A5538";
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(201,168,76,0.15)";
+                (e.currentTarget as HTMLElement).style.color = "#6A7A8A";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(217,162,100,0.15)";
               }}
             >
               <span>🚪</span> تسجيل خروج

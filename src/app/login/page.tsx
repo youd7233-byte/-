@@ -55,7 +55,7 @@ export default function LoginPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #0A0806;
+          background: #0D0F14;
           font-family: 'Cairo', 'Tajawal', sans-serif;
           direction: rtl;
           padding: 1.5rem;
@@ -67,11 +67,11 @@ export default function LoginPage() {
           width: 100%;
           max-width: 980px;
           min-height: 580px;
-          background: #120D08;
+          background: #131820;
           border-radius: 28px;
           overflow: hidden;
-          border: 1px solid rgba(201,168,76,0.18);
-          box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.08);
+          border: 1px solid rgba(217,162,100,0.18);
+          box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(217,162,100,0.08);
           animation: fadeUp 0.55s ease both;
         }
 
@@ -113,20 +113,20 @@ export default function LoginPage() {
         .login-hero-logo-icon {
           width: 38px;
           height: 38px;
-          background: linear-gradient(135deg, #C9A84C, #8B6B2A);
+          background: linear-gradient(135deg, #D9A264, #A97B3C);
           border-radius: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 1.1rem;
-          box-shadow: 0 4px 14px rgba(201,168,76,0.3);
+          box-shadow: 0 4px 14px rgba(217,162,100,0.3);
         }
 
         .login-hero-brand {
           font-family: 'Tajawal', sans-serif;
           font-weight: 900;
           font-size: 1.2rem;
-          color: #F0E6C8;
+          color: #F0F4F8;
           letter-spacing: 0.01em;
         }
 
@@ -135,8 +135,8 @@ export default function LoginPage() {
           top: 1.5rem;
           left: 1.5rem;
           background: rgba(10,8,6,0.5);
-          border: 1px solid rgba(201,168,76,0.25);
-          color: #C9A84C;
+          border: 1px solid rgba(217,162,100,0.25);
+          color: #D9A264;
           font-family: 'Cairo', sans-serif;
           font-weight: 600;
           font-size: 0.82rem;
@@ -151,8 +151,8 @@ export default function LoginPage() {
           gap: 0.4rem;
         }
         .login-hero-back:hover {
-          background: rgba(201,168,76,0.12);
-          border-color: rgba(201,168,76,0.5);
+          background: rgba(217,162,100,0.12);
+          border-color: rgba(217,162,100,0.5);
         }
 
         .login-hero-bottom {
@@ -166,13 +166,13 @@ export default function LoginPage() {
           font-family: 'Tajawal', sans-serif;
           font-weight: 900;
           font-size: 1.6rem;
-          color: #F0E6C8;
+          color: #F0F4F8;
           line-height: 1.3;
           margin-bottom: 1rem;
         }
 
         .login-hero-title span {
-          color: #C9A84C;
+          color: #D9A264;
         }
 
         .login-hero-tags {
@@ -185,13 +185,13 @@ export default function LoginPage() {
           display: flex;
           align-items: center;
           gap: 0.4rem;
-          background: rgba(201,168,76,0.12);
-          border: 1px solid rgba(201,168,76,0.25);
+          background: rgba(217,162,100,0.12);
+          border: 1px solid rgba(217,162,100,0.25);
           border-radius: 50px;
           padding: 0.35rem 0.85rem;
           font-size: 0.78rem;
           font-weight: 600;
-          color: #C9A84C;
+          color: #D9A264;
           backdrop-filter: blur(4px);
         }
 
@@ -201,31 +201,31 @@ export default function LoginPage() {
           flex-direction: column;
           justify-content: center;
           padding: 3rem 2.5rem;
-          background: #120D08;
+          background: #131820;
         }
 
         .login-form-title {
           font-family: 'Tajawal', sans-serif;
           font-weight: 900;
           font-size: 1.95rem;
-          color: #F0E6C8;
+          color: #F0F4F8;
           margin-bottom: 0.4rem;
           line-height: 1.2;
         }
 
         .login-form-title span {
-          color: #C9A84C;
+          color: #D9A264;
         }
 
         .login-form-subtitle {
           font-size: 0.875rem;
-          color: #6A5538;
+          color: #6A7A8A;
           margin-bottom: 2rem;
           font-weight: 500;
         }
 
         .login-form-subtitle a {
-          color: #C9A84C;
+          color: #D9A264;
           font-weight: 700;
           text-decoration: none;
           cursor: pointer;
@@ -250,7 +250,7 @@ export default function LoginPage() {
         .login-label {
           font-size: 0.82rem;
           font-weight: 700;
-          color: #B8A070;
+          color: #A7B8C4;
           display: flex;
           align-items: center;
           gap: 0.4rem;
@@ -265,7 +265,7 @@ export default function LoginPage() {
         .login-input-icon {
           position: absolute;
           right: 1rem;
-          color: #6A5538;
+          color: #6A7A8A;
           font-size: 0.95rem;
           pointer-events: none;
         }
@@ -273,10 +273,10 @@ export default function LoginPage() {
         .login-input {
           width: 100%;
           padding: 0.85rem 2.6rem 0.85rem 1rem;
-          background: #1A1208;
-          border: 1px solid rgba(201,168,76,0.15);
+          background: #171F2A;
+          border: 1px solid rgba(217,162,100,0.15);
           border-radius: 12px;
-          color: #F0E6C8;
+          color: #F0F4F8;
           font-family: 'Cairo', sans-serif;
           font-size: 0.95rem;
           outline: none;
@@ -285,10 +285,10 @@ export default function LoginPage() {
           text-align: right;
         }
         .login-input[type="email"] { text-align: left; direction: ltr; }
-        .login-input::placeholder { color: #6A5538; }
+        .login-input::placeholder { color: #6A7A8A; }
         .login-input:focus {
-          border-color: rgba(201,168,76,0.45);
-          box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+          border-color: rgba(217,162,100,0.45);
+          box-shadow: 0 0 0 3px rgba(217,162,100,0.08);
         }
 
         .login-password-toggle {
@@ -296,21 +296,21 @@ export default function LoginPage() {
           left: 1rem;
           background: none;
           border: none;
-          color: #6A5538;
+          color: #6A7A8A;
           cursor: pointer;
           font-size: 0.9rem;
           padding: 0;
           line-height: 1;
           transition: color 0.2s;
         }
-        .login-password-toggle:hover { color: #C9A84C; }
+        .login-password-toggle:hover { color: #D9A264; }
 
         .login-btn-primary {
           width: 100%;
           padding: 0.95rem;
           border-radius: 13px;
-          background: linear-gradient(135deg, #C9A84C 0%, #8B6B2A 100%);
-          color: #0A0806;
+          background: linear-gradient(135deg, #D9A264 0%, #A97B3C 100%);
+          color: #0D0F14;
           font-family: 'Cairo', sans-serif;
           font-weight: 900;
           font-size: 1rem;
@@ -318,12 +318,12 @@ export default function LoginPage() {
           cursor: pointer;
           margin-top: 0.25rem;
           transition: all 0.25s;
-          box-shadow: 0 6px 24px rgba(201,168,76,0.2);
+          box-shadow: 0 6px 24px rgba(217,162,100,0.2);
           letter-spacing: 0.01em;
         }
         .login-btn-primary:hover:not(:disabled) {
           transform: translateY(-2px);
-          box-shadow: 0 10px 32px rgba(201,168,76,0.35);
+          box-shadow: 0 10px 32px rgba(217,162,100,0.35);
         }
         .login-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
@@ -332,12 +332,12 @@ export default function LoginPage() {
           align-items: center;
           gap: 1rem;
           margin: 1.25rem 0;
-          color: #6A5538;
+          color: #6A7A8A;
         }
         .login-divider hr {
           flex: 1;
           border: none;
-          border-top: 1px solid rgba(201,168,76,0.12);
+          border-top: 1px solid rgba(217,162,100,0.12);
         }
         .login-divider span { font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
 
@@ -345,9 +345,9 @@ export default function LoginPage() {
           width: 100%;
           padding: 0.9rem;
           border-radius: 13px;
-          background: #1A1208;
-          border: 1px solid rgba(201,168,76,0.18);
-          color: #F0E6C8;
+          background: #171F2A;
+          border: 1px solid rgba(217,162,100,0.18);
+          color: #F0F4F8;
           font-family: 'Cairo', sans-serif;
           font-weight: 700;
           font-size: 0.95rem;
@@ -360,8 +360,8 @@ export default function LoginPage() {
           transition: all 0.25s;
         }
         .login-btn-google:hover {
-          background: rgba(201,168,76,0.07);
-          border-color: rgba(201,168,76,0.35);
+          background: rgba(217,162,100,0.07);
+          border-color: rgba(217,162,100,0.35);
           transform: translateY(-1px);
         }
 

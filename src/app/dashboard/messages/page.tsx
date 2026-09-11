@@ -229,11 +229,11 @@ function MessagesContent() {
       style={{
         display: "flex",
         height: "calc(100vh - 130px)",
-        background: "#120D08",
+        background: "#131820",
         borderRadius: "24px",
         overflow: "hidden",
         boxShadow: "0 8px 40px rgba(0,0,0,0.4)",
-        border: "1px solid rgba(201,168,76,0.15)",
+        border: "1px solid rgba(217,162,100,0.15)",
       }}
     >
       {/* ── قائمة المحادثات ── */}
@@ -241,7 +241,7 @@ function MessagesContent() {
         className="conversations-sidebar"
         style={{
           width: "300px",
-          borderLeft: "1px solid rgba(201,168,76,0.18)",
+          borderLeft: "1px solid rgba(217,162,100,0.18)",
           display: "flex",
           flexDirection: "column",
           flexShrink: 0,
@@ -250,11 +250,11 @@ function MessagesContent() {
         <div
           style={{
             padding: "1.25rem 1.5rem",
-            borderBottom: "1px solid rgba(201,168,76,0.15)",
-            background: "#0A0806",
+            borderBottom: "1px solid rgba(217,162,100,0.15)",
+            background: "#0D0F14",
           }}
         >
-          <h2 style={{ fontSize: "1.15rem", fontWeight: 900, color: "#F0E6C8" }}>
+          <h2 style={{ fontSize: "1.15rem", fontWeight: 900, color: "#F0F4F8" }}>
             💬 المحادثات
           </h2>
         </div>
@@ -289,10 +289,10 @@ function MessagesContent() {
                     padding: "0.9rem 1rem",
                     borderRadius: "14px",
                     background: isActive
-                      ? "linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.05))"
+                      ? "linear-gradient(135deg, rgba(217,162,100,0.1), rgba(217,162,100,0.05))"
                       : "transparent",
                     border: isActive
-                      ? "1.5px solid rgba(201,168,76,0.2)"
+                      ? "1.5px solid rgba(217,162,100,0.2)"
                       : "1.5px solid transparent",
                     cursor: "pointer",
                     transition: "all 0.2s",
@@ -318,7 +318,7 @@ function MessagesContent() {
                       borderRadius: "50%",
                       background: other.image
                         ? `url(${other.image}) center/cover`
-                        : "linear-gradient(135deg, #C9A84C, #8B6B2A)",
+                        : "linear-gradient(135deg, #D9A264, #A97B3C)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -335,7 +335,7 @@ function MessagesContent() {
                     <div
                       style={{
                         fontWeight: 800,
-                        color: "#F0E6C8",
+                        color: "#F0F4F8",
                         fontSize: "0.92rem",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
@@ -347,7 +347,7 @@ function MessagesContent() {
                     <div
                       style={{
                         fontSize: "0.8rem",
-                        color: "#B8A070",
+                        color: "#A7B8C4",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -362,7 +362,7 @@ function MessagesContent() {
                     <div
                       style={{
                         fontSize: "0.7rem",
-                        color: "#B8A070",
+                        color: "#A7B8C4",
                         flexShrink: 0,
                         alignSelf: "flex-start",
                       }}
@@ -385,11 +385,11 @@ function MessagesContent() {
             <div
               style={{
                 padding: "1.25rem 1.5rem",
-                borderBottom: "1px solid rgba(201,168,76,0.15)",
+                borderBottom: "1px solid rgba(217,162,100,0.15)",
                 display: "flex",
                 alignItems: "center",
                 gap: "1rem",
-                background: "#0A0806",
+                background: "#0D0F14",
               }}
             >
               {(() => {
@@ -403,7 +403,7 @@ function MessagesContent() {
                         borderRadius: "50%",
                         background: other.image
                           ? `url(${other.image}) center/cover`
-                          : "linear-gradient(135deg, #C9A84C, #8B6B2A)",
+                          : "linear-gradient(135deg, #D9A264, #A97B3C)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -415,10 +415,10 @@ function MessagesContent() {
                       {!other.image && other.name.charAt(0)}
                     </div>
                     <div>
-                      <div style={{ fontWeight: 800, color: "#F0E6C8", fontSize: "1rem" }}>
+                      <div style={{ fontWeight: 800, color: "#F0F4F8", fontSize: "1rem" }}>
                         {other.name}
                       </div>
-                      <div style={{ fontSize: "0.78rem", color: "#B8A070" }}>
+                      <div style={{ fontSize: "0.78rem", color: "#A7B8C4" }}>
                         {sessionUser?.role === "CLIENT" ? "حرفي" : "مواطن"}
                       </div>
                     </div>
@@ -465,7 +465,7 @@ function MessagesContent() {
                         style={{
                           textAlign: "center",
                           fontSize: "0.72rem",
-                          color: "#B8A070",
+                          color: "#A7B8C4",
                           margin: "0.5rem 0",
                           fontWeight: 700,
                         }}
@@ -487,13 +487,13 @@ function MessagesContent() {
                           padding: "0.75rem 1.1rem",
                           borderRadius: mine ? "18px 18px 18px 4px" : "18px 18px 4px 18px",
                           background: mine
-                            ? "linear-gradient(135deg, #C9A84C, #8B6B2A)"
+                            ? "linear-gradient(135deg, #D9A264, #A97B3C)"
                             : "#1A140C",
-                          color: mine ? "#0A0806" : "#F0E6C8",
+                          color: mine ? "#0D0F14" : "#F0F4F8",
                           boxShadow: mine
-                            ? "0 4px 16px rgba(201,168,76,0.25)"
+                            ? "0 4px 16px rgba(217,162,100,0.25)"
                             : "0 2px 8px rgba(0,0,0,0.2)",
-                          border: mine ? "none" : "1px solid rgba(201,168,76,0.15)",
+                          border: mine ? "none" : "1px solid rgba(217,162,100,0.15)",
                           wordBreak: "break-word",
                           opacity: msg.id.startsWith("temp-") ? 0.7 : 1,
                           transition: "opacity 0.3s",
@@ -529,8 +529,8 @@ function MessagesContent() {
             <div
               style={{
                 padding: "1rem 1.5rem",
-                borderTop: "1px solid rgba(201,168,76,0.15)",
-                background: "#0A0806",
+                borderTop: "1px solid rgba(217,162,100,0.15)",
+                background: "#0D0F14",
               }}
             >
               <form
@@ -548,17 +548,17 @@ function MessagesContent() {
                     flex: 1,
                     padding: "0.85rem 1.25rem",
                     borderRadius: "14px",
-                    border: "1.5px solid rgba(201,168,76,0.25)",
+                    border: "1.5px solid rgba(217,162,100,0.25)",
                     outline: "none",
                     fontFamily: "'Cairo', sans-serif",
                     fontSize: "0.95rem",
-                    background: "#120D08",
+                    background: "#131820",
                     transition: "border-color 0.2s",
-                    color: "#F0E6C8",
+                    color: "#F0F4F8",
                   }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "#C9A84C")}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = "#D9A264")}
                   onBlur={(e) =>
-                    (e.currentTarget.style.borderColor = "rgba(201,168,76,0.25)")
+                    (e.currentTarget.style.borderColor = "rgba(217,162,100,0.25)")
                   }
                 />
                 <button
@@ -569,9 +569,9 @@ function MessagesContent() {
                     borderRadius: "14px",
                     background:
                       !content.trim() || sending
-                        ? "rgba(201,168,76,0.1)"
-                        : "linear-gradient(135deg, #C9A84C, #8B6B2A)",
-                    color: "#0A0806",
+                        ? "rgba(217,162,100,0.1)"
+                        : "linear-gradient(135deg, #D9A264, #A97B3C)",
+                    color: "#0D0F14",
                     border: "none",
                     fontWeight: 800,
                     fontSize: "0.95rem",
@@ -582,7 +582,7 @@ function MessagesContent() {
                     gap: "0.4rem",
                     flexShrink: 0,
                     boxShadow:
-                      !content.trim() || sending ? "none" : "0 4px 14px rgba(201,168,76,0.2)",
+                      !content.trim() || sending ? "none" : "0 4px 14px rgba(217,162,100,0.2)",
                   }}
                 >
                   {sending ? "..." : "إرسال ←"}

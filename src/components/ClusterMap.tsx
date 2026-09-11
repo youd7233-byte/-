@@ -170,7 +170,7 @@ export default function ClusterMap({
                 color:#fff; font-size:1.1rem; flex-shrink:0;
               ">${artisan.isPremium ? "⭐" : "👷"}</div>
               <div>
-                <div style="font-weight:900; font-size:1rem; color:#1A1208;">${artisan.name}</div>
+                <div style="font-weight:900; font-size:1rem; color:#171F2A;">${artisan.name}</div>
                 <div style="font-size:0.78rem; color:#B5531A; font-weight:700;">${artisan.profession}</div>
               </div>
             </div>

@@ -94,7 +94,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
             <div style={{ position: "absolute", top: "1rem", left: "1rem", display: "flex", gap: "0.5rem" }}>
               {profile.isPremium && (
                 <span style={{
-                  background: "rgba(212,168,67,0.95)", color: "#1A1208",
+                  background: "rgba(212,168,67,0.95)", color: "#171F2A",
                   padding: "0.3rem 0.9rem", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 900,
                 }}>⭐ Premium</span>
               )}
