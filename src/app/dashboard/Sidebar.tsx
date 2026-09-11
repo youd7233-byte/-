@@ -34,6 +34,9 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
     ...(role === "ARTISAN"
       ? [{ name: "إحصائيات", href: "/dashboard/stats", icon: "📈", badge: null }]
       : []),
+    ...(role === "ADMIN"
+      ? [{ name: "لوحة الأدمن", href: "/dashboard/admin", icon: "🛡️", badge: null }]
+      : []),
     { name: "الإعدادات", href: "/dashboard/settings", icon: "⚙️", badge: null },
   ];
 
@@ -90,15 +93,15 @@ export default function Sidebar({ role, name }: { role: string; name: string }) 
           <div style={{
             fontSize: "0.72rem",
             fontWeight: 700,
-            background: role === "ARTISAN" ? "rgba(217,162,100,0.12)" : "rgba(3,105,161,0.12)",
-            color: role === "ARTISAN" ? "#D9A264" : "#38bdf8",
+            background: role === "ADMIN" ? "rgba(250,204,21,0.15)" : role === "ARTISAN" ? "rgba(217,162,100,0.12)" : "rgba(3,105,161,0.12)",
+            color: role === "ADMIN" ? "#facc15" : role === "ARTISAN" ? "#D9A264" : "#38bdf8",
             padding: "0.2rem 0.65rem",
             borderRadius: "10px",
             display: "inline-block",
             marginTop: "0.3rem",
-            border: role === "ARTISAN" ? "1px solid rgba(217,162,100,0.2)" : "1px solid rgba(56,189,248,0.2)",
+            border: role === "ADMIN" ? "1px solid rgba(250,204,21,0.3)" : role === "ARTISAN" ? "1px solid rgba(217,162,100,0.2)" : "1px solid rgba(56,189,248,0.2)",
           }}>
-            {role === "ARTISAN" ? "⚒️ حرفي" : "👤 مواطن"}
+            {role === "ADMIN" ? "👑 مشرف" : role === "ARTISAN" ? "⚒️ حرفي" : "👤 مواطن"}
           </div>
         </div>
 
