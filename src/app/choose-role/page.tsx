@@ -73,14 +73,14 @@ export default function ChooseRolePage() {
             style={{
               padding: "2.5rem 1.5rem",
               borderRadius: "24px",
-              border: `3px solid ${selected === "CLIENT" ? "var(--terracotta)" : "rgba(217,162,100,0.2)"}`,
-              background: selected === "CLIENT" ? "rgba(217,162,100,0.06)" : "rgba(255,255,255,0.8)",
+              border: `2px solid ${selected === "CLIENT" ? "var(--gold)" : "var(--border-mid)"}`,
+              background: selected === "CLIENT" ? "rgba(217,162,100,0.12)" : "var(--bg-card)",
               backdropFilter: "blur(10px)",
               cursor: "pointer",
               transition: "all 0.25s",
               boxShadow: selected === "CLIENT"
-                ? "0 12px 40px rgba(217,162,100,0.2)"
-                : "0 4px 20px rgba(0,0,0,0.06)",
+                ? "var(--shadow-gold)"
+                : "var(--shadow-md)",
               textAlign: "center",
               transform: selected === "CLIENT" ? "translateY(-4px)" : "translateY(0)",
             }}
@@ -88,16 +88,16 @@ export default function ChooseRolePage() {
             <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>👤</div>
             <h2 style={{
               fontSize: "1.4rem", fontWeight: 900,
-              color: selected === "CLIENT" ? "var(--terracotta)" : "var(--dark)",
+              color: selected === "CLIENT" ? "var(--gold)" : "var(--text-primary)",
               marginBottom: "0.5rem",
             }}>مواطن</h2>
-            <p style={{ color: "var(--muted)", fontSize: "0.9rem", lineHeight: 1.6 }}>
+            <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: 1.6 }}>
               أبحث عن حرفيين موثوقين بالقرب مني
             </p>
             {selected === "CLIENT" && (
               <div style={{
                 marginTop: "1rem", display: "inline-flex", alignItems: "center", gap: "0.4rem",
-                background: "var(--terracotta)", color: "#fff",
+                background: "var(--gold)", color: "#0D0F14",
                 padding: "0.3rem 1rem", borderRadius: "20px", fontSize: "0.85rem", fontWeight: 700,
               }}>
                 ✓ تم الاختيار
@@ -111,14 +111,14 @@ export default function ChooseRolePage() {
             style={{
               padding: "2.5rem 1.5rem",
               borderRadius: "24px",
-              border: `3px solid ${selected === "ARTISAN" ? "var(--terracotta)" : "rgba(217,162,100,0.2)"}`,
-              background: selected === "ARTISAN" ? "rgba(217,162,100,0.06)" : "rgba(255,255,255,0.8)",
+              border: `2px solid ${selected === "ARTISAN" ? "var(--gold)" : "var(--border-mid)"}`,
+              background: selected === "ARTISAN" ? "rgba(217,162,100,0.12)" : "var(--bg-card)",
               backdropFilter: "blur(10px)",
               cursor: "pointer",
               transition: "all 0.25s",
               boxShadow: selected === "ARTISAN"
-                ? "0 12px 40px rgba(217,162,100,0.2)"
-                : "0 4px 20px rgba(0,0,0,0.06)",
+                ? "var(--shadow-gold)"
+                : "var(--shadow-md)",
               textAlign: "center",
               transform: selected === "ARTISAN" ? "translateY(-4px)" : "translateY(0)",
             }}
@@ -126,16 +126,16 @@ export default function ChooseRolePage() {
             <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>👷</div>
             <h2 style={{
               fontSize: "1.4rem", fontWeight: 900,
-              color: selected === "ARTISAN" ? "var(--terracotta)" : "var(--dark)",
+              color: selected === "ARTISAN" ? "var(--gold)" : "var(--text-primary)",
               marginBottom: "0.5rem",
             }}>حرفي</h2>
-            <p style={{ color: "var(--muted)", fontSize: "0.9rem", lineHeight: 1.6 }}>
+            <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: 1.6 }}>
               أقدّم خدماتي وأريد عملاء جدد
             </p>
             {selected === "ARTISAN" && (
               <div style={{
                 marginTop: "1rem", display: "inline-flex", alignItems: "center", gap: "0.4rem",
-                background: "var(--terracotta)", color: "#fff",
+                background: "var(--gold)", color: "#0D0F14",
                 padding: "0.3rem 1rem", borderRadius: "20px", fontSize: "0.85rem", fontWeight: 700,
               }}>
                 ✓ تم الاختيار

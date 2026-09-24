@@ -64,16 +64,16 @@ export default function CompleteClientProfilePage() {
         minHeight: "calc(100vh - 70px)", padding: "2rem 1.5rem", position: "relative", zIndex: 1,
       }}>
         <div style={{
-          background: "rgba(255,255,255,0.85)", backdropFilter: "blur(20px)",
+          background: "var(--bg-card)", backdropFilter: "blur(20px)",
           borderRadius: "28px", padding: "3rem 2.5rem",
-          boxShadow: "0 20px 70px rgba(26,18,8,0.1)", border: "1px solid rgba(217,162,100,0.18)",
+          boxShadow: "0 20px 70px rgba(0,0,0,0.5)", border: "1px solid var(--border-mid)",
           width: "100%", maxWidth: "500px", animation: "fadeUp 0.5s ease both",
         }}>
           <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            <h1 style={{ fontSize: "1.8rem", fontWeight: 900, color: "var(--dark)", marginBottom: "0.5rem" }}>
+            <h1 style={{ fontSize: "1.8rem", fontWeight: 900, color: "var(--text-primary)", marginBottom: "0.5rem" }}>
               مرحباً بك في حِرَفي
             </h1>
-            <p style={{ color: "var(--muted)", fontSize: "0.95rem" }}>
+            <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem" }}>
               يرجى تأكيد بياناتك لنوجهك للحرفيين في ولايتك
             </p>
           </div>
@@ -81,15 +81,15 @@ export default function CompleteClientProfilePage() {
           {error && (
             <div style={{
               background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.2)",
-              borderRadius: "12px", padding: "0.9rem 1.2rem", color: "#c53030",
+              borderRadius: "12px", padding: "0.9rem 1.2rem", color: "#f87171",
               fontSize: "0.9rem", fontWeight: 700, marginBottom: "1.5rem", textAlign: "center",
             }}>⚠️ {error}</div>
           )}
 
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
             <div>
-              <label style={{ display: "block", fontSize: "0.88rem", fontWeight: 800, color: "var(--dark)", marginBottom: "0.5rem" }}>
-                الاسم واللقب <span style={{ color: "var(--terracotta)" }}>*</span>
+              <label style={{ display: "block", fontSize: "0.88rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "0.5rem" }}>
+                الاسم واللقب <span style={{ color: "var(--gold)" }}>*</span>
               </label>
               <input
                 type="text"
@@ -98,25 +98,25 @@ export default function CompleteClientProfilePage() {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 style={{
                   width: "100%", padding: "0.95rem 1.2rem",
-                  border: "2px solid rgba(217,162,100,0.22)", borderRadius: "14px",
-                  fontSize: "1rem", fontFamily: "'Cairo', sans-serif", color: "var(--text)",
-                  background: "rgba(255,255,255,0.7)", outline: "none", transition: "all 0.2s",
+                  border: "1px solid var(--border)", borderRadius: "14px",
+                  fontSize: "1rem", fontFamily: "'Cairo', sans-serif", color: "var(--text-primary)",
+                  background: "var(--bg-elevated)", outline: "none", transition: "all 0.2s",
                 }}
               />
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: "0.88rem", fontWeight: 800, color: "var(--dark)", marginBottom: "0.5rem" }}>
-                الولاية <span style={{ color: "var(--terracotta)" }}>*</span>
+              <label style={{ display: "block", fontSize: "0.88rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "0.5rem" }}>
+                الولاية <span style={{ color: "var(--gold)" }}>*</span>
               </label>
               <select
                 value={form.wilaya}
                 onChange={(e) => setForm({ ...form, wilaya: e.target.value })}
                 style={{
                   width: "100%", padding: "0.95rem 1.2rem",
-                  border: "2px solid rgba(217,162,100,0.22)", borderRadius: "14px",
-                  fontSize: "1rem", fontFamily: "'Cairo', sans-serif", color: "var(--text)",
-                  background: "rgba(255,255,255,0.7)", outline: "none", transition: "all 0.2s",
+                  border: "1px solid var(--border)", borderRadius: "14px",
+                  fontSize: "1rem", fontFamily: "'Cairo', sans-serif", color: "var(--text-primary)",
+                  background: "var(--bg-elevated)", outline: "none", transition: "all 0.2s",
                 }}
               >
                 <option value="">اختر ولايتك...</option>
@@ -129,11 +129,11 @@ export default function CompleteClientProfilePage() {
               disabled={loading}
               style={{
                 width: "100%", padding: "1.05rem", borderRadius: "16px",
-                background: "linear-gradient(135deg, var(--terracotta) 0%, #d45e1a 100%)",
-                color: "#fff", fontFamily: "'Cairo', sans-serif",
+                background: "linear-gradient(135deg, var(--gold) 0%, #A97B3C 100%)",
+                color: "#0D0F14", fontFamily: "'Cairo', sans-serif",
                 fontWeight: 900, fontSize: "1.05rem", border: "none",
                 cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.7 : 1,
-                boxShadow: "0 8px 28px rgba(217,162,100,0.28)", marginTop: "1rem", transition: "all 0.2s",
+                boxShadow: "var(--shadow-gold)", marginTop: "1rem", transition: "all 0.2s",
               }}
             >
               {loading ? "جاري الحفظ..." : "البحث عن الحرفيين 🚀"}

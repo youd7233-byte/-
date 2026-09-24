@@ -153,13 +153,13 @@
 .formContainer {
   width: 100%;
   max-width: 750px;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--bg-card);
   backdrop-filter: blur(20px);
   WebkitBackdropFilter: blur(20px);
-  border: 1px solid rgba(217,162,100,0.2);
+  border: 1px solid var(--border-mid);
   border-radius: 32px;
   padding: 3.5rem;
-  box-shadow: 0 20px 60px rgba(26,18,8,0.08);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -185,7 +185,7 @@
 
 .stepDotActive {
   width: 80px;
-  background: var(--terracotta);
+  background: var(--gold);
   box-shadow: 0 4px 12px rgba(217,162,100,0.3);
 }
 
@@ -193,14 +193,14 @@
 .title {
   font-size: 1.85rem;
   font-weight: 900;
-  color: var(--dark);
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
   text-align: center;
 }
 
 .subtitle {
   font-size: 0.95rem;
-  color: var(--muted);
+  color: var(--text-secondary);
   margin-bottom: 2.5rem;
   text-align: center;
   font-weight: 500;
@@ -215,13 +215,13 @@
   display: block;
   font-size: 0.88rem;
   font-weight: 800;
-  color: var(--dark);
+  color: var(--text-primary);
   margin-bottom: 0.6rem;
   padding-right: 4px;
 }
 
 .field label span {
-  color: var(--terracotta);
+  color: var(--gold);
 }
 
 .fieldRow {
@@ -240,12 +240,12 @@
 .textarea {
   width: 100%;
   padding: 1rem 1.25rem;
-  border: 2px solid rgba(217,162,100,0.15);
+  border: 1px solid var(--border);
   border-radius: 16px;
   font-family: 'Cairo', sans-serif;
   font-size: 1rem;
-  color: var(--text);
-  background: rgba(255,255,255,0.8);
+  color: var(--text-primary);
+  background: var(--bg-elevated);
   outline: none;
   transition: all 0.25s;
 }
@@ -253,15 +253,15 @@
 .input:focus,
 .select:focus,
 .textarea:focus {
-  border-color: var(--terracotta);
-  background: #fff;
-  box-shadow: 0 0 0 5px rgba(217,162,100,0.08), 0 8px 20px rgba(0,0,0,0.02);
+  border-color: var(--gold);
+  background: var(--bg-elevated);
+  box-shadow: 0 0 0 4px rgba(217,162,100,0.12);
   transform: translateY(-1px);
 }
 
 .select {
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B5531A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23D9A264' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: left 1rem center;
 }
@@ -274,12 +274,12 @@
   text-align: center;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(255,255,255,0.5);
+  background: var(--bg-elevated);
 }
 
 .uploadZone:hover {
-  border-color: var(--terracotta);
-  background: rgba(217,162,100,0.04);
+  border-color: var(--gold);
+  background: rgba(217,162,100,0.08);
   transform: scale(1.01);
 }
 
@@ -298,29 +298,29 @@
 }
 
 .planCard {
-  border: 2px solid rgba(217,162,100,0.15);
+  border: 1px solid var(--border);
   border-radius: 24px;
   padding: 2rem 1.5rem;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-  background: #fff;
+  background: var(--bg-card);
 }
 
 .planCard:hover {
-  border-color: rgba(217,162,100,0.4);
+  border-color: var(--gold);
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(217,162,100,0.12);
+  box-shadow: var(--shadow-gold);
 }
 
 .planCardSelected {
-  border-color: var(--terracotta);
-  background: rgba(217,162,100,0.03);
-  box-shadow: 0 12px 32px rgba(217,162,100,0.15);
+  border-color: var(--gold);
+  background: rgba(217,162,100,0.1);
+  box-shadow: var(--shadow-gold);
 }
 
 .planPrice {
-  color: var(--terracotta);
+  color: var(--gold);
   font-weight: 900;
   font-size: 1.75rem;
   margin: 0.5rem 0;
@@ -331,15 +331,15 @@
   flex: 1;
   padding: 1.1rem 2rem;
   border-radius: 18px;
-  background: linear-gradient(135deg, var(--terracotta) 0%, #d45e1a 100%);
-  color: #fff;
+  background: linear-gradient(135deg, var(--gold) 0%, #A97B3C 100%);
+  color: #0D0F14;
   font-family: 'Cairo', sans-serif;
   font-weight: 800;
   font-size: 1.1rem;
   border: none;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 10px 30px rgba(217,162,100,0.3);
+  box-shadow: var(--shadow-gold);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -347,27 +347,27 @@
 }
 
 .btnNext:hover:not(:disabled) {
-  background: var(--dark);
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 15px 35px rgba(26,18,8,0.25);
+  box-shadow: 0 15px 35px rgba(217,162,100,0.35);
 }
 
 .btnBack {
   padding: 1.1rem 1.75rem;
   border-radius: 18px;
-  border: 2px solid rgba(217,162,100,0.2);
-  color: var(--mid);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
   font-family: 'Cairo', sans-serif;
   font-weight: 800;
   font-size: 1rem;
-  background: #fff;
+  background: var(--bg-elevated);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .btnBack:hover {
-  background: var(--sand);
-  border-color: var(--clay);
+  background: rgba(217,162,100,0.1);
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 /* ── Success Screen ── */

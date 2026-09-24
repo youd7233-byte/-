@@ -83,12 +83,12 @@ export default function CompleteProfilePage() {
   };
 
   const cardStyle: React.CSSProperties = {
-    background: "rgba(255,255,255,0.85)",
+    background: "var(--bg-card)",
     backdropFilter: "blur(20px)",
     borderRadius: "28px",
     padding: "3rem",
-    boxShadow: "0 20px 70px rgba(26,18,8,0.1)",
-    border: "1px solid rgba(217,162,100,0.18)",
+    boxShadow: "0 20px 70px rgba(0,0,0,0.5)",
+    border: "1px solid var(--border-mid)",
     width: "100%",
     maxWidth: "600px",
     animation: "fadeUp 0.5s ease both",
@@ -96,28 +96,28 @@ export default function CompleteProfilePage() {
 
   const inputStyle: React.CSSProperties = {
     width: "100%", padding: "0.95rem 1.2rem",
-    border: "2px solid rgba(217,162,100,0.22)",
+    border: "1px solid var(--border)",
     borderRadius: "14px", fontSize: "1rem",
     fontFamily: "'Cairo', sans-serif",
-    color: "var(--text)",
-    background: "rgba(255,255,255,0.7)",
+    color: "var(--text-primary)",
+    background: "var(--bg-elevated)",
     outline: "none", transition: "all 0.2s",
     boxSizing: "border-box",
   };
 
   const labelStyle: React.CSSProperties = {
     display: "block", fontSize: "0.88rem",
-    fontWeight: 800, color: "var(--dark)", marginBottom: "0.5rem",
+    fontWeight: 800, color: "var(--text-primary)", marginBottom: "0.5rem",
   };
 
   const nextBtnStyle: React.CSSProperties = {
     width: "100%", padding: "1.05rem",
     borderRadius: "16px",
-    background: "linear-gradient(135deg, var(--terracotta) 0%, #d45e1a 100%)",
-    color: "#fff", fontFamily: "'Cairo', sans-serif",
+    background: "linear-gradient(135deg, var(--gold) 0%, #A97B3C 100%)",
+    color: "#0D0F14", fontFamily: "'Cairo', sans-serif",
     fontWeight: 900, fontSize: "1.05rem",
     border: "none", cursor: "pointer",
-    boxShadow: "0 8px 28px rgba(217,162,100,0.28)",
+    boxShadow: "var(--shadow-gold)",
     marginTop: "1.5rem", transition: "all 0.2s",
   };
 
@@ -141,8 +141,8 @@ export default function CompleteProfilePage() {
             <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <div style={{
                 width: "36px", height: "36px", borderRadius: "50%",
-                background: i + 1 <= step ? "var(--terracotta)" : "rgba(217,162,100,0.2)",
-                color: i + 1 <= step ? "#fff" : "var(--muted)",
+                background: i + 1 <= step ? "var(--gold)" : "rgba(217,162,100,0.15)",
+                color: i + 1 <= step ? "#0D0F14" : "var(--text-muted)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontWeight: 900, fontSize: "0.9rem", transition: "all 0.3s",
               }}>
@@ -150,10 +150,10 @@ export default function CompleteProfilePage() {
               </div>
               <span style={{
                 fontSize: "0.8rem", fontWeight: 600,
-                color: i + 1 === step ? "var(--terracotta)" : "var(--muted)",
+                color: i + 1 === step ? "var(--gold)" : "var(--text-muted)",
               }}>{s}</span>
               {i < steps.length - 1 && (
-                <div style={{ width: "30px", height: "2px", background: i + 1 < step ? "var(--terracotta)" : "rgba(217,162,100,0.2)", borderRadius: "1px" }} />
+                <div style={{ width: "30px", height: "2px", background: i + 1 < step ? "var(--gold)" : "rgba(217,162,100,0.15)", borderRadius: "1px" }} />
               )}
             </div>
           ))}
@@ -163,7 +163,7 @@ export default function CompleteProfilePage() {
           {error && (
             <div style={{
               background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.2)",
-              borderRadius: "12px", padding: "0.9rem 1.2rem", color: "#c53030",
+              borderRadius: "12px", padding: "0.9rem 1.2rem", color: "#f87171",
               fontSize: "0.9rem", fontWeight: 700, marginBottom: "1.5rem", textAlign: "center",
             }}>⚠️ {error}</div>
           )}
@@ -171,15 +171,15 @@ export default function CompleteProfilePage() {
           {/* Step 1 */}
           {step === 1 && (
             <div>
-              <h2 style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--dark)", marginBottom: "0.5rem" }}>
+              <h2 style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--text-primary)", marginBottom: "0.5rem" }}>
                 🔨 حرفتك وموقعك
               </h2>
-              <p style={{ color: "var(--muted)", marginBottom: "2rem", fontSize: "0.95rem" }}>
+              <p style={{ color: "var(--text-secondary)", marginBottom: "2rem", fontSize: "0.95rem" }}>
                 أخبرنا بما تتقنه وأين تعمل
               </p>
 
               <div style={{ marginBottom: "1.25rem" }}>
-                <label style={labelStyle}>نوع الحِرفة <span style={{ color: "var(--terracotta)" }}>*</span></label>
+                <label style={labelStyle}>نوع الحِرفة <span style={{ color: "var(--gold)" }}>*</span></label>
                 <select value={form.profession} onChange={(e) => update("profession", e.target.value)} style={inputStyle}>
                   <option value="">اختر حرفتك...</option>
                   {PROFESSIONS.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -188,7 +188,7 @@ export default function CompleteProfilePage() {
               
               {form.profession === "أخرى" && (
                 <div style={{ marginBottom: "1.25rem" }}>
-                  <label style={labelStyle}>أدخل حرفتك <span style={{ color: "var(--terracotta)" }}>*</span></label>
+                  <label style={labelStyle}>أدخل حرفتك <span style={{ color: "var(--gold)" }}>*</span></label>
                   <input
                     type="text"
                     placeholder="مثال: صيانة هواتف"
@@ -201,7 +201,7 @@ export default function CompleteProfilePage() {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.25rem" }}>
                 <div>
-                  <label style={labelStyle}>الولاية <span style={{ color: "var(--terracotta)" }}>*</span></label>
+                  <label style={labelStyle}>الولاية <span style={{ color: "var(--gold)" }}>*</span></label>
                   <select value={form.wilaya} onChange={(e) => update("wilaya", e.target.value)} style={inputStyle}>
                     <option value="">اختر الولاية...</option>
                     {ALGERIA_WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
@@ -229,16 +229,16 @@ export default function CompleteProfilePage() {
           {/* Step 2 */}
           {step === 2 && (
             <div>
-              <h2 style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--dark)", marginBottom: "0.5rem" }}>
+              <h2 style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--text-primary)", marginBottom: "0.5rem" }}>
                 📝 التواصل ونبذة عنك
               </h2>
-              <p style={{ color: "var(--muted)", marginBottom: "2rem", fontSize: "0.95rem" }}>
+              <p style={{ color: "var(--text-secondary)", marginBottom: "2rem", fontSize: "0.95rem" }}>
                 رقم الهاتف الخاص بك ونبذة تظهر للعملاء
               </p>
               
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.25rem" }}>
                 <div>
-                  <label style={labelStyle}>رقم الهاتف <span style={{ color: "var(--terracotta)" }}>*</span></label>
+                  <label style={labelStyle}>رقم الهاتف <span style={{ color: "var(--gold)" }}>*</span></label>
                   <input
                     type="tel"
                     dir="ltr"
@@ -277,8 +277,8 @@ export default function CompleteProfilePage() {
               <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
                 <button onClick={() => setStep(1)} style={{
                   flex: 1, padding: "1rem",
-                  borderRadius: "14px", border: "2px solid rgba(217,162,100,0.3)",
-                  background: "transparent", color: "var(--muted)", fontFamily: "'Cairo', sans-serif",
+                  borderRadius: "14px", border: "1px solid var(--border)",
+                  background: "var(--bg-elevated)", color: "var(--text-secondary)", fontFamily: "'Cairo', sans-serif",
                   fontWeight: 700, fontSize: "1rem", cursor: "pointer",
                 }}>→ السابق</button>
                 <button style={{ ...nextBtnStyle, flex: 2, marginTop: 0 }} onClick={() => { 
@@ -294,18 +294,18 @@ export default function CompleteProfilePage() {
           {/* Step 3 */}
           {step === 3 && (
             <div style={{ width: "100%" }}>
-              <h2 style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--dark)", marginBottom: "0.5rem" }}>
+              <h2 style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--text-primary)", marginBottom: "0.5rem" }}>
                 📍 موقعك على الخريطة
               </h2>
-              <p style={{ color: "var(--muted)", marginBottom: "1rem", fontSize: "0.95rem" }}>
+              <p style={{ color: "var(--text-secondary)", marginBottom: "1rem", fontSize: "0.95rem" }}>
                 انقر على الخريطة لتحديد موقعك أو استخدم التحديد التلقائي
               </p>
               
               <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
                 <button onClick={getLocation} style={{
                   padding: "0.6rem 1rem", borderRadius: "8px",
-                  background: "var(--terracotta)", color: "#fff",
-                  fontFamily: "'Cairo', sans-serif", fontWeight: 700, fontSize: "0.85rem",
+                  background: "linear-gradient(135deg, var(--gold) 0%, #A97B3C 100%)", color: "#0D0F14",
+                  fontFamily: "'Cairo', sans-serif", fontWeight: 800, fontSize: "0.85rem",
                   border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem"
                 }}>
                   📡 تحديد تلقائي
@@ -322,20 +322,20 @@ export default function CompleteProfilePage() {
               </div>
 
               {form.lat && (
-                <div style={{ textAlign: "center", marginBottom: "1rem", color: "var(--terracotta)", fontWeight: 700, fontSize: "0.9rem" }}>
+                <div style={{ textAlign: "center", marginBottom: "1rem", color: "var(--gold)", fontWeight: 700, fontSize: "0.9rem" }}>
                   تم تحديد الموقع: {form.lat.toFixed(4)}, {form.lng?.toFixed(4)}
                 </div>
               )}
 
-              <p style={{ fontSize: "0.85rem", color: "var(--muted)", textAlign: "center", marginBottom: "1.5rem" }}>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", textAlign: "center", marginBottom: "1.5rem" }}>
                 * يمكنك تخطي الخريطة وإضافة الموقع لاحقاً
               </p>
 
               <div style={{ display: "flex", gap: "1rem" }}>
                 <button onClick={() => setStep(2)} style={{
                   flex: 1, padding: "1rem",
-                  borderRadius: "14px", border: "2px solid rgba(217,162,100,0.3)",
-                  background: "transparent", color: "var(--muted)", fontFamily: "'Cairo', sans-serif",
+                  borderRadius: "14px", border: "1px solid var(--border)",
+                  background: "var(--bg-elevated)", color: "var(--text-secondary)", fontFamily: "'Cairo', sans-serif",
                   fontWeight: 700, fontSize: "1rem", cursor: "pointer",
                 }}>→ السابق</button>
                 <button
